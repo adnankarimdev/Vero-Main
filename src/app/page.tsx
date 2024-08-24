@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Star, MessageSquare } from "lucide-react"
 import { Bar, Pie } from 'react-chartjs-2'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js'
-import { reviewsDataSimmons, reviewsDataBridgeland, reviewsDataCalgaryPlace, reviewsDataChinook, reviewsDataFarmers, reviewsDataHudsons, reviewsDataMarda, reviewsDataMissions, reviewsDataStephenAve } from "./constants/constants"
+import { reviewsDataSimmons, reviewsDataBridgeland, reviewsDataCalgaryPlace, reviewsDataChinook, reviewsDataFarmers, reviewsDataHudsons, reviewsDataMarda, reviewsDataMissions, reviewsDataStephenAve, stopWordsArray } from "./constants/constants"
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
@@ -14,6 +14,7 @@ export default function Dashboard() {
   const keywords = ["best coffee", "artisan", "bad"];
   const negativeKeywords = ["bad", "terrible", "rude"]
   const [sortCriteria, setSortCriteria] = useState("location"); // Default sort by location
+  const threshold = 100;
 
   const handleSortChange = (criteria) => {
     setSortCriteria(criteria);
@@ -43,11 +44,45 @@ export default function Dashboard() {
     }
     return 0;
   });
-  
+
   const keywordCounts = keywords.reduce((acc, keyword) => {
     acc[keyword] = 0;
     return acc;
   }, {});
+
+  function getCommonWordsInFiveStarReviews(reviews: { rating: string, body: string }[]): [string, number][] {
+    const stopWords = new Set(stopWordsArray);
+  
+    // Step 1: Filter reviews with a rating of 5
+    const fiveStarReviews = reviews.filter(review => parseInt(review.rating) === 5);
+  
+    // Step 2: Tokenize the review text and count word frequency
+    const wordFrequency: { [key: string]: number } = {};
+  
+    fiveStarReviews.forEach(review => {
+      const words = review.body
+        .toLowerCase() // Convert to lowercase to avoid case sensitivity
+        .replace(/[^\w\s]/g, '') // Remove punctuation
+        .split(/\s+/); // Split by whitespace to get individual words
+  
+      words.forEach(word => {
+        if (word.length > 2 && !stopWords.has(word)) { // Exclude short words and stop words
+          wordFrequency[word] = (wordFrequency[word] || 0) + 1;
+        }
+      });
+    });
+  
+    // Step 3: Sort words by frequency
+    const sortedWords: [string, number][] = Object.entries(wordFrequency)
+      .sort((a, b) => b[1] - a[1]);
+  
+    // Return the sorted word frequency
+    return Object.entries(wordFrequency)
+    .filter(([_, frequency]) => frequency > threshold)  // Filter words above threshold
+    .sort(([, a], [, b]) => b - a); 
+  }
+  const commonWords = getCommonWordsInFiveStarReviews(reviewsData);
+  
 
   const keywordCountsNegative = negativeKeywords.reduce((acc, keyword) => {
     acc[keyword] = 0;
@@ -282,6 +317,23 @@ export default function Dashboard() {
           </div>
         </CardContent>
       </Card>
+
+      <Card>
+      <CardHeader>
+        <CardTitle>Common Words in 5-Star Reviews</CardTitle>
+        <CardDescription>These are the words most frequently mentioned in 5-star reviews.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-2">
+          {commonWords.map(([word, count], index) => (
+            <div key={index} className="flex justify-between">
+              <span className="text-lg font-medium">{word}</span>
+              <span className="text-lg font-medium">{count}</span>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
     </div>
   </CardContent>
 </Card>
