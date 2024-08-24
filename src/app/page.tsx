@@ -1,113 +1,306 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { useState } from "react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Star, MessageSquare } from "lucide-react"
+import { Bar, Pie } from 'react-chartjs-2'
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js'
+import { reviewsDataSimmons, reviewsDataBridgeland, reviewsDataCalgaryPlace, reviewsDataChinook, reviewsDataFarmers, reviewsDataHudsons, reviewsDataMarda, reviewsDataMissions, reviewsDataStephenAve } from "./constants/constants"
+
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
+
+export default function Dashboard() {
+  const keywords = ["best coffee", "artisan", "bad"];
+  const negativeKeywords = ["bad", "terrible", "rude"]
+  const [sortCriteria, setSortCriteria] = useState("location"); // Default sort by location
+
+  const handleSortChange = (criteria) => {
+    setSortCriteria(criteria);
+  };
+
+
+
+  const reviewsData = [
+    ...reviewsDataSimmons,
+    ...reviewsDataBridgeland,
+    ...reviewsDataCalgaryPlace,
+    ...reviewsDataChinook,
+    ...reviewsDataFarmers,
+    ...reviewsDataHudsons,
+    ...reviewsDataMarda,
+    ...reviewsDataMissions,
+    ...reviewsDataStephenAve
+  ];
+
+  const sortedReviews = [...reviewsData].sort((a, b) => {
+    if (sortCriteria === "location") {
+      return a.location.localeCompare(b.location);
+    } else if (sortCriteria === "rating") {
+      return parseInt(b.rating) - parseInt(a.rating); // Sort by rating in descending order
+    } else if (sortCriteria === "date") {
+      return new Date(b.date) - new Date(a.date); // Sort by date in descending order
+    }
+    return 0;
+  });
+  
+  const keywordCounts = keywords.reduce((acc, keyword) => {
+    acc[keyword] = 0;
+    return acc;
+  }, {});
+
+  const keywordCountsNegative = negativeKeywords.reduce((acc, keyword) => {
+    acc[keyword] = 0;
+    return acc;
+  }, {});
+
+  reviewsData.forEach(review => {
+    keywords.forEach(keyword => {
+      const regex = new RegExp(keyword, 'gi');
+      const matches = review.body.match(regex);
+      if (matches) {
+        keywordCounts[keyword] += matches.length;
+      }
+    });
+  });
+
+  reviewsData.forEach(review => {
+    negativeKeywords.forEach(keyword => {
+      const regex = new RegExp(keyword, 'gi');
+      const matches = review.body.match(regex);
+      if (matches) {
+        keywordCountsNegative[keyword] += matches.length;
+      }
+    });
+  });
+  const ratings = reviewsData.map(review => parseInt(review.rating));
+  const totalReviews = ratings.length;
+  const averageRating = (ratings.reduce((sum, rating) => sum + rating, 0) / totalReviews).toFixed(1);
+
+  const ratingDistribution = ratings.reduce((acc, rating) => {
+    acc[rating] = (acc[rating] || 0) + 1;
+    return acc;
+  }, {});
+
+  const barData = {
+    labels: ["1 Star", "2 Stars", "3 Stars", "4 Stars", "5 Stars"],
+    datasets: [
+      {
+        label: 'Number of Reviews',
+        data: [
+          ratingDistribution[1] || 0,
+          ratingDistribution[2] || 0,
+          ratingDistribution[3] || 0,
+          ratingDistribution[4] || 0,
+          ratingDistribution[5] || 0
+        ],
+        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+        borderColor: 'rgba(255, 206, 86, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const pieData = {
+    labels: ["1 Star", "2 Stars", "3 Stars", "4 Stars", "5 Stars"],
+    datasets: [
+      {
+        label: 'Rating Distribution',
+        data: [
+          ratingDistribution[1] || 0,
+          ratingDistribution[2] || 0,
+          ratingDistribution[3] || 0,
+          ratingDistribution[4] || 0,
+          ratingDistribution[5] || 0
+        ],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Google Reviews Dashboard</h1>
+      <Tabs defaultValue="summary">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="summary">Summary</TabsTrigger>
+          <TabsTrigger value="reviews">Reviews</TabsTrigger>
+          <TabsTrigger value="keywords">Top Keywords</TabsTrigger>
+          <TabsTrigger value="chat">Chat</TabsTrigger>
+        </TabsList>
+        <TabsContent value="summary">
+          <Card>
+            <CardHeader>
+              <CardTitle>Summary</CardTitle>
+              <CardDescription>Overview of your Google Reviews</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Average Rating</CardTitle>
+                    <Star className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{averageRating}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Total Reviews</CardTitle>
+                    <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{totalReviews}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+            <CardHeader>
+              <CardTitle>Rating Distribution</CardTitle>
+              <CardDescription>Distribution of ratings across all reviews</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="h-64">
+                  <Bar data={barData} />
+                </div>
+                <div className="h-64">
+                  <Pie data={pieData} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Chat with your Reviews</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="w-full h-[500px] border rounded">
+                  <iframe src={"https://www.chatbase.co/chatbot-iframe/hMDhaNLvdyjoukQKDtZJ2"} width="100%" height="100%" frameBorder="0"></iframe>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="reviews">
+  <Card>
+    <CardHeader>
+      <CardTitle>Reviews</CardTitle>
+      <CardDescription>List of your recent Google Reviews</CardDescription>
+      {/* Sorting Controls */}
+      <div className="flex space-x-4 mt-4">
+        <button onClick={() => handleSortChange("location")} className="btn">
+          Sort by Location
+        </button>
+        <button onClick={() => handleSortChange("rating")} className="btn">
+          Sort by Rating
+        </button>
+        <button onClick={() => handleSortChange("date")} className="btn">
+          Sort by Date
+        </button>
       </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-4">
+        {sortedReviews.map((review, index) => (
+          <Card key={index}>
+            <CardHeader>
+              <CardTitle>{review.location}</CardTitle>
+              <CardDescription>{review.date}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center space-x-2 mb-2">
+                <Star className="h-4 w-4 text-yellow-400" />
+                <span>{review.rating}</span>
+              </div>
+              <p>{review.body}</p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
+    </CardContent>
+  </Card>
+</TabsContent>
+        <TabsContent value="distribution">
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+        </TabsContent>
+        <TabsContent value="keywords">
+        <Card>
+  <CardHeader>
+    <CardTitle>Top Keywords</CardTitle>
+    <CardDescription>Keywords most frequently mentioned in reviews</CardDescription>
+  </CardHeader>
+  <CardContent>
+    {/* Flex container for the two cards */}
+    <div className="flex space-x-4">
+      {/* Positive Keywords Card */}
+      <Card className="flex-1">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Positive Keywords</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            {Object.entries(keywordCounts).map(([keyword, count]) => (
+              <div key={keyword} className="text-lg font-medium">
+                {keyword}: {count}
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+      {/* Negative Keywords Card */}
+      <Card className="flex-1">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Negative Keywords</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            {Object.entries(keywordCountsNegative).map(([keyword, count]) => (
+              <div key={keyword} className="text-lg font-medium">
+                {keyword}: {count}
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  </CardContent>
+</Card>
+</TabsContent>
+        <TabsContent value="chat">
+          <Card>
+            <CardHeader>
+              <CardTitle>Chat with your Reviews</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="w-full h-[500px] border rounded">
+                  <iframe src={"https://www.chatbase.co/chatbot-iframe/hMDhaNLvdyjoukQKDtZJ2"} width="100%" height="100%" frameBorder="0"></iframe>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
 }
