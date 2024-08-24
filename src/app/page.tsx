@@ -22,8 +22,53 @@ import { reviewsDataSimmons, reviewsDataBridgeland, reviewsDataCalgaryPlace, rev
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
 export default function Dashboard() {
-  const keywords = ["best coffee", "artisan", "bad"];
-  const negativeKeywords = ["bad", "terrible", "rude"]
+  const keywords = [
+    "Best Coffee",
+    "Specialty Coffee",
+    "Artisan Coffee",
+    "Gourmet Coffee",
+    "Freshly Brewed Coffee",
+    "Cozy Cafe",
+    "Best Coffee Experience",
+    "Quiet Coffee Shop",
+    "Study Cafe",
+    "Coffee Date Spot",
+    "Pet-Friendly Cafe",
+    "Community Coffee Shop",
+    "Coffee Tasting",
+    "Barista Crafted Coffee",
+    "Signature Coffee Drinks",
+    "Custom Blends",
+    "Gourmet Pastries",
+    "Artisan Teas",
+    "Local Bakery Goods",
+    "Healthy Snacks",
+    "Handmade Desserts",
+    "Breakfast Cafe",
+    "Brunch Spot"
+  ];
+  const negativeKeywords = [
+    "Bad Service",
+    "Rude Staff",
+    "Cold Coffee",
+    "Overpriced",
+    "Stale Pastries",
+    "Noisy Environment",
+    "Long Wait Times",
+    "Uncomfortable Seating",
+    "Dirty Tables",
+    "Poor Quality",
+    "Slow Service",
+    "Burnt Coffee",
+    "Limited Menu",
+    "Crowded",
+    "Unfriendly Staff",
+    "Weak Coffee",
+    "Disappointing Experience",
+    "Unhygienic",
+    "Underwhelming",
+    "Poor WiFi"
+  ];
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   const threshold = 100;
