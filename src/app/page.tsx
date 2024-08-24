@@ -3,8 +3,19 @@
 import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { Star, MessageSquare } from "lucide-react"
 import { Bar, Pie } from 'react-chartjs-2'
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js'
 import { reviewsDataSimmons, reviewsDataBridgeland, reviewsDataCalgaryPlace, reviewsDataChinook, reviewsDataFarmers, reviewsDataHudsons, reviewsDataMarda, reviewsDataMissions, reviewsDataStephenAve, stopWordsArray } from "./constants/constants"
 
@@ -13,12 +24,9 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarEle
 export default function Dashboard() {
   const keywords = ["best coffee", "artisan", "bad"];
   const negativeKeywords = ["bad", "terrible", "rude"]
-  const [sortCriteria, setSortCriteria] = useState("location"); // Default sort by location
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedLocation, setSelectedLocation] = useState<string>("");
   const threshold = 100;
-
-  const handleSortChange = (criteria) => {
-    setSortCriteria(criteria);
-  };
 
 
 
@@ -34,21 +42,24 @@ export default function Dashboard() {
     ...reviewsDataStephenAve
   ];
 
-  const sortedReviews = [...reviewsData].sort((a, b) => {
-    if (sortCriteria === "location") {
-      return a.location.localeCompare(b.location);
-    } else if (sortCriteria === "rating") {
-      return parseInt(b.rating) - parseInt(a.rating); // Sort by rating in descending order
-    } else if (sortCriteria === "date") {
-      return new Date(b.date) - new Date(a.date); // Sort by date in descending order
-    }
-    return 0;
-  });
+  const uniqueLocations = Array.from(new Set(reviewsData.map(review => review.location)));
 
-  const keywordCounts = keywords.reduce((acc, keyword) => {
+  const filteredReviews = selectedLocation && selectedLocation !== "All"
+  ? reviewsData.filter(review => review.location === selectedLocation)
+  : reviewsData; // Show all reviews if no location is selected
+
+  const finalFilteredReviews = filteredReviews.filter(review => 
+    searchQuery 
+      ? review.body.toLowerCase().includes(searchQuery.toLowerCase()) 
+      : true
+  );
+
+
+  const keywordCounts: KeywordCounts = keywords.reduce((acc: KeywordCounts, keyword) => {
     acc[keyword] = 0;
     return acc;
   }, {});
+  
 
   function getCommonWordsInFiveStarReviews(reviews: { rating: string, body: string }[]): [string, number][] {
     const stopWords = new Set(stopWordsArray);
@@ -83,11 +94,14 @@ export default function Dashboard() {
   }
   const commonWords = getCommonWordsInFiveStarReviews(reviewsData);
   
+  type KeywordCounts = {
+    [key: string]: number;
+  };
 
-  const keywordCountsNegative = negativeKeywords.reduce((acc, keyword) => {
+  const keywordCountsNegative: KeywordCounts = negativeKeywords.reduce((acc: KeywordCounts, keyword) => {
     acc[keyword] = 0;
     return acc;
-  }, {});
+  }, {} as KeywordCounts); 
 
   reviewsData.forEach(review => {
     keywords.forEach(keyword => {
@@ -112,7 +126,9 @@ export default function Dashboard() {
   const totalReviews = ratings.length;
   const averageRating = (ratings.reduce((sum, rating) => sum + rating, 0) / totalReviews).toFixed(1);
 
-  const ratingDistribution = ratings.reduce((acc, rating) => {
+  type RatingDistribution = { [key: number]: number };
+
+  const ratingDistribution: RatingDistribution = ratings.reduce((acc: RatingDistribution, rating) => {
     acc[rating] = (acc[rating] || 0) + 1;
     return acc;
   }, {});
@@ -175,7 +191,7 @@ export default function Dashboard() {
           <TabsTrigger value="summary">Summary</TabsTrigger>
           <TabsTrigger value="reviews">Reviews</TabsTrigger>
           <TabsTrigger value="keywords">Top Keywords</TabsTrigger>
-          <TabsTrigger value="chat">Chat</TabsTrigger>
+          <TabsTrigger value="Auto Respond to Reviews">Auto Respond to Reviews</TabsTrigger>
         </TabsList>
         <TabsContent value="summary">
           <Card>
@@ -187,7 +203,7 @@ export default function Dashboard() {
               <div className="grid gap-4 md:grid-cols-2">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Average Rating</CardTitle>
+                    <CardTitle className="text-sm font-medium">{"Average Rating (All Locations)"}</CardTitle>
                     <Star className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
@@ -196,7 +212,7 @@ export default function Dashboard() {
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Total Reviews</CardTitle>
+                    <CardTitle className="text-sm font-medium">{"Total Reviews (All Locations"}</CardTitle>
                     <MessageSquare className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
@@ -242,20 +258,30 @@ export default function Dashboard() {
       <CardDescription>List of your recent Google Reviews</CardDescription>
       {/* Sorting Controls */}
       <div className="flex space-x-4 mt-4">
-        <button onClick={() => handleSortChange("location")} className="btn">
-          Sort by Location
-        </button>
-        <button onClick={() => handleSortChange("rating")} className="btn">
-          Sort by Rating
-        </button>
-        <button onClick={() => handleSortChange("date")} className="btn">
-          Sort by Date
-        </button>
+      <Input
+              className="w-[300px]"
+              placeholder="Search reviews..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+      <Select onValueChange={setSelectedLocation}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Select a location" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem key={0} value="All"> All </SelectItem>
+        {uniqueLocations.map((location, index) => (
+          <SelectItem key={index + 1} value={location}>
+            {location}
+          </SelectItem>
+        ))}
+        </SelectContent>
+      </Select>
       </div>
     </CardHeader>
     <CardContent>
       <div className="space-y-4">
-        {sortedReviews.map((review, index) => (
+        {finalFilteredReviews.map((review, index) => (
           <Card key={index}>
             <CardHeader>
               <CardTitle>{review.location}</CardTitle>
@@ -295,7 +321,7 @@ export default function Dashboard() {
           <div className="space-y-2">
             {Object.entries(keywordCounts).map(([keyword, count]) => (
               <div key={keyword} className="text-lg font-medium">
-                {keyword}: {count}
+                <Badge variant="destructive" className="bg-green-500 text-white">{keyword}: {count}</Badge>
               </div>
             ))}
           </div>
@@ -311,7 +337,7 @@ export default function Dashboard() {
           <div className="space-y-2">
             {Object.entries(keywordCountsNegative).map(([keyword, count]) => (
               <div key={keyword} className="text-lg font-medium">
-                {keyword}: {count}
+                <Badge variant="destructive">{keyword}: {count}</Badge>
               </div>
             ))}
           </div>
@@ -327,8 +353,9 @@ export default function Dashboard() {
         <div className="space-y-2">
           {commonWords.map(([word, count], index) => (
             <div key={index} className="flex justify-between">
-              <span className="text-lg font-medium">{word}</span>
-              <span className="text-lg font-medium">{count}</span>
+              <Badge variant="destructive" style={{ backgroundColor: '#C0AD8D', color: '#FFFFFF' }}>{word}: {count}</Badge>
+              {/* <span className="text-lg font-medium">{word}</span>
+              <span className="text-lg font-medium">{count}</span> */}
             </div>
           ))}
         </div>
@@ -338,18 +365,11 @@ export default function Dashboard() {
   </CardContent>
 </Card>
 </TabsContent>
-        <TabsContent value="chat">
+        <TabsContent value="Auto Respond to Reviews">
           <Card>
             <CardHeader>
-              <CardTitle>Chat with your Reviews</CardTitle>
+              <CardTitle>Coming soon!</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="w-full h-[500px] border rounded">
-                  <iframe src={"https://www.chatbase.co/chatbot-iframe/hMDhaNLvdyjoukQKDtZJ2"} width="100%" height="100%" frameBorder="0"></iframe>
-                </div>
-              </div>
-            </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
