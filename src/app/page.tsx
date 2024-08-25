@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import JsxParser from 'react-jsx-parser';
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/components/ui/use-toast"
 import { Star, MessageSquare, BarChart, PieChart } from "lucide-react";
 import { Bar, Pie, Line, Doughnut, Radar, PolarArea, Bubble, Scatter } from 'react-chartjs-2';
 import { Input } from "@/components/ui/input";
@@ -37,6 +38,7 @@ import {
   PointElement, 
   LineElement, 
   RadarController,
+  RadialLinearScale,
 } from "chart.js";
 import {
   reviewsDataSimmons,
@@ -61,7 +63,8 @@ ChartJS.register(
   Title,
   PointElement,
   LineElement,
-  RadarController
+  RadarController,
+  RadialLinearScale
 );
 
 export default function Dashboard() {
@@ -155,6 +158,7 @@ export default function Dashboard() {
   const [searchQueryGpt, setSearchQueryGpt] = useState<string>("");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   const [returnedGraph, setReturnedGraph] = useState<string>("")
+  const { toast } = useToast()
   const threshold = 100;
 
   const reviewsData = [
@@ -200,6 +204,9 @@ export default function Dashboard() {
       // Handle success response
       const codeString = response.data["content"].replace(/```jsx/g, "").replace(/```/g, "");
       console.log(codeString);
+      toast({
+        title: "Graph Generated",
+      })
       setReturnedGraph(codeString)
     })
     .catch(error => {
