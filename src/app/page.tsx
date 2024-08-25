@@ -34,6 +34,9 @@ import {
   LinearScale,
   BarElement,
   Title,
+  PointElement, 
+  LineElement, 
+  RadarController,
 } from "chart.js";
 import {
   reviewsDataSimmons,
@@ -56,9 +59,13 @@ ChartJS.register(
   LinearScale,
   BarElement,
   Title,
+  PointElement,
+  LineElement,
+  RadarController
 );
 
 export default function Dashboard() {
+  
   const BarChart = (props:any) => {
     return <Bar {...props} />;
   };
@@ -386,7 +393,7 @@ export default function Dashboard() {
                 <CardContent>
                   <div className="flex items-center space-x-2">
                     <Input
-                      className="w-[300px]"
+                      className="w-full h-[50px] px-4 py-3 text-lg overflow-x-auto"
                       placeholder=""
                       value={searchQueryGpt}
                       onChange={(e) => setSearchQueryGpt(e.target.value)}
