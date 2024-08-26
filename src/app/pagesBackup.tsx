@@ -10,20 +10,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import JsxParser from "react-jsx-parser";
+import JsxParser from 'react-jsx-parser';
 import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast"
 import { Star, MessageSquare, BarChart, PieChart } from "lucide-react";
-import {
-  Bar,
-  Pie,
-  Line,
-  Doughnut,
-  Radar,
-  PolarArea,
-  Bubble,
-  Scatter,
-} from "react-chartjs-2";
+import { Bar, Pie, Line, Doughnut, Radar, PolarArea, Bubble, Scatter } from 'react-chartjs-2';
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -34,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Chart as ChartJS,
   ArcElement,
@@ -44,8 +35,8 @@ import {
   LinearScale,
   BarElement,
   Title,
-  PointElement,
-  LineElement,
+  PointElement, 
+  LineElement, 
   RadarController,
   RadialLinearScale,
 } from "chart.js";
@@ -61,7 +52,7 @@ import {
   reviewsDataStephenAve,
   stopWordsArray,
 } from "./constants/constants";
-import SmartReviewBuilder from "@/components/ui/SmartReviewBuilder";
+import SmartReviewBuilder from "@/components/ui/SmartReviewBuilder"
 
 ChartJS.register(
   ArcElement,
@@ -78,42 +69,43 @@ ChartJS.register(
 );
 
 export default function Dashboard() {
-  const BarChart = (props: any) => {
+  
+  const BarChart = (props:any) => {
     return <Bar {...props} />;
   };
-
+  
   // Wrapper for Pie Chart
-  const PieChart = (props: any) => {
+  const PieChart = (props:any) => {
     return <Pie {...props} />;
   };
-
+  
   // Wrapper for Line Chart
-  const LineChart = (props: any) => {
+  const LineChart = (props:any) => {
     return <Line {...props} />;
   };
-
+  
   // Wrapper for Doughnut Chart
-  const DoughnutChart = (props: any) => {
+  const DoughnutChart = (props:any) => {
     return <Doughnut {...props} />;
   };
-
+  
   // Wrapper for Radar Chart
-  const RadarChart = (props: any) => {
+  const RadarChart = (props:any) => {
     return <Radar {...props} />;
   };
-
+  
   // Wrapper for PolarArea Chart
-  const PolarAreaChart = (props: any) => {
+  const PolarAreaChart = (props:any) => {
     return <PolarArea {...props} />;
   };
-
+  
   // Wrapper for Bubble Chart
-  const BubbleChart = (props: any) => {
+  const BubbleChart = (props:any) => {
     return <Bubble {...props} />;
   };
-
+  
   // Wrapper for Scatter Chart
-  const ScatterChart = (props: any) => {
+  const ScatterChart = (props:any) => {
     return <Scatter {...props} />;
   };
   const keywords = [
@@ -166,8 +158,8 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchQueryGpt, setSearchQueryGpt] = useState<string>("");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
-  const [returnedGraph, setReturnedGraph] = useState<string>("");
-  const { toast } = useToast();
+  const [returnedGraph, setReturnedGraph] = useState<string>("")
+  const { toast } = useToast()
   const threshold = 100;
 
   const reviewsData = [
@@ -183,7 +175,7 @@ export default function Dashboard() {
   ];
 
   const uniqueLocations = Array.from(
-    new Set(reviewsData.map((review) => review.location))
+    new Set(reviewsData.map((review) => review.location)),
   );
 
   const filteredReviews =
@@ -194,7 +186,7 @@ export default function Dashboard() {
   const finalFilteredReviews = filteredReviews.filter((review) =>
     searchQuery
       ? review.body.toLowerCase().includes(searchQuery.toLowerCase())
-      : true
+      : true,
   );
 
   const keywordCounts: KeywordCounts = keywords.reduce(
@@ -202,39 +194,36 @@ export default function Dashboard() {
       acc[keyword] = 0;
       return acc;
     },
-    {}
+    {},
   );
 
   const handleSubmit = () => {
-    axios
-      .post("http://localhost:8021/backend/create-charts/", {
-        query: searchQueryGpt,
+    axios.post("http://localhost:8021/backend/create-charts/", {
+      query: searchQueryGpt,
+    })
+    .then(response => {
+      // Handle success response
+      const codeString = response.data["content"].replace(/```jsx/g, "").replace(/```/g, "");
+      console.log(codeString);
+      toast({
+        title: "Graph Generated",
       })
-      .then((response) => {
-        // Handle success response
-        const codeString = response.data["content"]
-          .replace(/```jsx/g, "")
-          .replace(/```/g, "");
-        console.log(codeString);
-        toast({
-          title: "Graph Generated",
-        });
-        setReturnedGraph(codeString);
-      })
-      .catch((error) => {
-        // Handle error
-        console.error(error);
-      });
+      setReturnedGraph(codeString)
+    })
+    .catch(error => {
+      // Handle error
+      console.error(error);
+    });
   };
 
   function getCommonWordsInFiveStarReviews(
-    reviews: { rating: string; body: string }[]
+    reviews: { rating: string; body: string }[],
   ): [string, number][] {
     const stopWords = new Set(stopWordsArray);
 
     // Step 1: Filter reviews with a rating of 5
     const fiveStarReviews = reviews.filter(
-      (review) => parseInt(review.rating) === 5
+      (review) => parseInt(review.rating) === 5,
     );
 
     // Step 2: Tokenize the review text and count word frequency
@@ -256,7 +245,7 @@ export default function Dashboard() {
 
     // Step 3: Sort words by frequency
     const sortedWords: [string, number][] = Object.entries(wordFrequency).sort(
-      (a, b) => b[1] - a[1]
+      (a, b) => b[1] - a[1],
     );
 
     // Return the sorted word frequency
@@ -275,7 +264,7 @@ export default function Dashboard() {
       acc[keyword] = 0;
       return acc;
     },
-    {} as KeywordCounts
+    {} as KeywordCounts,
   );
 
   reviewsData.forEach((review) => {
@@ -310,7 +299,7 @@ export default function Dashboard() {
       acc[rating] = (acc[rating] || 0) + 1;
       return acc;
     },
-    {}
+    {},
   );
 
   const barData = {
@@ -407,43 +396,41 @@ export default function Dashboard() {
                   </CardContent>
                 </Card>
                 <Card>
-                  <CardHeader>
-                    <CardTitle>Ask your reviews</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center space-x-2">
-                      <Input
-                        className="w-full h-[50px] px-4 py-3 text-lg overflow-x-auto"
-                        placeholder=""
-                        value={searchQueryGpt}
-                        onChange={(e) => setSearchQueryGpt(e.target.value)}
-                      />
-                      <Button variant="outline" onClick={handleSubmit}>
-                        Submit
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-                {returnedGraph && (
-                  <JsxParser
-                    components={{
-                      BarChart,
-                      PieChart,
-                      LineChart,
-                      DoughnutChart,
-                      RadarChart,
-                      PolarAreaChart,
-                      BubbleChart,
-                      ScatterChart,
-                      Card,
-                      CardHeader,
-                      CardTitle,
-                      CardDescription,
-                      CardContent,
-                    }}
-                    jsx={returnedGraph}
-                  />
-                )}
+                <CardHeader>
+                  <CardTitle>Ask your reviews</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      className="w-full h-[50px] px-4 py-3 text-lg overflow-x-auto"
+                      placeholder=""
+                      value={searchQueryGpt}
+                      onChange={(e) => setSearchQueryGpt(e.target.value)}
+                    />
+                    <Button variant="outline" onClick={handleSubmit}>Submit</Button>
+                  </div>
+                </CardContent>
+              </Card>
+              {returnedGraph && (
+                       <JsxParser
+                        components={{
+                          BarChart,
+                          PieChart,
+                          LineChart,
+                          DoughnutChart,
+                          RadarChart,
+                          PolarAreaChart,
+                          BubbleChart,
+                          ScatterChart,
+                          Card,
+                          CardHeader,
+                          CardTitle,
+                          CardDescription,
+                          CardContent
+                        }}
+                          jsx={returnedGraph}
+                        />
+                      )}
               </div>
             </CardContent>
           </Card>
@@ -553,7 +540,7 @@ export default function Dashboard() {
                               {keyword}: {count}
                             </Badge>
                           </div>
-                        )
+                        ),
                       )}
                     </div>
                   </CardContent>
@@ -599,7 +586,9 @@ export default function Dashboard() {
           </Card>
         </TabsContent>
         <TabsContent value="smartReviews">
+        <div className="flex items-center justify-center min-h-screen">
           <SmartReviewBuilder />
+        </div>
         </TabsContent>
       </Tabs>
     </div>
