@@ -4,8 +4,10 @@ import React, { useState, useEffect } from 'react'
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
+import { Progress as Prog} from "@/components/ui/progress"
 import { useToast } from "@/components/ui/use-toast"
+import * as Progress from '@radix-ui/react-progress'
+import ScoreRingCard from './ScoreRingCard'
 import axios from 'axios'
 import {
   Dialog,
@@ -82,6 +84,8 @@ const SmartReviewBuilder = () => {
   const [isReviewComplete, setIsReviewComplete] = useState(false)
   const [showAlert, setShowAlert] = useState(false);
   const [sophisticatedReview, setSophisticatedReview] = useState('')
+  const [userReviewScore, setUserReviewScore] = useState('')
+  const [userReviewSophisticatedScore, setUserReviewSophisticatedScore] = useState('')
   const { toast } = useToast()
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -103,7 +107,20 @@ const SmartReviewBuilder = () => {
     if (currentStep < categories.length - 1) {
       setCurrentStep(currentStep + 1)
     } else {
-      setIsReviewComplete(true)
+      //finish clicked. 
+      const userReviews = reviews.join('\n');
+      axios.post("http://localhost:8021/backend/create-review-score/", {
+        userReview: userReviews,
+      })
+      .then(response => {
+        // Handle success response
+        setUserReviewScore(response.data.content)
+        setIsReviewComplete(true)
+      })
+      .catch(error => {
+        // Handle error
+        console.error(error);
+      });
     }
   }
 
@@ -159,6 +176,32 @@ const SmartReviewBuilder = () => {
     });
   };
 
+  const getProgressColorClass = (wordCount:number) => {
+    if (wordCount <= 20) {
+      return '#FF6961'; // Red color
+    } else if (wordCount <= 40) {
+      return '#FDFFB6'; // Yellow color
+    }else if (wordCount < 60) {
+      return '#FFBD71'; // Yellow color
+    }
+     else {
+      return '#CAFFBF'; // Green color
+    }
+  }
+
+  const getProgressEmoji = (wordCount:number) => {
+    if (wordCount <= 20) {
+      return '🫣';
+    } else if (wordCount <= 40) {
+      return '😏'; 
+    }else if (wordCount < 60) {
+      return '🤩'
+    } 
+    else {
+      return '🥳'; 
+    }
+  }
+
   const handleSophisticateReview = () => {
     console.log("Submitted reviews:", reviews);
     const allReviews = reviews.join('\n');
@@ -171,6 +214,17 @@ const SmartReviewBuilder = () => {
       toast({
         title: "Sophisticated Review Generated",
       })
+      axios.post("http://localhost:8021/backend/create-review-score/", {
+        userReview: allReviews,
+      })
+      .then(response => {
+        // Handle success response
+        setUserReviewSophisticatedScore(response.data.content)
+      })
+      .catch(error => {
+        // Handle error
+        console.error(error);
+      });
       setIsDialogOpen(true);
     })
     .catch(error => {
@@ -191,6 +245,11 @@ const SmartReviewBuilder = () => {
           className="w-full min-h-[400px]" 
           onChange={(e) => setSophisticatedReview(e.target.value)}/>
         </DialogHeader>
+        <ScoreRingCard 
+        score={parseInt(userReviewSophisticatedScore, 10)} 
+        title="New Review Score" 
+        description="Indicator displaying how helpful your review is."
+          />
         <DialogFooter>
           <Button type="submit" onClick={handleSubmitSophisticated}>Use Review</Button>
         </DialogFooter>
@@ -202,7 +261,7 @@ const SmartReviewBuilder = () => {
     return (
       <Card className="w-full max-w-3xl mx-auto">
         <CardHeader>
-          <CardTitle>Your Complete Review</CardTitle>
+          <CardTitle>Your Review </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {categories.map((category, index) => (
@@ -212,10 +271,15 @@ const SmartReviewBuilder = () => {
               <p>{reviews[index]}</p>
             </div>
           ))}
+          <ScoreRingCard 
+        score={parseInt(userReviewScore, 10)} 
+        title="Review Score" 
+        description="Indicator displaying how helpful your review is."
+          />
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button onClick={handleSubmit}>Submit Review</Button>
-          <Button onClick={handleSophisticateReview}>Sophisticate Review</Button>
+          <Button onClick={handleSophisticateReview}>Improve Review</Button>
         </CardFooter>
       </Card>
     )
@@ -225,7 +289,7 @@ const SmartReviewBuilder = () => {
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle>{categories[currentStep].name}</CardTitle>
-        <Progress value={(currentStep + 1) / categories.length * 100} className="w-full" />
+        <Prog value={(currentStep + 1) / categories.length * 100} className="w-full" />
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-lg font-medium">{selectedQuestions[currentStep]}</p>
@@ -237,12 +301,26 @@ const SmartReviewBuilder = () => {
           className="resize-none"
         />
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button onClick={handlePrevious} disabled={currentStep === 0}>Previous</Button>
-        <Button onClick={handleNext}>
-          {currentStep === categories.length - 1 ? 'Finish' : 'Next'}
-        </Button>
-      </CardFooter>
+      <CardFooter className="flex justify-between items-center">
+  <Button onClick={handlePrevious} disabled={currentStep === 0}>Previous</Button>
+  
+  {/* <div className="flex flex-col items-center">
+    <Progress.Root className="ProgressRoot" value={Math.min((reviews[currentStep].trim().split(/\s+/).length / 60) * 100, 100)}>
+      <Progress.Indicator
+        className="ProgressIndicator"
+        style={{ 
+          transform: `translateX(-${100 - Math.min((reviews[currentStep].trim().split(/\s+/).length / 60) * 100, 100)}%)`, 
+          backgroundColor: getProgressColorClass(reviews[currentStep].trim().split(/\s+/).length) 
+        }}
+      />
+    </Progress.Root>
+    <span className="mt-2 text-center">{getProgressEmoji(reviews[currentStep].trim().split(/\s+/).length)}</span>
+  </div> */}
+  
+  <Button onClick={handleNext}>
+    {currentStep === categories.length - 1 ? 'Finish' : 'Next'}
+  </Button>
+</CardFooter>
     </Card>
   )
 }
