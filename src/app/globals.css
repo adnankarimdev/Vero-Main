@@ -68,7 +68,7 @@
   }
 }
 
-@import '@radix-ui/colors/black-alpha.css';
+@import "@radix-ui/colors/black-alpha.css";
 
 .ProgressRoot {
   position: relative;
