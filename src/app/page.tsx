@@ -52,6 +52,7 @@ import {
   reviewsDataStephenAve,
   stopWordsArray,
 } from "./constants/constants";
+import SmartReviewBuilder from "@/components/ui/SmartReviewBuilder"
 
 ChartJS.register(
   ArcElement,
@@ -355,13 +356,14 @@ export default function Dashboard() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Google Reviews Dashboard</h1>
       <Tabs defaultValue="summary">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="summary">Summary</TabsTrigger>
           <TabsTrigger value="reviews">Reviews</TabsTrigger>
           <TabsTrigger value="keywords">Top Keywords</TabsTrigger>
           <TabsTrigger value="Auto Respond to Reviews">
             Auto Respond to Reviews
           </TabsTrigger>
+          <TabsTrigger value="smartReviews">Smart Reviews</TabsTrigger>
         </TabsList>
         <TabsContent value="summary">
           <Card>
@@ -582,6 +584,9 @@ export default function Dashboard() {
               <CardTitle>Coming soon!</CardTitle>
             </CardHeader>
           </Card>
+        </TabsContent>
+        <TabsContent value="smartReviews">
+          <SmartReviewBuilder />
         </TabsContent>
       </Tabs>
     </div>
