@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { CircleArrowRight, CircleArrowLeft, BadgeCheck } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -320,12 +321,15 @@ const SmartReviewBuilder = () => {
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
+      <CardHeader className="flex flex-col items-center relative">
+        <p className="absolute top-0 right-0 m-4 text-sm text-muted-foreground">
+          {currentStep + 1}/{categories.length}
+        </p>
         <CardTitle>{categories[currentStep].name}</CardTitle>
-        <Prog
+        {/* <Prog
           value={((currentStep + 1) / categories.length) * 100}
           className="w-full"
-        />
+        />*/}
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-lg font-medium">{selectedQuestions[currentStep]}</p>
@@ -339,7 +343,8 @@ const SmartReviewBuilder = () => {
       </CardContent>
       <CardFooter className="flex justify-between items-center">
         <Button onClick={handlePrevious} disabled={currentStep === 0}>
-          Previous
+          {/* <ArrowLeft/> */}
+          <CircleArrowLeft />
         </Button>
 
         {/* <div className="flex flex-col items-center">
@@ -355,9 +360,9 @@ const SmartReviewBuilder = () => {
     <span className="mt-2 text-center">{getProgressEmoji(reviews[currentStep].trim().split(/\s+/).length)}</span>
   </div> */}
 
-        <Button onClick={handleNext}>
-          {currentStep === categories.length - 1 ? "Finish" : "Next"}
-        </Button>
+    <Button onClick={handleNext}>
+      {currentStep === categories.length - 1 ? <BadgeCheck /> : <CircleArrowRight />}
+    </Button>
       </CardFooter>
     </Card>
   );

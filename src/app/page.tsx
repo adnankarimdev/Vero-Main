@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Loader from "@/components/ui/Loader";
 import {
   Card,
   CardContent,
@@ -13,9 +14,10 @@ import {
 import JsxParser from 'react-jsx-parser';
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast"
-import { Star, MessageSquare, BarChart, PieChart } from "lucide-react";
+import { Star, MessageSquare, BarChart, PieChart, ChartSpline } from "lucide-react";
 import { Bar, Pie, Line, Doughnut, Radar, PolarArea, Bubble, Scatter } from 'react-chartjs-2';
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
@@ -69,6 +71,14 @@ ChartJS.register(
 );
 
 export default function Dashboard() {
+  
+  const preMadeQueries = [
+    "What is the average rating over the last year?",
+    "Show the sentiment trend over time.",
+    "What are the most common keywords in reviews?",
+    "How do reviews vary by month?"
+  ];
+
   
   const BarChart = (props:any) => {
     return <Bar {...props} />;
@@ -159,6 +169,11 @@ export default function Dashboard() {
   const [searchQueryGpt, setSearchQueryGpt] = useState<string>("");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   const [returnedGraph, setReturnedGraph] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false)
+  const handlePreMadeQueryClick = (query:string) => {
+    setSearchQueryGpt(query);
+  };
+
   const { toast } = useToast()
   const threshold = 100;
 
@@ -198,6 +213,8 @@ export default function Dashboard() {
   );
 
   const handleSubmit = () => {
+    setLoading(true)
+    setReturnedGraph("")
     axios.post("http://localhost:8021/backend/create-charts/", {
       query: searchQueryGpt,
     })
@@ -209,10 +226,12 @@ export default function Dashboard() {
         title: "Graph Generated",
       })
       setReturnedGraph(codeString)
+      setLoading(false)
     })
     .catch(error => {
       // Handle error
       console.error(error);
+      setLoading(false)
     });
   };
 
@@ -397,20 +416,35 @@ export default function Dashboard() {
                 </Card>
                 <Card>
                 <CardHeader>
-                  <CardTitle>Ask your reviews</CardTitle>
+                  <CardTitle>Text to Graph</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center space-x-2">
-                    <Input
-                      className="w-full h-[50px] px-4 py-3 text-lg overflow-x-auto"
+                    <Textarea
+                      className="w-full h-100px px-4 py-3 text-lg overflow-x-auto"
                       placeholder=""
                       value={searchQueryGpt}
                       onChange={(e) => setSearchQueryGpt(e.target.value)}
                     />
-                    <Button variant="outline" onClick={handleSubmit}>Submit</Button>
+                    <Button variant="outline" onClick={handleSubmit} className="bg-transparent hover:bg-transparent border-none shadow-none"><ChartSpline /></Button>
                   </div>
+                  <div className="mt-4 space-y-2">
+          {preMadeQueries.map((query, index) => (
+            <Button
+              key={index}
+              variant="link"
+              className="text-blue-600 hover:underline"
+              onClick={() => handlePreMadeQueryClick(query)}
+            >
+              {query}
+            </Button>
+          ))}
+        </div>
                 </CardContent>
               </Card>
+              {loading && (      <div className="flex justify-center items-center h-40">
+        <Loader />
+      </div>)}
               {returnedGraph && (
                        <JsxParser
                         components={{
