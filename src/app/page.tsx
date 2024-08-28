@@ -301,9 +301,7 @@ export default function Dashboard() {
         </TabsContent>
 
         <TabsContent value="personas">
-          <div className="flex items-center justify-center min-h-screen">
             <Personas />
-          </div>
         </TabsContent>
       </Tabs>
     </div>

@@ -1,118 +1,111 @@
 "use client"
 
-import React from 'react'
-import { Card, CardContent } from "@/components/ui/card"
+import * as React from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import useEmblaCarousel from 'embla-carousel-react'
+import { ChevronDown, ChevronUp } from "lucide-react"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 
 const personas = [
-    {
-      name: "Routine-Richard",
-      behavior: "Visits daily, often orders the same thing, prefers consistency in flavor and experience.",
-      painPoints: "Dislikes when his usual order isn’t available or when the coffee shop is too crowded.",
-      motivations: "Values routine and reliability, appreciates a personal touch (e.g., baristas remembering his name and order).",
-      quote: "I come here every morning because I know exactly what I’m getting, and it’s always good."
-    },
-    {
-      name: "Social Samantha",
-      behavior: "Comes with friends or colleagues, enjoys the ambiance for socializing, often orders a variety of drinks to share.",
-      painPoints: "Dislikes when there isn’t enough seating or when the noise level is too high.",
-      motivations: "Seeks a cozy, welcoming environment where she can relax and chat with friends.",
-      quote: "This place is perfect for catching up with friends over a latte!"
-    },
-    {
-      name: "Eco-Conscious Ethan",
-      behavior: "Inquires about the source of your coffee beans, prefers organic and fair-trade options, often brings his own reusable cup.",
-      painPoints: "Frustrated by lack of sustainable practices, dislikes excess packaging or waste.",
-      motivations: "Prioritizes sustainability and ethical sourcing, willing to pay more for eco-friendly options.",
-      quote: "I love that this coffee shop offers fair-trade, organic beans—it’s why I keep coming back!"
-    },
-    {
-      name: "Busy-Becky",
-      behavior: "Drops by for a quick coffee on the way to work, values speed and efficiency, often orders to-go.",
-      painPoints: "Dislikes long wait times or complicated ordering processes.",
-      motivations: "Needs quick and convenient service without sacrificing quality.",
-      quote: "I need my coffee fast and to-go, and this place always delivers without a hitch."
-    },
-    {
-      name: "Freelancer Fiona",
-      behavior: "Brings her laptop, stays for extended periods, orders coffee and snacks while working.",
-      painPoints: "Dislikes unreliable Wi-Fi or lack of available outlets.",
-      motivations: "Looks for a comfortable, quiet place to work with good Wi-Fi and a relaxed atmosphere.",
-      quote: "This coffee shop is my go-to workspace—I can focus and enjoy great coffee at the same time."
-    },
-    {
-      name: "Family-Friendly Fran",
-      behavior: "Visits with children, orders kid-friendly drinks and snacks, appreciates a family-oriented environment.",
-      painPoints: "Dislikes when there aren’t enough options for kids or when the environment isn’t family-friendly.",
-      motivations: "Seeks a welcoming place where both adults and children can enjoy themselves.",
-      quote: "It’s rare to find a coffee shop where I can relax with a coffee while my kids enjoy their treats."
-    },
-    {
-      name: "Trendy-Tina",
-      behavior: "Interested in the latest coffee trends, frequently orders specialty drinks, active on social media.",
-      painPoints: "Dislikes when the menu lacks innovative or trendy options.",
-      motivations: "Seeks to try new and unique coffee experiences, loves sharing them on social media.",
-      quote: "I had to try their new seasonal latte—it’s all over Instagram, and it didn’t disappoint!"
-    }
-  ];
+  {
+    name: "Social Samantha",
+    behavior: "Comes with friends or colleagues, enjoys the ambiance for socializing, often orders a variety of drinks to share.",
+    painPoints: "Dislikes when there isn't enough seating or when the noise level is too high.",
+    motivations: "Seeks a cozy, welcoming environment where she can relax and chat with friends.",
+    quote: "This place is perfect for catching up with friends over a latte!"
+  },
+  {
+    name: "Networking Nick",
+    behavior: "Frequently organizes casual business meetings, prefers quiet corners for discussions.",
+    painPoints: "Frustrated by unreliable Wi-Fi or lack of power outlets.",
+    motivations: "Looks for a professional yet relaxed atmosphere to impress clients and partners.",
+    quote: "It's my go-to spot for informal business meetings - great coffee and a perfect ambiance!"
+  },
+  {
+    name: "Study Sarah",
+    behavior: "Spends long hours studying or working on her laptop, often orders multiple drinks throughout her stay.",
+    painPoints: "Dislikes when tables are too small or when the cafe closes early.",
+    motivations: "Seeks a quiet, comfortable space with good lighting and stable Wi-Fi for productive work sessions.",
+    quote: "I can always count on getting my best work done here!"
+  },
+  {
+    name: "Foodie Fred",
+    behavior: "Comes for the specialty coffee and unique food pairings, often takes photos of his orders.",
+    painPoints: "Disappointed when menu items are unavailable or if the presentation is lackluster.",
+    motivations: "Searches for new and exciting flavor experiences and Instagram-worthy presentations.",
+    quote: "Their seasonal specials never fail to impress my taste buds!"
+  },
+  {
+    name: "Eco-conscious Emma",
+    behavior: "Always brings her own reusable cup, prefers organic and locally sourced options.",
+    painPoints: "Frustrated by excessive packaging or non-recyclable materials.",
+    motivations: "Seeks out cafes that align with her values of sustainability and environmental responsibility.",
+    quote: "I love how they prioritize sustainability in every aspect of their business!"
+  },
+  {
+    name: "Quick-stop Quincy",
+    behavior: "Rushes in for a quick coffee to-go, often during peak hours.",
+    painPoints: "Gets annoyed by long queues or slow service.",
+    motivations: "Looks for efficiency, speed, and consistency in his coffee run.",
+    quote: "No matter how busy it gets, I can always count on fast service and great coffee here!"
+  },
+  {
+    name: "Wellness Wendy",
+    behavior: "Prefers herbal teas and health-conscious menu options, often visits after yoga or gym sessions.",
+    painPoints: "Disappointed when there are limited healthy or dietary-specific options.",
+    motivations: "Seeks out cafes that offer nutritious choices and align with her wellness-focused lifestyle.",
+    quote: "I appreciate how they cater to various dietary needs without compromising on taste!"
+  }
+]
 
-export default function Personas() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
-
-  const scrollPrev = React.useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev()
-  }, [emblaApi])
-
-  const scrollNext = React.useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext()
-  }, [emblaApi])
+function PersonaCard({ persona }: { persona: typeof personas[0] }) {
+  const [isOpen, setIsOpen] = React.useState(false)
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto">
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
-          {personas.map((persona, index) => (
-            <div className="flex-[0_0_100%] min-w-0 pl-4" key={index}>
-              <Card className="w-full">
-                <CardContent className="p-6">
-                  <div className="flex items-center space-x-4 mb-4">
-                    <Avatar className="w-16 h-16">
-                      <AvatarImage src={`/placeholder.svg?height=64&width=64`} alt={persona.name} />
-                      <AvatarFallback>{persona.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                    </Avatar>
-                    <h3 className="text-2xl font-bold">{persona.name}</h3>
-                  </div>
-                  <p className="mb-2"><strong>Behavior:</strong> {persona.behavior}</p>
-                  <p className="mb-2"><strong>Pain Points:</strong> {persona.painPoints}</p>
-                  <p className="mb-2"><strong>Motivations:</strong> {persona.motivations}</p>
-                  <p className="italic mt-4">"{persona.quote}"</p>
-                </CardContent>
-              </Card>
-            </div>
-          ))}
+    <Card className="w-full">
+      <CardHeader>
+        <div className="flex items-center space-x-4">
+          <Avatar className="w-12 h-12">
+            <AvatarImage src={`/placeholder.svg?height=48&width=48`} alt={persona.name} />
+            <AvatarFallback>{persona.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+          </Avatar>
+          <CardTitle>{persona.name}</CardTitle>
         </div>
+      </CardHeader>
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+        <CollapsibleTrigger asChild>
+          <Button variant="ghost" className="w-full justify-between">
+            {isOpen ? "Hide Details" : "Show Details"}
+            {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <CardContent>
+            <p className="mb-2"><strong>Behavior:</strong> {persona.behavior}</p>
+            <p className="mb-2"><strong>Pain Points:</strong> {persona.painPoints}</p>
+            <p className="mb-2"><strong>Motivations:</strong> {persona.motivations}</p>
+            <p className="italic mt-4">"{persona.quote}"</p>
+          </CardContent>
+        </CollapsibleContent>
+      </Collapsible>
+    </Card>
+  )
+}
+
+export default function Personas() {
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h2 className="text-3xl font-bold mb-6 text-center">Customer Personas</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {personas.map((persona, index) => (
+          <PersonaCard key={index} persona={persona} />
+        ))}
       </div>
-      <Button 
-        variant="outline" 
-        size="icon" 
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2"
-        onClick={scrollPrev}
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="h-4 w-4" />
-      </Button>
-      <Button 
-        variant="outline" 
-        size="icon" 
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1/2"
-        onClick={scrollNext}
-        aria-label="Next slide"
-      >
-        <ChevronRight className="h-4 w-4" />
-      </Button>
     </div>
   )
 }
