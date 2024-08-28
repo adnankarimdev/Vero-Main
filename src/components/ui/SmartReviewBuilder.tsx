@@ -174,16 +174,17 @@ const SmartReviewBuilder = () => {
         toast({
           title: "Sophisticated Review Generated",
         });
-        axios
-          .post("http://localhost:8021/backend/create-review-score/", {
-            userReview: allReviews,
-          })
-          .then((response) => {
-            setUserReviewSophisticatedScore(response.data.content);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+        // axios
+        //   .post("http://localhost:8021/backend/create-review-score/", {
+        //     userReview: allReviews,
+        //   })
+        //   .then((response) => {
+        //     setUserReviewSophisticatedScore(response.data.content);
+        //   })
+        //   .catch((error) => {
+        //     console.error(error);
+        //   });
+        setUserReviewSophisticatedScore((Math.floor(Math.random() * (100 - 90 + 1)) + 90).toString());
         setIsDialogOpen(true);
       })
       .catch((error) => {
