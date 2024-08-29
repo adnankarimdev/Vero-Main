@@ -318,7 +318,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-center min-h-screen">
             <TutorialSteps steps={steps}/>
             <SmartReviewBuilder />
-            <ChatInterface/>
+            {/* <ChatInterface/> */}
           </div>
         </TabsContent>
 

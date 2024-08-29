@@ -184,13 +184,14 @@ const SmartReviewBuilder = () => {
 
   if (showInitialChoice) {
     return (
-      <Card className="w-full max-w-2xl mx-auto">
+      
+      <Card className="w-auto max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle>Choose Your Review Method</CardTitle>
+          <CardTitle className="text-center">Choose Your Review Method</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <Button onClick={() => setShowInitialChoice(false)} className="w-full">
-            Continue to Smart Reviewer
+            Continue to Redefeyn
           </Button>
           <Button onClick={handleGoToGoogleReview} className="w-full">
             Go Directly to Google Review
