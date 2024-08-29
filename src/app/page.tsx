@@ -5,6 +5,14 @@ import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { Bar, Pie, Line, Doughnut, Radar, PolarArea, Bubble, Scatter } from "react-chartjs-2";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { reviewsDataSimmons, reviewsDataBridgeland, reviewsDataCalgaryPlace, reviewsDataChinook, reviewsDataFarmers, reviewsDataHudsons, reviewsDataMarda, reviewsDataMissions, reviewsDataStephenAve, stopWordsArray } from "./constants/constants";
 import SmartReviewBuilder from "@/components/ui/SmartReviewBuilder";
 import Summary from "@/components/ui/Summary";
@@ -12,6 +20,7 @@ import Reviews from "@/components/ui/Reviews";
 import Keywords from "@/components/ui/Keywords";
 import AutoRespond from "@/components/ui/AutoRespond";
 import { KeywordCounts } from "@/components/Types/types";
+import { useRouter } from 'next/navigation';
 
 import {
   Chart as ChartJS,
@@ -30,6 +39,9 @@ import {
 import Personas from "@/components/ui/Personas";
 import TutorialSteps from "@/components/ui/TutorialSteps";
 import ChatInterface from "@/components/ui/ChatInterface";
+import NotionInterface from "@/components/ui/NotionInterface";
+import SmartReviewBuilderNew from "@/components/ui/SmartReviewBuilderNew";
+// import SmartReviewBuilderNew from "@/components/ui/SmartReviewBuilderNew";
 
 ChartJS.register(
   ArcElement,
@@ -46,6 +58,9 @@ ChartJS.register(
 );
 
 export default function Dashboard() {
+  const router = useRouter();
+  const [showReviewPlatform, setShowReviewPlatform] = useState(false)
+
   const preMadeQueries = [
     "Are there any noticeable trends in review ratings over time?",
     "What are the top issues customers mention in their reviews?",
@@ -126,9 +141,23 @@ export default function Dashboard() {
   const [returnedGraph, setReturnedGraph] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
+
   const handlePreMadeQueryClick = (query: string) => {
     setSearchQueryGpt(query);
   };
+
+  const handleGoToGoogleReview = () => {
+    window.open(
+      "https://search.google.com/local/writereview?placeid=ChIJzd0u2lRlcVMRoSTjaEEDL_E",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
+
+  const goToRedefeyn = () =>
+  {
+    setShowReviewPlatform(true)
+  }
 
   const { toast } = useToast();
   const threshold = 100;
@@ -258,7 +287,7 @@ export default function Dashboard() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Google Reviews Dashboard</h1>
       <Tabs defaultValue="summary">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="summary">Summary</TabsTrigger>
           <TabsTrigger value="reviews">Reviews</TabsTrigger>
           <TabsTrigger value="keywords">Top Keywords</TabsTrigger>
@@ -267,6 +296,7 @@ export default function Dashboard() {
           </TabsTrigger>
           <TabsTrigger value="smartReviews">Smart Reviews</TabsTrigger>
           <TabsTrigger value="personas">Customer Personas</TabsTrigger>
+          <TabsTrigger value="notion">Notion</TabsTrigger>
         </TabsList>
 
         <TabsContent value="summary">
@@ -315,15 +345,42 @@ export default function Dashboard() {
         </TabsContent>
 
         <TabsContent value="smartReviews">
-          <div className="flex items-center justify-center min-h-screen">
-            <TutorialSteps steps={steps}/>
-            <SmartReviewBuilder />
+          {!showReviewPlatform && (
+            <div className="flex items-center justify-center min-h-screen">
+                  <>
+                  <div className="flex items-center justify-center min-h-screen"></div>
+                    <TutorialSteps steps={steps} />
+                    {/* Uncomment the line below if you want to include SmartReviewBuilder */}
+                    {/* <SmartReviewBuilder /> */}
+                    <Card className="w-auto max-w-2xl mx-auto">
+                      <CardHeader>
+                        <CardTitle className="text-center">Choose Your Review Method</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <Button onClick={() => goToRedefeyn()} className="w-full">
+                          Continue to Redefeyn
+                        </Button>
+                        <Button onClick={handleGoToGoogleReview} className="w-full">
+                          Go Directly to Google Review
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </>
+                  </div>
+                )}
+                {showReviewPlatform && (<SmartReviewBuilderNew/>)}
             {/* <ChatInterface/> */}
-          </div>
+          
         </TabsContent>
 
         <TabsContent value="personas">
             <Personas />
+        </TabsContent>
+
+
+        <TabsContent value="notion">
+        <NotionInterface/>
+
         </TabsContent>
       </Tabs>
     </div>
