@@ -28,6 +28,8 @@ import {
   RadialLinearScale,
 } from "chart.js";
 import Personas from "@/components/ui/Personas";
+import TutorialSteps from "@/components/ui/TutorialSteps";
+import ChatInterface from "@/components/ui/ChatInterface";
 
 ChartJS.register(
   ArcElement,
@@ -76,6 +78,24 @@ export default function Dashboard() {
     "Breakfast Cafe",
     "Brunch Spot",
   ];
+
+  const steps = [
+    {
+      title: "Step 1: Share Your Thoughts",
+      description: "Quickly jot down your answers to our suggested topics, using your own unique style.",
+      emoji: "✏️"
+    },
+    {
+      title: "Step 2: See the Magic",
+      description: "If you want, Smart Review will enhance your response, making sure it's the best it can be based on what you wrote!",
+      emoji: "✨"
+    },
+    {
+      title: "Step 3: Submit Your Review",
+      description: "Once you're happy with it, send off your polished Google review!",
+      emoji: "🚀"
+    },
+  ]
 
   const negativeKeywords = [
     "Bad Service",
@@ -296,7 +316,9 @@ export default function Dashboard() {
 
         <TabsContent value="smartReviews">
           <div className="flex items-center justify-center min-h-screen">
+            <TutorialSteps steps={steps}/>
             <SmartReviewBuilder />
+            <ChatInterface/>
           </div>
         </TabsContent>
 

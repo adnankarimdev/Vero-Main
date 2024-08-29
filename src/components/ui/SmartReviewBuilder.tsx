@@ -30,25 +30,7 @@ const categories = [
   {
     name: "Experience and Atmosphere",
     questions: [
-      "What did you enjoy most about your visit to Phil and Sebastian?",
-      "How would you describe the atmosphere and ambiance of our coffee shop?",
-      "Was there a specific moment during your visit that stood out to you?",
-    ],
-  },
-  {
-    name: "Product and Quality",
-    questions: [
-      "What is your favorite drink or food item at Phil and Sebastian, and why?",
-      "How would you rate the quality of our coffee compared to other places you've tried?",
-      "Did you try any of our specialty drinks? What did you think of them?",
-    ],
-  },
-  {
-    name: "Service and Staff",
-    questions: [
-      "How was your interaction with our staff? Did anyone provide exceptional service?",
-      "Was the service at Phil and Sebastian up to your expectations?",
-      "How did our baristas help make your visit special?",
+      "What did you enjoy most about your visit to Phil and Sebastian? \n Did you try any of our specialty drinks? What did you think of them? \n Was the service at Phil and Sebastian up to your expectations?",
     ],
   },
 ];
