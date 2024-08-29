@@ -1,13 +1,13 @@
-import { CheckCircle } from "lucide-react"
+import { CheckCircle } from "lucide-react";
 
 interface Step {
-  title: string
-  description: string
-  emoji: string
+  title: string;
+  description: string;
+  emoji: string;
 }
 
 interface TutorialStepsProps {
-  steps: Step[]
+  steps: Step[];
 }
 
 export default function TutorialSteps({ steps }: TutorialStepsProps) {
@@ -22,11 +22,6 @@ export default function TutorialSteps({ steps }: TutorialStepsProps) {
             </span>
             <h3 className="flex items-center mb-1 text-lg font-semibold text-gray-900 dark:text-white">
               {step.title}
-              {index === steps.length - 1 && (
-                <span className="bg-primary text-primary-foreground text-sm font-medium mr-2 px-2.5 py-0.5 rounded ml-3">
-                  Latest
-                </span>
-              )}
             </h3>
             <p className="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
               {step.description}
@@ -35,5 +30,5 @@ export default function TutorialSteps({ steps }: TutorialStepsProps) {
         ))}
       </ol>
     </div>
-  )
+  );
 }

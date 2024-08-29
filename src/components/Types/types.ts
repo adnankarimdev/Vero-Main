@@ -1,9 +1,9 @@
 export type KeywordCounts = {
-    [key: string]: number;
-  };
+  [key: string]: number;
+};
 
-  export type Block = {
-    id: string
-    type: 'text' | 'bullet'
-    content: string
-  }
+export type Block = {
+  id: string;
+  type: "text" | "bullet";
+  content: string;
+};

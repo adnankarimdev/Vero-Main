@@ -4,7 +4,16 @@ import { useState } from "react";
 import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
-import { Bar, Pie, Line, Doughnut, Radar, PolarArea, Bubble, Scatter } from "react-chartjs-2";
+import {
+  Bar,
+  Pie,
+  Line,
+  Doughnut,
+  Radar,
+  PolarArea,
+  Bubble,
+  Scatter,
+} from "react-chartjs-2";
 import {
   Card,
   CardContent,
@@ -13,14 +22,25 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { reviewsDataSimmons, reviewsDataBridgeland, reviewsDataCalgaryPlace, reviewsDataChinook, reviewsDataFarmers, reviewsDataHudsons, reviewsDataMarda, reviewsDataMissions, reviewsDataStephenAve, stopWordsArray } from "./constants/constants";
+import {
+  reviewsDataSimmons,
+  reviewsDataBridgeland,
+  reviewsDataCalgaryPlace,
+  reviewsDataChinook,
+  reviewsDataFarmers,
+  reviewsDataHudsons,
+  reviewsDataMarda,
+  reviewsDataMissions,
+  reviewsDataStephenAve,
+  stopWordsArray,
+} from "./constants/constants";
 import SmartReviewBuilder from "@/components/ui/SmartReviewBuilder";
 import Summary from "@/components/ui/Summary";
 import Reviews from "@/components/ui/Reviews";
 import Keywords from "@/components/ui/Keywords";
 import AutoRespond from "@/components/ui/AutoRespond";
 import { KeywordCounts } from "@/components/Types/types";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 import {
   Chart as ChartJS,
@@ -59,7 +79,7 @@ ChartJS.register(
 
 export default function Dashboard() {
   const router = useRouter();
-  const [showReviewPlatform, setShowReviewPlatform] = useState(false)
+  const [showReviewPlatform, setShowReviewPlatform] = useState(false);
 
   const preMadeQueries = [
     "Are there any noticeable trends in review ratings over time?",
@@ -97,20 +117,23 @@ export default function Dashboard() {
   const steps = [
     {
       title: "Step 1: Share Your Thoughts",
-      description: "Quickly jot down your answers to our suggested topics, using your own unique style.",
-      emoji: "✏️"
+      description:
+        "Quickly jot down your answers to questions by Phil & Sebastian, using your own unique style.",
+      emoji: "✏️",
     },
     {
       title: "Step 2: See the Magic",
-      description: "If you want, Smart Review will enhance your response, making sure it's the best it can be based on what you wrote!",
-      emoji: "✨"
+      description:
+        "If you want, Redefeyn will enhance your response, making sure it's the best it can be based on what you wrote!",
+      emoji: "✨",
     },
     {
       title: "Step 3: Submit Your Review",
-      description: "Once you're happy with it, send off your polished Google review!",
-      emoji: "🚀"
+      description:
+        "Once you're happy with it, send off your polished Google review!",
+      emoji: "🚀",
     },
-  ]
+  ];
 
   const negativeKeywords = [
     "Bad Service",
@@ -134,13 +157,12 @@ export default function Dashboard() {
     "Underwhelming",
     "Poor WiFi",
   ];
-  
+
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchQueryGpt, setSearchQueryGpt] = useState<string>("");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   const [returnedGraph, setReturnedGraph] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
 
   const handlePreMadeQueryClick = (query: string) => {
     setSearchQueryGpt(query);
@@ -154,10 +176,9 @@ export default function Dashboard() {
     );
   };
 
-  const goToRedefeyn = () =>
-  {
-    setShowReviewPlatform(true)
-  }
+  const goToRedefeyn = () => {
+    setShowReviewPlatform(true);
+  };
 
   const { toast } = useToast();
   const threshold = 100;
@@ -189,13 +210,11 @@ export default function Dashboard() {
       : true
   );
 
-  const positiveKeywordCounts: { [key: string]: number } = positiveKeywords.reduce(
-    (acc: KeywordCounts, keyword) => {
+  const positiveKeywordCounts: { [key: string]: number } =
+    positiveKeywords.reduce((acc: KeywordCounts, keyword) => {
       acc[keyword] = 0;
       return acc;
-    },
-    {}
-  );
+    }, {});
 
   const handleSubmit = () => {
     setLoading(true);
@@ -254,7 +273,7 @@ export default function Dashboard() {
       acc[keyword] = 0;
       return acc;
     },
-    {} as KeywordCounts,
+    {} as KeywordCounts
   );
 
   reviewsData.forEach((review) => {
@@ -285,18 +304,18 @@ export default function Dashboard() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Google Reviews Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-4">Redefeyn Dashboard</h1>
       <Tabs defaultValue="summary">
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="summary">Summary</TabsTrigger>
+          <TabsTrigger value="smartReviews">Smart Reviews</TabsTrigger>
           <TabsTrigger value="reviews">Reviews</TabsTrigger>
           <TabsTrigger value="keywords">Top Keywords</TabsTrigger>
           <TabsTrigger value="Auto Respond to Reviews">
             Auto Respond to Reviews
           </TabsTrigger>
-          <TabsTrigger value="smartReviews">Smart Reviews</TabsTrigger>
+          
           <TabsTrigger value="personas">Customer Personas</TabsTrigger>
-          <TabsTrigger value="notion">Notion</TabsTrigger>
         </TabsList>
 
         <TabsContent value="summary">
@@ -346,41 +365,34 @@ export default function Dashboard() {
 
         <TabsContent value="smartReviews">
           {!showReviewPlatform && (
-            <div className="flex items-center justify-center min-h-screen">
-                  <>
-                  <div className="flex items-center justify-center min-h-screen"></div>
-                    <TutorialSteps steps={steps} />
-                    {/* Uncomment the line below if you want to include SmartReviewBuilder */}
-                    {/* <SmartReviewBuilder /> */}
-                    <Card className="w-auto max-w-2xl mx-auto">
-                      <CardHeader>
-                        <CardTitle className="text-center">Choose Your Review Method</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <Button onClick={() => goToRedefeyn()} className="w-full">
-                          Continue to Redefeyn
-                        </Button>
-                        <Button onClick={handleGoToGoogleReview} className="w-full">
-                          Go Directly to Google Review
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </>
-                  </div>
-                )}
-                {showReviewPlatform && (<SmartReviewBuilderNew/>)}
-            {/* <ChatInterface/> */}
-          
+            <div className="flex items-start justify-center min-h-screen space-x-4">
+              {/* Tutorial Steps Component */}
+              <TutorialSteps steps={steps} />
+
+              {/* Card Component */}
+              <Card className="w-auto max-w-2xl mx-auto mt-10">
+                <CardHeader>
+                  <CardTitle className="text-center">
+                    Choose Your Review Method
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Button onClick={() => goToRedefeyn()} className="w-full">
+                    Continue to Redefeyn
+                  </Button>
+                  <Button onClick={handleGoToGoogleReview} className="w-full">
+                    Go Directly to Google Review
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+          {showReviewPlatform && <SmartReviewBuilderNew />}
+          {/* <ChatInterface/> */}
         </TabsContent>
 
         <TabsContent value="personas">
-            <Personas />
-        </TabsContent>
-
-
-        <TabsContent value="notion">
-        <NotionInterface/>
-
+          <Personas />
         </TabsContent>
       </Tabs>
     </div>

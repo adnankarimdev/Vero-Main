@@ -27,7 +27,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Block } from "@/components/Types/types";
-import { Bold, Italic, Plus, Circle } from 'lucide-react'
+import { Bold, Italic, Plus, Circle } from "lucide-react";
 
 const categories = [
   {
@@ -40,15 +40,15 @@ const categories = [
 
 const SmartReviewBuilderNew = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [title, setTitle] = useState('P&S')
-    const [questions, setQuestions] = useState([
-    'What did you enjoy most about your visit to Phil and Sebastian?',
-    'Did you try any of our specialty drinks? What did you think of them?',
-    'Was the service at Phil and Sebastian up to your expectations?'
+  const [title, setTitle] = useState("P&S");
+  const [questions, setQuestions] = useState([
+    "What did you enjoy about your visit to Phil and Sebastian, if anything?",
+    "Did you try any of our specialty drinks? If so, how would you describe your experience?",
+    "How was the service during your visit to Phil and Sebastian?",
   ]);
   const [blocks, setBlocks] = useState<Block[]>([
-    { id: '1', type: 'text', content: '' }
-  ])
+    { id: "1", type: "text", content: "" },
+  ]);
   const [reviews, setReviews] = useState<string[]>(
     new Array(categories.length).fill("")
   );
@@ -62,6 +62,8 @@ const SmartReviewBuilderNew = () => {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [showInitialChoice, setShowInitialChoice] = useState(true);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [placeholder, setPlaceholder] = useState("✍🏻");
 
   useEffect(() => {
     const questions = categories.map(
@@ -178,7 +180,9 @@ const SmartReviewBuilderNew = () => {
         //   .catch((error) => {
         //     console.error(error);
         //   });
-        setUserReviewSophisticatedScore((Math.floor(Math.random() * (100 - 90 + 1)) + 90).toString());
+        setUserReviewSophisticatedScore(
+          (Math.floor(Math.random() * (100 - 90 + 1)) + 90).toString()
+        );
         setIsDialogOpen(true);
       })
       .catch((error) => {
@@ -195,34 +199,38 @@ const SmartReviewBuilderNew = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, id: string) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      const currentBlock = blocks.find(block => block.id === id)
-      const newBlock: Block = { 
-        id: Date.now().toString(), 
-        type: currentBlock?.type || 'text', 
-        content: '' 
-      }
-      setBlocks(blocks => {
-        const index = blocks.findIndex(block => block.id === id)
-        return [...blocks.slice(0, index + 1), newBlock, ...blocks.slice(index + 1)]
-      })
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      const currentBlock = blocks.find((block) => block.id === id);
+      const newBlock: Block = {
+        id: Date.now().toString(),
+        type: currentBlock?.type || "text",
+        content: "",
+      };
+      setBlocks((blocks) => {
+        const index = blocks.findIndex((block) => block.id === id);
+        return [
+          ...blocks.slice(0, index + 1),
+          newBlock,
+          ...blocks.slice(index + 1),
+        ];
+      });
     }
-  }
-  const addBlock = (type: 'text' | 'bullet') => {
-    const newBlock: Block = { 
-      id: Date.now().toString(), 
-      type, 
-      content: ''
-    }
-    setBlocks(blocks => [...blocks, newBlock])
-  }
+  };
+  const addBlock = (type: "text" | "bullet") => {
+    const newBlock: Block = {
+      id: Date.now().toString(),
+      type,
+      content: "",
+    };
+    setBlocks((blocks) => [...blocks, newBlock]);
+  };
   const handleBlockChange = (id: string, content: string) => {
-    setBlocks(blocks.map(block => 
-      block.id === id ? { ...block, content } : block
-    ))
-  }
-  
+    setBlocks(
+      blocks.map((block) => (block.id === id ? { ...block, content } : block))
+    );
+  };
+
   if (isDialogOpen) {
     return (
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -282,36 +290,48 @@ const SmartReviewBuilderNew = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-4">
-    <p className="text-3xl font-bold">
-      {title || 'Untitled'}
-    </p>
-  <div>
-    {questions.map((question, index) => (
-      <Input
-        key={index}
-        value={question}
-        className="text-sm font-italic border-none outline-none"
-        placeholder="Untitled"
-        disabled
-      />
-    ))}
-  </div>
-
-            <div className="flex-grow">
-              <Textarea
-                value={reviews[currentStep]}
-                onChange={(e) => handleReviewChange(e.target.value)}
-                className="w-full border-none outline-none"
-                style={{ resize: 'none' }}
-                rows={1}
-                placeholder={'✍🏻'}
-              />
-            </div>
-
-            <div className="flex justify-end space-x-2">
-                {currentStep === categories.length - 1 ? <Send onClick={handleNext}/>: <CircleArrowRight />}
-            </div>
+      <p className="text-3xl font-bold">{title || "Untitled"}</p>
+      <div className="max mx-auto p-6 bg-white rounded-lg shadow-sm">
+        <ul className="space-y-4">
+          {questions.map((item, index) => (
+            <li
+              key={index}
+              className="flex items-start space-x-3 transition-opacity duration-300 ease-in-out"
+              style={{
+                opacity:
+                  hoveredIndex === null || hoveredIndex === index ? 1 : 0.5,
+              }}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+            >
+              <span className="flex-shrink-0 w-1.5 h-1.5 mt-2 rounded-full bg-gray-400" />
+              <span className="text-gray-700">{item}</span>
+            </li>
+          ))}
+        </ul>
       </div>
+
+      <div className="flex-grow">
+        <Textarea
+          value={reviews[currentStep]}
+          onFocus={() => setPlaceholder("")} // Clear placeholder on focus
+          onBlur={() => setPlaceholder(reviews[currentStep] ? "" : "✍🏻")}
+          onChange={(e) => handleReviewChange(e.target.value)}
+          className="w-full border-none outline-none"
+          style={{ resize: "none" }}
+          rows={1}
+          placeholder={placeholder}
+        />
+      </div>
+
+      <div className="flex justify-end space-x-2">
+        {currentStep === categories.length - 1 ? (
+          <Send onClick={handleNext} />
+        ) : (
+          <CircleArrowRight />
+        )}
+      </div>
+    </div>
   );
 };
 

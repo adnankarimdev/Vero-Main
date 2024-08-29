@@ -166,7 +166,9 @@ const SmartReviewBuilder = () => {
         //   .catch((error) => {
         //     console.error(error);
         //   });
-        setUserReviewSophisticatedScore((Math.floor(Math.random() * (100 - 90 + 1)) + 90).toString());
+        setUserReviewSophisticatedScore(
+          (Math.floor(Math.random() * (100 - 90 + 1)) + 90).toString()
+        );
         setIsDialogOpen(true);
       })
       .catch((error) => {
@@ -184,13 +186,17 @@ const SmartReviewBuilder = () => {
 
   if (showInitialChoice) {
     return (
-      
       <Card className="w-auto max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle className="text-center">Choose Your Review Method</CardTitle>
+          <CardTitle className="text-center">
+            Choose Your Review Method
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button onClick={() => setShowInitialChoice(false)} className="w-full">
+          <Button
+            onClick={() => setShowInitialChoice(false)}
+            className="w-full"
+          >
             Continue to Redefeyn
           </Button>
           <Button onClick={handleGoToGoogleReview} className="w-full">
@@ -281,7 +287,11 @@ const SmartReviewBuilder = () => {
           <CircleArrowLeft />
         </Button>
         <Button onClick={handleNext}>
-          {currentStep === categories.length - 1 ? <BadgeCheck /> : <CircleArrowRight />}
+          {currentStep === categories.length - 1 ? (
+            <BadgeCheck />
+          ) : (
+            <CircleArrowRight />
+          )}
         </Button>
       </CardFooter>
     </Card>
