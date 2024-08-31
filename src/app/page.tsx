@@ -304,7 +304,7 @@ export default function Dashboard() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Redefeyn Dashboard</h1>
+      {/* <h1 className="text-2xl font-bold mb-4">Redefeyn Dashboard</h1>
       <Tabs defaultValue="summary">
         <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="summary">Summary</TabsTrigger>
@@ -361,40 +361,40 @@ export default function Dashboard() {
 
         <TabsContent value="Auto Respond to Reviews">
           <AutoRespond />
-        </TabsContent>
+        </TabsContent> */}
 
-        <TabsContent value="smartReviews">
+        {/* <TabsContent value="smartReviews"> */}
           {!showReviewPlatform && (
-            <div className="flex items-start justify-center min-h-screen space-x-4">
-              {/* Tutorial Steps Component */}
-              <TutorialSteps steps={steps} />
+            <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
+  {/* Tutorial Steps Component */}
+  <TutorialSteps steps={steps} />
 
-              {/* Card Component */}
-              <Card className="w-auto max-w-2xl mx-auto mt-10">
-                <CardHeader>
-                  <CardTitle className="text-center">
-                    Choose Your Review Method
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <Button onClick={() => goToRedefeyn()} className="w-full">
-                    Continue to Redefeyn
-                  </Button>
-                  <Button onClick={handleGoToGoogleReview} className="w-full">
-                    Go Directly to Google Review
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
+  {/* Card Component */}
+  <Card className="w-auto max-w-2xl mx-auto mt-10">
+    <CardHeader>
+      <CardTitle className="text-center">
+        Choose Your Review Method
+      </CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-4">
+      <Button onClick={() => goToRedefeyn()} className="w-full">
+        Continue to Redefeyn
+      </Button>
+      <Button onClick={handleGoToGoogleReview} className="w-full">
+        Go Directly to Google Review
+      </Button>
+    </CardContent>
+  </Card>
+</div>
           )}
           {showReviewPlatform && <SmartReviewBuilderNew />}
           {/* <ChatInterface/> */}
-        </TabsContent>
+        {/* </TabsContent> */}
 
-        <TabsContent value="personas">
+        {/* <TabsContent value="personas">
           <Personas />
         </TabsContent>
-      </Tabs>
+      </Tabs> */}
     </div>
   );
 }
