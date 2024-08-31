@@ -61,6 +61,7 @@ import TutorialSteps from "@/components/ui/TutorialSteps";
 import ChatInterface from "@/components/ui/ChatInterface";
 import NotionInterface from "@/components/ui/NotionInterface";
 import SmartReviewBuilderNew from "@/components/ui/SmartReviewBuilderNew";
+import AuthPage from "@/components/ui/AuthPage";
 // import SmartReviewBuilderNew from "@/components/ui/SmartReviewBuilderNew";
 
 ChartJS.register(
@@ -306,7 +307,8 @@ export default function Dashboard() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Redefeyn Dashboard</h1>
       <Tabs defaultValue="summary">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
+          <TabsTrigger value="signup">Sign Up</TabsTrigger>
           <TabsTrigger value="summary">Summary</TabsTrigger>
           <TabsTrigger value="reviews">Reviews</TabsTrigger>
           <TabsTrigger value="keywords">Top Keywords</TabsTrigger>
@@ -316,6 +318,10 @@ export default function Dashboard() {
           <TabsTrigger value="personas">Customer Personas</TabsTrigger>
         </TabsList>
 
+
+        <TabsContent value="signup">
+          <AuthPage/>
+          </TabsContent>
         <TabsContent value="summary">
           <Summary
             averageRating={averageRating}
