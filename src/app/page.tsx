@@ -319,9 +319,13 @@ export default function Dashboard() {
         </TabsList>
 
 
+              
         <TabsContent value="signup">
-          <AuthPage/>
-          </TabsContent>
+        <div className="flex items-center justify-center min-h-screen">
+          <AuthPage />
+          </div>
+        </TabsContent>
+     
         <TabsContent value="summary">
           <Summary
             averageRating={averageRating}
