@@ -6,9 +6,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Loader2, LucideProps } from "lucide-react"
 import { FaGoogle } from "react-icons/fa";
+import axios from "axios"
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation"
 
 export default function AuthPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [buisnessName, setBuisnessName] = useState('')
+  const { toast } = useToast();
+  const router = useRouter()
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault()
@@ -17,6 +25,57 @@ export default function AuthPage() {
     setTimeout(() => {
       setIsLoading(false)
     }, 3000)
+  }
+
+  const handleLogin = () =>
+  {
+    axios
+    .post("http://localhost:8021/backend/login/", {
+        email: email,
+        password: password,
+    })
+    .then((response) => {
+        toast({
+            title: "Successfully Logged In",
+            description: "Welcome to Redefeyn.",
+          });
+          setTimeout(() => {
+            router.push('/dashboard')
+          }, 2000);
+    })
+    .catch((error) => {
+        console.log(error)
+        toast({
+            title: "Failed to login",
+            description: error.response.data.error,
+          });
+    });
+  }
+  const handleSignUp = () =>
+  {
+
+    // TODO: add valdiation steps here
+    axios
+    .post("http://localhost:8021/backend/sign-up/", {
+        email: email,
+        password: password,
+        business_name: buisnessName,
+    })
+    .then((response) => {
+        toast({
+            title: "User Created",
+            description: "Welcome to Redefeyn.",
+          });
+          setTimeout(() => {
+            router.push('/dashboard')
+          }, 2000);
+    })
+    .catch((error) => {
+        toast({
+            title: "Failed to sign up.",
+            description: "It's not you, it's us. Please try again.",
+          });
+    });
   }
 
   return (
@@ -41,6 +100,8 @@ export default function AuthPage() {
                   <Input
                     id="email"
                     placeholder="name@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     autoCapitalize="none"
                     autoComplete="email"
@@ -52,6 +113,8 @@ export default function AuthPage() {
                   </Label>
                   <Input
                     id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
                     type="password"
                     autoCapitalize="none"
@@ -59,7 +122,7 @@ export default function AuthPage() {
                     disabled={isLoading}
                   />
                 </div>
-                <Button disabled={isLoading}>
+                <Button disabled={isLoading} onClick={handleLogin}>
                   {isLoading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
@@ -72,11 +135,26 @@ export default function AuthPage() {
             <form onSubmit={onSubmit}>
               <div className="grid gap-2">
                 <div className="grid gap-1">
+                <Label className="sr-only" htmlFor="email">
+                    Buisness Name
+                  </Label>
+                  <Input
+                    id="buisnessName"
+                    value={buisnessName}
+                    onChange={(e) => setBuisnessName(e.target.value)}
+                    placeholder="Phil & Sebastian"
+                    type="text"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    disabled={isLoading}
+                  />
                   <Label className="sr-only" htmlFor="email">
                     Email
                   </Label>
                   <Input
                     id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@example.com"
                     type="email"
                     autoCapitalize="none"
@@ -89,14 +167,17 @@ export default function AuthPage() {
                   </Label>
                   <Input
                     id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
                     type="password"
                     autoCapitalize="none"
                     autoComplete="new-password"
                     disabled={isLoading}
                   />
+
                 </div>
-                <Button disabled={isLoading}>
+                <Button disabled={isLoading} onClick={handleSignUp}>
                   {isLoading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}

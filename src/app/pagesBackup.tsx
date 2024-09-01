@@ -33,7 +33,7 @@ import {
   reviewsDataMissions,
   reviewsDataStephenAve,
   stopWordsArray,
-} from "./constants/constants";
+} from "../constants/constants";
 import SmartReviewBuilder from "@/components/ui/SmartReviewBuilder";
 import Summary from "@/components/ui/Summary";
 import Reviews from "@/components/ui/Reviews";
@@ -61,6 +61,9 @@ import TutorialSteps from "@/components/ui/TutorialSteps";
 import ChatInterface from "@/components/ui/ChatInterface";
 import NotionInterface from "@/components/ui/NotionInterface";
 import SmartReviewBuilderNew from "@/components/ui/SmartReviewBuilderNew";
+import AuthPage from "@/components/ui/AuthPage";
+import ClientSettings from "@/components/ui/ClientSettings";
+import Sidebar from "@/components/Sidebar";
 // import SmartReviewBuilderNew from "@/components/ui/SmartReviewBuilderNew";
 
 ChartJS.register(
@@ -227,9 +230,9 @@ export default function Dashboard() {
         const codeString = response.data["content"]
           .replace(/```jsx/g, "")
           .replace(/```/g, "");
-        toast({
-          title: "Graph Generated",
-        });
+        // toast({
+        //   title: "Graph Generated",
+        // });
         setReturnedGraph(codeString);
         setLoading(false);
       })
@@ -296,6 +299,10 @@ export default function Dashboard() {
     });
   });
 
+  const nextpage = () =>
+  {
+    router.push('/dashboard')
+  }
   const ratings = reviewsData.map((review) => parseInt(review.rating));
   const totalReviews = ratings.length;
   const averageRating = (
@@ -306,18 +313,28 @@ export default function Dashboard() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Redefeyn Dashboard</h1>
       <Tabs defaultValue="summary">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="signup">Sign Up </TabsTrigger>
+          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="summary">Summary</TabsTrigger>
-          <TabsTrigger value="smartReviews">Smart Reviews</TabsTrigger>
           <TabsTrigger value="reviews">Reviews</TabsTrigger>
-          <TabsTrigger value="keywords">Top Keywords</TabsTrigger>
+          {/* <TabsTrigger value="keywords">Top Keywords</TabsTrigger> */}
           <TabsTrigger value="Auto Respond to Reviews">
             Auto Respond to Reviews
           </TabsTrigger>
-          
-          <TabsTrigger value="personas">Customer Personas</TabsTrigger>
+
+        
+          {/* <TabsTrigger value="personas">Customer Personas</TabsTrigger> */}
         </TabsList>
 
+
+              
+        <TabsContent value="signup">
+        <div className="flex items-center justify-center min-h-screen">
+          <AuthPage />
+          </div>
+        </TabsContent>
+     
         <TabsContent value="summary">
           <Summary
             averageRating={averageRating}
@@ -339,9 +356,12 @@ export default function Dashboard() {
             ScatterChart={Scatter}
             toast={toast}
           />
+          
+          <Button onClick={nextpage}>Redirect</Button>
         </TabsContent>
 
         <TabsContent value="reviews">
+        <Sidebar></Sidebar>
           <Reviews
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -349,6 +369,8 @@ export default function Dashboard() {
             setSelectedLocation={setSelectedLocation}
             finalFilteredReviews={finalFilteredReviews}
           />
+          
+          
         </TabsContent>
 
         <TabsContent value="keywords">
@@ -363,32 +385,8 @@ export default function Dashboard() {
           <AutoRespond />
         </TabsContent>
 
-        <TabsContent value="smartReviews">
-          {!showReviewPlatform && (
-            <div className="flex items-start justify-center min-h-screen space-x-4">
-              {/* Tutorial Steps Component */}
-              <TutorialSteps steps={steps} />
-
-              {/* Card Component */}
-              <Card className="w-auto max-w-2xl mx-auto mt-10">
-                <CardHeader>
-                  <CardTitle className="text-center">
-                    Choose Your Review Method
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <Button onClick={() => goToRedefeyn()} className="w-full">
-                    Continue to Redefeyn
-                  </Button>
-                  <Button onClick={handleGoToGoogleReview} className="w-full">
-                    Go Directly to Google Review
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-          {showReviewPlatform && <SmartReviewBuilderNew />}
-          {/* <ChatInterface/> */}
+        <TabsContent value="dashboard">
+          <ClientSettings />
         </TabsContent>
 
         <TabsContent value="personas">
