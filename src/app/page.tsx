@@ -62,6 +62,7 @@ import ChatInterface from "@/components/ui/ChatInterface";
 import NotionInterface from "@/components/ui/NotionInterface";
 import SmartReviewBuilderNew from "@/components/ui/SmartReviewBuilderNew";
 import AuthPage from "@/components/ui/AuthPage";
+import ClientSettings from "@/components/ui/ClientSettings";
 // import SmartReviewBuilderNew from "@/components/ui/SmartReviewBuilderNew";
 
 ChartJS.register(
@@ -307,15 +308,16 @@ export default function Dashboard() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Redefeyn Dashboard</h1>
       <Tabs defaultValue="summary">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="signup">Sign Up</TabsTrigger>
+          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="summary">Summary</TabsTrigger>
           <TabsTrigger value="reviews">Reviews</TabsTrigger>
-          <TabsTrigger value="keywords">Top Keywords</TabsTrigger>
+          {/* <TabsTrigger value="keywords">Top Keywords</TabsTrigger> */}
           <TabsTrigger value="Auto Respond to Reviews">
             Auto Respond to Reviews
           </TabsTrigger>
-          <TabsTrigger value="personas">Customer Personas</TabsTrigger>
+          {/* <TabsTrigger value="personas">Customer Personas</TabsTrigger> */}
         </TabsList>
 
 
@@ -371,6 +373,10 @@ export default function Dashboard() {
 
         <TabsContent value="Auto Respond to Reviews">
           <AutoRespond />
+        </TabsContent>
+
+        <TabsContent value="dashboard">
+          <ClientSettings />
         </TabsContent>
 
         <TabsContent value="personas">
