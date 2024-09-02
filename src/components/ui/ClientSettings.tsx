@@ -125,7 +125,7 @@ export default function ClientSettings() {
       // Here you would typically send the settings to your backend
       console.log("Saving settings:", settings);
       axios
-        .post("http://localhost:8021/backend/save-review-settings/", settings)
+        .post("http://10.0.0.239:8021/backend/save-review-settings/", settings)
         .then((response) => {
           toast({
             title: "Success",
@@ -150,7 +150,7 @@ export default function ClientSettings() {
     const fetchReviewSettings = async (placeId = "123") => {
       try {
         const response = await axios.get(
-          `http://localhost:8021/backend/get-review-settings/${placeId}/`
+          `http://10.0.0.239:8021/backend/get-review-settings/${placeId}/`
         );
         console.log(response);
         setSettings(response.data);

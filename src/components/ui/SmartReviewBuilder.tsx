@@ -73,7 +73,7 @@ const SmartReviewBuilder = () => {
     } else {
       const userReviews = reviews.join("\n");
       axios
-        .post("http://localhost:8021/backend/create-review-score/", {
+        .post("http://10.0.0.239:8021/backend/create-review-score/", {
           userReview: userReviews,
         })
         .then((response) => {
@@ -148,7 +148,7 @@ const SmartReviewBuilder = () => {
   const handleSophisticateReview = () => {
     const allReviews = reviews.join("\n");
     axios
-      .post("http://localhost:8021/backend/create-review/", {
+      .post("http://10.0.0.239:8021/backend/create-review/", {
         allReviewsToSend: allReviews,
       })
       .then((response) => {
@@ -157,7 +157,7 @@ const SmartReviewBuilder = () => {
           title: "Sophisticated Review Generated",
         });
         // axios
-        //   .post("http://localhost:8021/backend/create-review-score/", {
+        //   .post("http://10.0.0.239:8021/backend/create-review-score/", {
         //     userReview: allReviews,
         //   })
         //   .then((response) => {

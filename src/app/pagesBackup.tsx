@@ -223,7 +223,7 @@ export default function Dashboard() {
     setLoading(true);
     setReturnedGraph("");
     axios
-      .post("http://localhost:8021/backend/create-charts/", {
+      .post("http://10.0.0.239:8021/backend/create-charts/", {
         query: searchQueryGpt,
       })
       .then((response) => {
