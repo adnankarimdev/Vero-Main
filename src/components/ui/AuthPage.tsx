@@ -1,82 +1,85 @@
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Loader2, LucideProps } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Loader2, LucideProps } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
-import axios from "axios"
+import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
 
 export default function AuthPage() {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [buisnessName, setBuisnessName] = useState('')
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [buisnessName, setBuisnessName] = useState("");
   const { toast } = useToast();
-  const router = useRouter()
+  const router = useRouter();
 
   async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault()
-    setIsLoading(true)
+    event.preventDefault();
+    setIsLoading(true);
 
     setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
+      setIsLoading(false);
+    }, 3000);
   }
 
-  const handleLogin = () =>
-  {
+  const handleLogin = () => {
     axios
-    .post("http://localhost:8021/backend/login/", {
+      .post("http://localhost:8021/backend/login/", {
         email: email,
         password: password,
-    })
-    .then((response) => {
+      })
+      .then((response) => {
         toast({
-            title: "Successfully Logged In",
-            description: "Welcome to Redefeyn.",
-          });
-          setTimeout(() => {
-            router.push('/dashboard')
-          }, 2000);
-    })
-    .catch((error) => {
-        console.log(error)
+          title: "Successfully Logged In",
+          description: "Welcome to Redefeyn.",
+        });
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 2000);
+      })
+      .catch((error) => {
+        console.log(error);
         toast({
-            title: "Failed to login",
-            description: error.response.data.error,
-          });
-    });
-  }
-  const handleSignUp = () =>
-  {
-
+          title: "Failed to login",
+          description: error.response.data.error,
+        });
+      });
+  };
+  const handleSignUp = () => {
     // TODO: add valdiation steps here
     axios
-    .post("http://localhost:8021/backend/sign-up/", {
+      .post("http://localhost:8021/backend/sign-up/", {
         email: email,
         password: password,
         business_name: buisnessName,
-    })
-    .then((response) => {
+      })
+      .then((response) => {
         toast({
-            title: "User Created",
-            description: "Welcome to Redefeyn.",
-          });
-          setTimeout(() => {
-            router.push('/dashboard')
-          }, 2000);
-    })
-    .catch((error) => {
+          title: "User Created",
+          description: "Welcome to Redefeyn.",
+        });
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 2000);
+      })
+      .catch((error) => {
         toast({
-            title: "Failed to sign up.",
-            description: "It's not you, it's us. Please try again.",
-          });
-    });
-  }
+          title: "Failed to sign up.",
+          description: "It's not you, it's us. Please try again.",
+        });
+      });
+  };
 
   return (
     <Card className="w-[350px]">
@@ -135,7 +138,7 @@ export default function AuthPage() {
             <form onSubmit={onSubmit}>
               <div className="grid gap-2">
                 <div className="grid gap-1">
-                <Label className="sr-only" htmlFor="email">
+                  <Label className="sr-only" htmlFor="email">
                     Buisness Name
                   </Label>
                   <Input
@@ -175,7 +178,6 @@ export default function AuthPage() {
                     autoComplete="new-password"
                     disabled={isLoading}
                   />
-
                 </div>
                 <Button disabled={isLoading} onClick={handleSignUp}>
                   {isLoading && (
@@ -197,7 +199,12 @@ export default function AuthPage() {
             </span>
           </div>
         </div>
-        <Button variant="outline" type="button" disabled={isLoading} className="w-full">
+        <Button
+          variant="outline"
+          type="button"
+          disabled={isLoading}
+          className="w-full"
+        >
           {isLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
@@ -207,5 +214,5 @@ export default function AuthPage() {
         </Button>
       </CardContent>
     </Card>
-  )
+  );
 }

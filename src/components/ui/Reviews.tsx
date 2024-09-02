@@ -82,6 +82,5 @@ export default function ReviewsTab({
         </div>
       </CardContent>
     </Card>
-    
   );
 }

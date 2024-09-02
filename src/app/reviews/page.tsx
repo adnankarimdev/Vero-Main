@@ -15,7 +15,6 @@ import {
 import Reviews from "@/components/ui/Reviews";
 
 export default function Dashboard() {
-
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
 
@@ -48,13 +47,13 @@ export default function Dashboard() {
 
   return (
     <div className="container mx-auto p-4">
-            <Reviews
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            uniqueLocations={uniqueLocations}
-            setSelectedLocation={setSelectedLocation}
-            finalFilteredReviews={finalFilteredReviews}
-          />
+      <Reviews
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        uniqueLocations={uniqueLocations}
+        setSelectedLocation={setSelectedLocation}
+        finalFilteredReviews={finalFilteredReviews}
+      />
     </div>
   );
 }

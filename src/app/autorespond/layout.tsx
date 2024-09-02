@@ -1,16 +1,14 @@
-import Sidebar from "@/components/ui/Sidebar"
+import Sidebar from "@/components/ui/Sidebar";
 
 type LayoutProps = {
-    children: React.ReactNode;
-  };
-  
+  children: React.ReactNode;
+};
+
 export default function AutoRespondLayout({ children }: LayoutProps) {
   return (
     <div className="flex">
       <Sidebar />
-      <main className="flex-1 p-4">
-        {children}
-      </main>
+      <main className="flex-1 p-4">{children}</main>
     </div>
-  )
+  );
 }

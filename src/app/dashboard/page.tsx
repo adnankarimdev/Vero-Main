@@ -57,7 +57,6 @@ ChartJS.register(
 );
 
 export default function Dashboard() {
-
   const preMadeQueries = [
     "Are there any noticeable trends in review ratings over time?",
     "What are the top issues customers mention in their reviews?",
@@ -119,26 +118,26 @@ export default function Dashboard() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Redefeyn Dashboard</h1>
-          <Summary
-            averageRating={averageRating}
-            totalReviews={totalReviews}
-            searchQueryGpt={searchQueryGpt}
-            setSearchQueryGpt={setSearchQueryGpt}
-            handleSubmit={handleSubmit}
-            loading={loading}
-            returnedGraph={returnedGraph}
-            handlePreMadeQueryClick={handlePreMadeQueryClick}
-            preMadeQueries={preMadeQueries}
-            BarChart={Bar}
-            PieChart={Pie}
-            LineChart={Line}
-            DoughnutChart={Doughnut}
-            RadarChart={Radar}
-            PolarAreaChart={PolarArea}
-            BubbleChart={Bubble}
-            ScatterChart={Scatter}
-            toast={toast}
-          />          
+      <Summary
+        averageRating={averageRating}
+        totalReviews={totalReviews}
+        searchQueryGpt={searchQueryGpt}
+        setSearchQueryGpt={setSearchQueryGpt}
+        handleSubmit={handleSubmit}
+        loading={loading}
+        returnedGraph={returnedGraph}
+        handlePreMadeQueryClick={handlePreMadeQueryClick}
+        preMadeQueries={preMadeQueries}
+        BarChart={Bar}
+        PieChart={Pie}
+        LineChart={Line}
+        DoughnutChart={Doughnut}
+        RadarChart={Radar}
+        PolarAreaChart={PolarArea}
+        BubbleChart={Bubble}
+        ScatterChart={Scatter}
+        toast={toast}
+      />
     </div>
   );
 }

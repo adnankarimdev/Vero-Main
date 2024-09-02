@@ -1,15 +1,21 @@
-import { LayoutDashboard, Star, Settings, Infinity, FilePenLine } from "lucide-react"
-import Link from "next/link"
+import {
+  LayoutDashboard,
+  Star,
+  Settings,
+  Infinity,
+  FilePenLine,
+} from "lucide-react";
+import Link from "next/link";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Home", href: "/dashboard" },
   { icon: Star, label: "Reviews", href: "/reviews" },
   { icon: Infinity, label: "Auto Respond", href: "/autorespond" },
   { icon: FilePenLine, label: "Settings", href: "/settings" },
-]
+];
 
 export default function Sidebar() {
   return (
@@ -38,5 +44,5 @@ export default function Sidebar() {
         ))}
       </nav>
     </aside>
-  )
+  );
 }

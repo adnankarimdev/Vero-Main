@@ -299,10 +299,9 @@ export default function Dashboard() {
     });
   });
 
-  const nextpage = () =>
-  {
-    router.push('/dashboard')
-  }
+  const nextpage = () => {
+    router.push("/dashboard");
+  };
   const ratings = reviewsData.map((review) => parseInt(review.rating));
   const totalReviews = ratings.length;
   const averageRating = (
@@ -323,18 +322,15 @@ export default function Dashboard() {
             Auto Respond to Reviews
           </TabsTrigger>
 
-        
           {/* <TabsTrigger value="personas">Customer Personas</TabsTrigger> */}
         </TabsList>
 
-
-              
         <TabsContent value="signup">
-        <div className="flex items-center justify-center min-h-screen">
-          <AuthPage />
+          <div className="flex items-center justify-center min-h-screen">
+            <AuthPage />
           </div>
         </TabsContent>
-     
+
         <TabsContent value="summary">
           <Summary
             averageRating={averageRating}
@@ -356,12 +352,12 @@ export default function Dashboard() {
             ScatterChart={Scatter}
             toast={toast}
           />
-          
+
           <Button onClick={nextpage}>Redirect</Button>
         </TabsContent>
 
         <TabsContent value="reviews">
-        <Sidebar></Sidebar>
+          <Sidebar></Sidebar>
           <Reviews
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -369,8 +365,6 @@ export default function Dashboard() {
             setSelectedLocation={setSelectedLocation}
             finalFilteredReviews={finalFilteredReviews}
           />
-          
-          
         </TabsContent>
 
         <TabsContent value="keywords">

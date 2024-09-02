@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/ui/Loader";
 import JsxParser from "react-jsx-parser";
-import Iframe from 'react-iframe'
+import Iframe from "react-iframe";
 
 export default function SummaryTab({
   averageRating,
@@ -129,7 +129,7 @@ style="height: 100%; min-height: 700px"
 frameborder="0"
 ></iframe> */}
 
-{/* <Iframe url="https://www.chatbase.co/chatbot-iframe/hMDhaNLvdyjoukQKDtZJ2"
+        {/* <Iframe url="https://www.chatbase.co/chatbot-iframe/hMDhaNLvdyjoukQKDtZJ2"
         width="640px"
         height="320px"
         id=""
