@@ -37,6 +37,8 @@ export default function ClientSettings() {
     placeIds: "",
     showComplimentaryItem: false,
     complimentaryItem: "",
+    dialogBody: "",
+    dialogTitle: "",
   });
 
   const handleQuestionChange = (
@@ -292,15 +294,48 @@ export default function ClientSettings() {
                   }
                 />
               </div>
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="showWorryDialog"
-                  checked={settings.showWorryDialog}
-                  onCheckedChange={(checked) =>
-                    handleSettingChange("showWorryDialog", checked)
-                  }
-                />
-                <Label htmlFor="showWorryDialog">Show Worry Dialog</Label>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="showWorryDialog"
+                    checked={settings.showWorryDialog}
+                    onCheckedChange={(checked) =>
+                      handleSettingChange("showWorryDialog", checked)
+                    }
+                  />
+                  <Label htmlFor="showWorryDialog">Show Worry Dialog</Label>
+                </div>
+
+                {settings.showWorryDialog && (
+                  <div>
+
+<div className="mt-2">
+                      <Label htmlFor="dialogTitle">Dialog Title</Label>
+                      <Input
+                        id="dialogTitle"
+                        type="text"
+                        value={settings.dialogTitle}
+                        onChange={(e) =>
+                          handleSettingChange("dialogTitle", e.target.value)
+                        }
+                        required
+                      />
+                    </div>
+
+                    <div className="mt-2">
+                    <Label htmlFor="dialogBody">Dialog Body</Label>
+                      <Textarea
+                        id="dialogBody"
+                        value={settings.dialogBody}
+                        rows={5}
+                        onChange={(e) =>
+                          handleSettingChange("dialogBody", e.target.value)
+                        }
+                        className="w-full" 
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </TabsContent>
