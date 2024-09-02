@@ -71,8 +71,9 @@ export default function AuthPage() {
           title: "User Created",
           description: "Welcome to Redefeyn.",
         });
+        localStorage.setItem('userEmail', email);
         setTimeout(() => {
-          router.push("/dashboard");
+          router.push("/placefinder");
         }, 2000);
       })
       .catch((error) => {
