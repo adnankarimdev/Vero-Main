@@ -39,7 +39,8 @@ export default function ClientSettings() {
     complimentaryItem: "",
     dialogBody: "",
     dialogTitle: "",
-    websiteUrl: ""
+    websiteUrl: "",
+    userEmail: localStorage.getItem('userEmail')
   });
 
   const handleQuestionChange = (
@@ -150,19 +151,36 @@ export default function ClientSettings() {
   };
 
   useEffect(() => {
-    const fetchReviewSettings = async (placeId = "123") => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
+        const email = localStorage.getItem('userEmail');
+        console.log("email in local", email)
+        if (!email) {
+          console.error("Email not found in localStorage");
+          return;
+        }
+  
+        // First, fetch the placeId
+        const placeIdResponse = await axios.get(
+          `http://10.0.0.239:8021/backend/get-place-id-by-email/${email}/`
+        );
+        const placeId = placeIdResponse.data.placeIds;
+        console.log("Fetched placeId:", placeId);
+  
+        // Then, use the fetched placeId to get the review settings
+        const reviewSettingsResponse = await axios.get(
           `http://10.0.0.239:8021/backend/get-review-settings/${placeId}/`
         );
-        console.log(response);
-        setSettings(response.data);
+        console.log("Fetched review settings:", reviewSettingsResponse);
+  
+        // Update the settings state
+        setSettings(reviewSettingsResponse.data);
       } catch (err) {
         console.error(err);
       }
     };
-
-    fetchReviewSettings();
+  
+    fetchData();
   }, []);
 
   return (

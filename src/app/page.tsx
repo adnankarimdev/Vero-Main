@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -15,6 +16,15 @@ export default function Home() {
   const onGetStarted = () => {
     router.push("/login");
   };
+
+    useEffect(() => {
+    if (localStorage.getItem('authToken'))
+    {
+        router.push("/dashboard");
+    }
+    
+  }, []);
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-background p-4">
       <Card className="w-full max-w-md">
