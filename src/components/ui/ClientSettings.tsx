@@ -22,7 +22,7 @@ export default function ClientSettings() {
   const { toast } = useToast();
   const [settings, setSettings] = useState({
     questions: Array(5)
-      .fill()
+      .fill(null)
       .map((_, i) => ({
         id: i + 1,
         questions: [""],
