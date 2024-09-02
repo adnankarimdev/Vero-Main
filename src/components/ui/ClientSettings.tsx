@@ -39,6 +39,7 @@ export default function ClientSettings() {
     complimentaryItem: "",
     dialogBody: "",
     dialogTitle: "",
+    websiteUrl: ""
   });
 
   const handleQuestionChange = (
@@ -341,16 +342,26 @@ export default function ClientSettings() {
           </TabsContent>
           <TabsContent value="other">
             <div className="space-y-4">
-              <div>
-                <Label htmlFor="placeIds">Place IDs (comma-separated)</Label>
-                <Input
-                  id="placeIds"
-                  value={settings.placeIds}
-                  onChange={(e) =>
-                    handleSettingChange("placeIds", e.target.value)
-                  }
-                />
-              </div>
+            <div>
+  <div className="mb-4"> {/* Add margin-bottom to create space */}
+    <Label htmlFor="placeIds">Place ID</Label>
+    <Input
+      id="placeIds"
+      value={settings.placeIds}
+      onChange={(e) => handleSettingChange("placeIds", e.target.value)}
+    />
+  </div>
+  {settings.placeIds && (
+    <div>
+      <Label htmlFor="placeIds" className="text-muted-foreground">
+        Customer URL:
+        <a href={settings.websiteUrl} target="_blank" rel="noopener noreferrer">
+          {" " + settings.websiteUrl}
+        </a>
+      </Label>
+    </div>
+  )}
+</div>
               <div className="flex items-center space-x-2">
                 <Switch
                   id="showComplimentaryItem"
