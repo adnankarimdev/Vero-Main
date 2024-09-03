@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import Logo from "./Logo";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Home", href: "/dashboard" },
