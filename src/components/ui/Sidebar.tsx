@@ -24,11 +24,11 @@ export default function Sidebar() {
   const router = useRouter();
 
   const handleLogout = () => {
-    console.log("logged out")
-    localStorage.removeItem('authToken'); 
-    localStorage.removeItem('userEmail'); 
-    console.log("logged out")
-    router.push('/'); 
+    console.log("logged out");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userEmail");
+    console.log("logged out");
+    router.push("/");
   };
 
   return (
@@ -48,7 +48,10 @@ export default function Sidebar() {
             asChild
           >
             {item.label === "Logout" ? (
-              <button onClick={handleLogout} className="flex items-center w-full">
+              <button
+                onClick={handleLogout}
+                className="flex items-center w-full"
+              >
                 <item.icon className="h-5 w-5" />
                 <span className="ml-2 hidden group-hover:inline-block">
                   {item.label}

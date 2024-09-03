@@ -3,6 +3,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Place } from "../Types/types";
 import {
   Card,
   CardContent,
@@ -15,8 +17,8 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { ToastAction } from "@/components/ui/toast";
 import axios from "axios";
+import { PlaceType } from "../Types/types";
 
 export default function ClientSettings() {
   const { toast } = useToast();
@@ -34,14 +36,19 @@ export default function ClientSettings() {
     clientEmail: "",
     worryRating: 3,
     showWorryDialog: true,
-    placeIds: "",
+    placeIds: [],
     showComplimentaryItem: false,
     complimentaryItem: "",
     dialogBody: "",
     dialogTitle: "",
-    websiteUrl: "",
-    userEmail: localStorage.getItem('userEmail')
+    websiteUrls: [],
+    userEmail: "",
+    places: [],
   });
+  const [placeIds, setPlaceIds] = useState([]);
+  const [placesInfo, setPlacesInfo] = useState<Place[]>([]);
+  const [websiteURLS, setWebsiteURLS] = useState([]);
+  const [websiteAndLocation, setWebsiteAndLocation] = useState([]);
 
   const handleQuestionChange = (
     ratingId: number,
@@ -88,7 +95,7 @@ export default function ClientSettings() {
 
   const handleSettingChange = (
     key: string,
-    value: string | number | boolean
+    value: string | number | boolean | { id: number; questions: string[] }[]
   ) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
@@ -116,6 +123,10 @@ export default function ClientSettings() {
 
   const handleSave = () => {
     const errors = validateSettings();
+    console.log(
+      "user emaillll in settings:",
+      localStorage.getItem("userEmail")
+    );
 
     if (errors.length > 0) {
       errors.forEach((error) => {
@@ -153,33 +164,54 @@ export default function ClientSettings() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const email = localStorage.getItem('userEmail');
-        console.log("email in local", email)
+        const email = localStorage.getItem("userEmail");
+        console.log("email in local", email);
         if (!email) {
           console.error("Email not found in localStorage");
           return;
         }
-  
+
         // First, fetch the placeId
         const placeIdResponse = await axios.get(
           `http://10.0.0.239:8021/backend/get-place-id-by-email/${email}/`
         );
-        const placeId = placeIdResponse.data.placeIds;
-        console.log("Fetched placeId:", placeId);
-  
+        handleSettingChange("placeIds", placeIdResponse.data.placeIds);
+        console.log("my place idss", placeIdResponse.data.places);
+        handleSettingChange("userEmail", email as string);
+        setPlaceIds(placeIdResponse.data.placeIds);
+        setPlacesInfo(placeIdResponse.data.places);
+        setWebsiteURLS(placeIdResponse.data.websiteUrls);
+
+        const placeIdsAsArray = placeIdResponse.data.places.map(
+          (place: any) => place.place_id
+        );
+        console.log(placeIdsAsArray);
+        const placeIdsQuery = placeIdsAsArray.join(",");
+
         // Then, use the fetched placeId to get the review settings
         const reviewSettingsResponse = await axios.get(
-          `http://10.0.0.239:8021/backend/get-review-settings/${placeId}/`
+          `http://10.0.0.239:8021/backend/get-review-settings/${placeIdsQuery}/`
         );
         console.log("Fetched review settings:", reviewSettingsResponse);
-  
+
         // Update the settings state
         setSettings(reviewSettingsResponse.data);
+        if (reviewSettingsResponse.data.questions.length == 0) {
+          handleSettingChange(
+            "questions",
+            Array(5)
+              .fill(null)
+              .map((_, i) => ({
+                id: i + 1,
+                questions: [""],
+              }))
+          );
+        }
       } catch (err) {
         console.error(err);
       }
     };
-  
+
     fetchData();
   }, []);
 
@@ -197,7 +229,7 @@ export default function ClientSettings() {
             <TabsTrigger value="questions">Questions</TabsTrigger>
             <TabsTrigger value="email">Email</TabsTrigger>
             <TabsTrigger value="ratings">Ratings</TabsTrigger>
-            <TabsTrigger value="other">Other</TabsTrigger>
+            <TabsTrigger value="locations">Locations</TabsTrigger>
           </TabsList>
           <TabsContent value="questions">
             {settings.questions.map((rating) => (
@@ -327,8 +359,7 @@ export default function ClientSettings() {
 
                 {settings.showWorryDialog && (
                   <div>
-
-<div className="mt-2">
+                    <div className="mt-2">
                       <Label htmlFor="dialogTitle">Dialog Title</Label>
                       <Input
                         id="dialogTitle"
@@ -342,7 +373,7 @@ export default function ClientSettings() {
                     </div>
 
                     <div className="mt-2">
-                    <Label htmlFor="dialogBody">Dialog Body</Label>
+                      <Label htmlFor="dialogBody">Dialog Body</Label>
                       <Textarea
                         id="dialogBody"
                         value={settings.dialogBody}
@@ -350,7 +381,7 @@ export default function ClientSettings() {
                         onChange={(e) =>
                           handleSettingChange("dialogBody", e.target.value)
                         }
-                        className="w-full" 
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -358,28 +389,24 @@ export default function ClientSettings() {
               </div>
             </div>
           </TabsContent>
-          <TabsContent value="other">
+          <TabsContent value="locations">
             <div className="space-y-4">
-            <div>
-  <div className="mb-4"> {/* Add margin-bottom to create space */}
-    <Label htmlFor="placeIds">Place ID</Label>
-    <Input
-      id="placeIds"
-      value={settings.placeIds}
-      onChange={(e) => handleSettingChange("placeIds", e.target.value)}
-    />
-  </div>
-  {settings.placeIds && (
-    <div>
-      <Label htmlFor="placeIds" className="text-muted-foreground">
-        Customer URL:
-        <a href={settings.websiteUrl} target="_blank" rel="noopener noreferrer">
-          {" " + settings.websiteUrl}
-        </a>
-      </Label>
-    </div>
-  )}
-</div>
+              <div>
+                <div className="mb-4">
+                  {" "}
+                  {/* Add margin-bottom to create space */}
+                  <Label htmlFor="placeIds">Registered Places</Label>
+                  {websiteURLS.map((website, index) => (
+                    <a href={website} target="_blank" rel="noopener noreferrer">
+                      <div className="text-lg font-medium">
+                        <Badge className="text-white">
+                          {" " + placesInfo[index].name}
+                        </Badge>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
               <div className="flex items-center space-x-2">
                 <Switch
                   id="showComplimentaryItem"

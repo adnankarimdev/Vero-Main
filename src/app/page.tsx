@@ -17,12 +17,10 @@ export default function Home() {
     router.push("/login");
   };
 
-    useEffect(() => {
-    if (localStorage.getItem('authToken'))
-    {
-        router.push("/dashboard");
+  useEffect(() => {
+    if (localStorage.getItem("authToken")) {
+      router.push("/dashboard");
     }
-    
   }, []);
 
   return (

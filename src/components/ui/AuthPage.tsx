@@ -40,8 +40,8 @@ export default function AuthPage() {
         password: password,
       })
       .then((response) => {
-        localStorage.setItem('authToken', response.data.token);
-        localStorage.setItem('userEmail', email);
+        localStorage.setItem("authToken", response.data.token);
+        localStorage.setItem("userEmail", email);
         toast({
           title: "Successfully Logged In",
           description: "Welcome to Redefeyn.",
@@ -71,7 +71,7 @@ export default function AuthPage() {
           title: "User Created",
           description: "Welcome to Redefeyn.",
         });
-        localStorage.setItem('userEmail', email);
+        localStorage.setItem("userEmail", email);
         setTimeout(() => {
           router.push("/placefinder");
         }, 2000);
