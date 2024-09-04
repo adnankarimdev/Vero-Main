@@ -77,7 +77,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
 
   const handleLocationsSubmit = () => {
     axios
-      .post("http://10.0.0.239:8021/backend/set-place-ids/", {
+      .post("http://localhost:8021/backend/set-place-ids/", {
         places: places,
         userEmail: localStorage.getItem("userEmail"),
       })
