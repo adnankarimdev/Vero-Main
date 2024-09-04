@@ -1,6 +1,6 @@
-import { Inter } from 'next/font/google'
+import { Inter } from "next/font/google";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export default function Logo() {
   return (
@@ -29,7 +29,7 @@ export default function Logo() {
             repeatCount="indefinite"
           /> */}
         </path>
-        
+
         {/* Letter R */}
         <text
           x="50"
@@ -44,5 +44,5 @@ export default function Logo() {
         </text>
       </svg>
     </div>
-  )
+  );
 }
