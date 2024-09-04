@@ -129,7 +129,7 @@ export default function LandingPage() {
         <section className="container mx-auto px-4 py-24 md:py-32 lg:py-40">
           <div className="max-w-3xl mx-auto text-center space-y-8">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              Redefeyn Reviews
+              Redefeyn
             </h1>
             {/* <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             At Redefeyn, we’re committed to helping you connect with customers authentically. We simplify gathering genuine reviews, managing feedback, and boosting your online reputation, all with a personal touch.

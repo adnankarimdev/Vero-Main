@@ -35,7 +35,7 @@ import { PlaceType } from "../Types/types";
 export default function ClientSettings() {
   const { toast } = useToast();
   const [settings, setSettings] = useState({
-    questions: Array(5)
+    questions: Array(4)
       .fill(null)
       .map((_, i) => ({
         id: i + 1,

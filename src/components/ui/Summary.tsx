@@ -43,7 +43,7 @@ export default function SummaryTab({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {"Average Rating (All Locations)"}
+                {"Current Rating (All Locations)"}
               </CardTitle>
               <Star className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -54,7 +54,7 @@ export default function SummaryTab({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {"Total Reviews (All Locations"}
+                {"5 Star Reviews Needed to Increase Rating (All Locations)"}
               </CardTitle>
               <MessageSquare className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
