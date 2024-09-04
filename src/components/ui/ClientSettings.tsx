@@ -1,10 +1,22 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RiAiGenerate } from "react-icons/ri";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Place } from "../Types/types";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
   Card,
   CardContent,
@@ -48,6 +60,7 @@ export default function ClientSettings() {
   const [placeIds, setPlaceIds] = useState([]);
   const [placesInfo, setPlacesInfo] = useState<Place[]>([]);
   const [websiteURLS, setWebsiteURLS] = useState([]);
+  const [areasToFocusOn, setAreasToFocusOn] = useState('')
   const [websiteAndLocation, setWebsiteAndLocation] = useState([]);
 
   const handleQuestionChange = (
@@ -161,6 +174,32 @@ export default function ClientSettings() {
     }
   };
 
+  const handleGenerateReviewQuestions = () =>
+    {
+      var fullContext = "Questions should focus on these topics: " + areasToFocusOn + "\n" + "All Locations Context: " + JSON.stringify(placesInfo)
+      axios
+        .post("http://localhost:8021/backend/generate-review-questions/", {context: fullContext})
+        .then((response) => {
+
+          //this will be a string rep of json
+          const generatedQuestions = response.data["content"].replace(/```json/g, "")
+          .replace(/```/g, "");
+          const generatedQuestionsAsJson = JSON.parse(generatedQuestions)
+          console.log(generatedQuestionsAsJson)
+          handleSettingChange("questions", generatedQuestionsAsJson["questions"])
+          toast({
+            title: "Success",
+            description: "Questions generated.",
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          toast({
+            title: "Failed to generate",
+            description: "try again",
+          });
+        });
+    }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -232,6 +271,43 @@ export default function ClientSettings() {
             <TabsTrigger value="locations">Locations</TabsTrigger>
           </TabsList>
           <TabsContent value="questions">
+          <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                  <div className="flex justify-end">
+  <Button variant="ghost">
+    <RiAiGenerate size={24} />
+  </Button>
+</div>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Generate Review Questions
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        {
+                          "This will generate a review questions for each rating. You can input which areas you'd like the questions to be focused on. Otherwise, the questions will be generated more generically."
+                        }{" "}
+                     {/* <Label htmlFor="areaFocus">Areas of focus</Label> */}
+                      <Input
+                        id="areaFocus"
+                        type="text"
+                        className="mt-4" // Add margin-top here
+                        value={areasToFocusOn}
+                        onChange={(e) =>
+                          setAreasToFocusOn(e.target.value)
+                        }
+                      />
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleGenerateReviewQuestions}>
+                        Continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
             {settings.questions.map((rating) => (
               <div key={rating.id} className="mb-6">
                 <div className="flex items-center justify-between mb-2">
