@@ -22,6 +22,9 @@ import { Place } from "../Types/types";
 const GOOGLE_MAPS_API_KEY = "AIzaSyDEJBvbJXfBOqam_dohKIp-9OT6ZBYB2rY";
 const GOOGLE_MAPS_API_URL = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`;
 
+const GOOGLE_RECENT_REVIEWS_CALL =
+  "https://maps.googleapis.com/maps/api/place/details/json?place_id=YOUR_PLACE_ID&key=YOUR_API_KEY";
+
 declare global {
   interface Window {
     google: any;
@@ -43,13 +46,19 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
             fields: ["name", "formatted_address", "place_id"],
           }
         );
-        autocomplete.addListener("place_changed", () => {
+        autocomplete.addListener("place_changed", async () => {
           const selectedPlace = autocomplete.getPlace();
           const newPlace: Place = {
             name: selectedPlace.name,
             formatted_address: selectedPlace.formatted_address,
             place_id: selectedPlace.place_id,
           };
+          const response = await axios.get(
+            `http://localhost:8021/backend/get-place-details/${selectedPlace.place_id}/`
+          );
+          const data = response.data;
+          newPlace.currentRating = data.result["rating"];
+          newPlace.currentTotalReviews = data.result["user_ratings_total"];
           setPlaces((prevPlaces) => [...prevPlaces, newPlace]);
           if (inputRef.current) {
             inputRef.current.value = "";

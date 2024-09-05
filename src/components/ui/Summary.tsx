@@ -1,3 +1,16 @@
+import { useEffect, useState } from "react";
+import { Place } from "../Types/types";
+import { Separator } from "@/components/ui/separator";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Card,
   CardContent,
@@ -5,12 +18,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Star, MessageSquare, ChartSpline } from "lucide-react";
+import { Star, MessageSquare, ChartSpline, Ban } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/ui/Loader";
 import JsxParser from "react-jsx-parser";
 import Iframe from "react-iframe";
+import axios from "axios";
+import TableSkeletonLoader from "./Skeletons/TableSkeletonLoader";
 
 export default function SummaryTab({
   averageRating,
@@ -32,18 +47,81 @@ export default function SummaryTab({
   ScatterChart,
   toast,
 }: any) {
+  const [placesInfo, setPlacesInfo] = useState<Place[]>([]);
+  const [isTableLoading, setIsTableLoading] = useState(true);
+
+  const calculateAdditionalReviews = (
+    currentRating: number,
+    currentReviews: number,
+    targetRating: number
+  ): number | string => {
+    if (targetRating <= currentRating) {
+      return "Target rating must be higher than the current rating.";
+    }
+
+    // Total rating points for current reviews
+    const totalCurrentPoints = currentRating * currentReviews;
+
+    // Solve for the number of additional reviews needed
+    const additionalReviews =
+      (targetRating * currentReviews - totalCurrentPoints) / (5 - targetRating);
+
+    // Check if the result is a valid number
+    if (isNaN(additionalReviews) || additionalReviews < 0) {
+      return "Invalid input values.";
+    }
+
+    // Round up to the next whole number
+    return Math.ceil(additionalReviews);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const email = localStorage.getItem("userEmail");
+        console.log("email in local", email);
+        if (!email) {
+          console.error("Email not found in localStorage");
+          return;
+        }
+
+        // First, fetch the placeId
+        const placeIdResponse = await axios.get(
+          `http://localhost:8021/backend/get-place-id-by-email/${email}/`
+        );
+        setPlacesInfo(placeIdResponse.data.places);
+        setIsTableLoading(false);
+      } catch (err) {
+        console.error(err);
+        setIsTableLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Summary</CardTitle>
-        <CardDescription>Overview of your Google Reviews</CardDescription>
+        <CardTitle>All Locations</CardTitle>
+        <CardDescription>Snapshot of Your Google Reviews</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2 mb-10">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {"Current Rating (All Locations)"}
+                {"Average Review Rating with Customers using Redefeyn"}
+              </CardTitle>
+              <Star className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{5}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {"Customer Ratings Directly on Google"}
               </CardTitle>
               <Star className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -54,15 +132,28 @@ export default function SummaryTab({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {"5 Star Reviews Needed to Increase Rating (All Locations)"}
+                {"Negative Reviews Prevented with Redefeyn"}
               </CardTitle>
-              <MessageSquare className="h-4 w-4 text-muted-foreground" />
+              <Ban className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{totalReviews}</div>
             </CardContent>
           </Card>
           <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {"5 Star Reviews Posted with Redefeyn"}
+              </CardTitle>
+              <MessageSquare className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {calculateAdditionalReviews(averageRating, totalReviews, 4.4)}
+              </div>
+            </CardContent>
+          </Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle>Text to Graph</CardTitle>
             </CardHeader>
@@ -95,7 +186,7 @@ export default function SummaryTab({
                 ))}
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
           {loading && (
             <div className="flex justify-center items-center h-40">
               <Loader />
@@ -122,6 +213,53 @@ export default function SummaryTab({
             />
           )}
         </div>
+        <Separator className="my-4" />
+        <CardHeader>
+          <CardTitle>Per Location</CardTitle>
+          <CardDescription>Snapshot of Your Google Reviews</CardDescription>
+        </CardHeader>
+
+        {isTableLoading && <TableSkeletonLoader />}
+        {!isTableLoading && (
+          <Table className="w-full mt-2">
+            <TableCaption>An overview of all your locations</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Current Rating</TableHead>
+                <TableHead>Total Number of Reviews</TableHead>
+                <TableHead>5-Star Reviews Needed (+0.1)</TableHead>
+                <TableHead>5-Star Reviews with Redefeyn</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {placesInfo.map((place) => (
+                <TableRow key={place.place_id} className="text-center">
+                  <TableCell className="font-medium text-left">
+                    {place.name}
+                  </TableCell>
+                  <TableCell>{place.currentRating}</TableCell>
+                  <TableCell>{place.currentTotalReviews}</TableCell>
+                  <TableCell>
+                    {calculateAdditionalReviews(
+                      Number(place.currentRating!),
+                      Number(place.currentTotalReviews),
+                      Number(place.currentRating! + 0.1)
+                    )}
+                  </TableCell>
+                  <TableCell>{0}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            {/* <TableFooter>
+          <TableRow>
+            <TableCell colSpan={3}>Total</TableCell>
+            <TableCell className="text-right">$2,500.00</TableCell>
+          </TableRow>
+        </TableFooter> */}
+          </Table>
+        )}
+
         {/* <iframe
 src="https://www.chatbase.co/chatbot-iframe/hMDhaNLvdyjoukQKDtZJ2"
 width="100%"

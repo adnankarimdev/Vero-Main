@@ -31,6 +31,7 @@ import { PlusCircle, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 import { PlaceType } from "../Types/types";
+import TabsSkeletonLoader from "./Skeletons/TabsSkeletonLoader";
 
 export default function ClientSettings() {
   const { toast } = useToast();
@@ -46,7 +47,7 @@ export default function ClientSettings() {
     emailBody: "",
     emailAppPassword: "",
     clientEmail: "",
-    worryRating: 3,
+    worryRating: 4,
     showWorryDialog: true,
     placeIds: [],
     showComplimentaryItem: false,
@@ -60,8 +61,9 @@ export default function ClientSettings() {
   const [placeIds, setPlaceIds] = useState([]);
   const [placesInfo, setPlacesInfo] = useState<Place[]>([]);
   const [websiteURLS, setWebsiteURLS] = useState([]);
-  const [areasToFocusOn, setAreasToFocusOn] = useState('')
+  const [areasToFocusOn, setAreasToFocusOn] = useState("");
   const [websiteAndLocation, setWebsiteAndLocation] = useState([]);
+  const [isTabsLoading, setIsTabsLoading] = useState(true);
 
   const handleQuestionChange = (
     ratingId: number,
@@ -124,6 +126,9 @@ export default function ClientSettings() {
     });
 
     // Validate email fields
+    if (settings.worryRating < 1 || settings.worryRating > 4) {
+      errors.push("Worry rating must be a value between 1 and 4");
+    }
     if (!settings.emailAppPassword) {
       errors.push("Email app password is required");
     }
@@ -174,32 +179,38 @@ export default function ClientSettings() {
     }
   };
 
-  const handleGenerateReviewQuestions = () =>
-    {
-      var fullContext = "Questions should focus on these topics: " + areasToFocusOn + "\n" + "All Locations Context: " + JSON.stringify(placesInfo)
-      axios
-        .post("http://localhost:8021/backend/generate-review-questions/", {context: fullContext})
-        .then((response) => {
-
-          //this will be a string rep of json
-          const generatedQuestions = response.data["content"].replace(/```json/g, "")
+  const handleGenerateReviewQuestions = () => {
+    var fullContext =
+      "Questions should focus on these topics: " +
+      areasToFocusOn +
+      "\n" +
+      "All Locations Context: " +
+      JSON.stringify(placesInfo);
+    axios
+      .post("http://localhost:8021/backend/generate-review-questions/", {
+        context: fullContext,
+      })
+      .then((response) => {
+        //this will be a string rep of json
+        const generatedQuestions = response.data["content"]
+          .replace(/```json/g, "")
           .replace(/```/g, "");
-          const generatedQuestionsAsJson = JSON.parse(generatedQuestions)
-          console.log(generatedQuestionsAsJson)
-          handleSettingChange("questions", generatedQuestionsAsJson["questions"])
-          toast({
-            title: "Success",
-            description: "Questions generated.",
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-          toast({
-            title: "Failed to generate",
-            description: "try again",
-          });
+        const generatedQuestionsAsJson = JSON.parse(generatedQuestions);
+        console.log(generatedQuestionsAsJson);
+        handleSettingChange("questions", generatedQuestionsAsJson["questions"]);
+        toast({
+          title: "Success",
+          description: "Questions generated.",
         });
-    }
+      })
+      .catch((error) => {
+        console.log(error);
+        toast({
+          title: "Failed to generate",
+          description: "try again",
+        });
+      });
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -235,6 +246,7 @@ export default function ClientSettings() {
 
         // Update the settings state
         setSettings(reviewSettingsResponse.data);
+        setIsTabsLoading(false);
         if (reviewSettingsResponse.data.questions.length == 0) {
           handleSettingChange(
             "questions",
@@ -248,6 +260,7 @@ export default function ClientSettings() {
         }
       } catch (err) {
         console.error(err);
+        setIsTabsLoading(false);
       }
     };
 
@@ -263,253 +276,287 @@ export default function ClientSettings() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="questions">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="questions">Questions</TabsTrigger>
-            <TabsTrigger value="email">Email</TabsTrigger>
-            <TabsTrigger value="ratings">Ratings</TabsTrigger>
-            <TabsTrigger value="locations">Locations</TabsTrigger>
-          </TabsList>
-          <TabsContent value="questions">
-          <AlertDialog>
-                  <AlertDialogTrigger asChild>
+        {isTabsLoading && <TabsSkeletonLoader />}
+        {!isTabsLoading && (
+          <Tabs defaultValue="questions">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="questions">Questions</TabsTrigger>
+              <TabsTrigger value="email">Email</TabsTrigger>
+              <TabsTrigger value="ratings">Ratings</TabsTrigger>
+              <TabsTrigger value="locations">Locations</TabsTrigger>
+            </TabsList>
+            <TabsContent value="questions">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
                   <div className="flex justify-end">
-  <Button variant="ghost">
-    <RiAiGenerate size={24} />
-  </Button>
-</div>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Generate Review Questions
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        {
-                          "This will generate a review questions for each rating. You can input which areas you'd like the questions to be focused on. Otherwise, the questions will be generated more generically."
-                        }{" "}
-                     {/* <Label htmlFor="areaFocus">Areas of focus</Label> */}
+                    <Button variant="ghost">
+                      <RiAiGenerate size={24} />
+                    </Button>
+                  </div>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Generate Review Questions
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {
+                        "This will generate a review questions for each rating. You can input which areas you'd like the questions to be focused on. Otherwise, the questions will be generated more generically."
+                      }{" "}
+                      {/* <Label htmlFor="areaFocus">Areas of focus</Label> */}
                       <Input
                         id="areaFocus"
                         type="text"
                         className="mt-4" // Add margin-top here
                         value={areasToFocusOn}
-                        onChange={(e) =>
-                          setAreasToFocusOn(e.target.value)
-                        }
+                        onChange={(e) => setAreasToFocusOn(e.target.value)}
                       />
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleGenerateReviewQuestions}>
-                        Continue
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-            {settings.questions.map((rating) => (
-              <div key={rating.id} className="mb-6">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-semibold">Rating {rating.id}</h3>
-                </div>
-                {rating.questions.map((question, index) => (
-                  <div key={index} className="flex items-center mb-2 space-x-2">
-                    <Input
-                      placeholder={`Question ${index + 1} for rating ${rating.id}`}
-                      value={question}
-                      onChange={(e) =>
-                        handleQuestionChange(rating.id, index, e.target.value)
-                      }
-                      className="w-3/4"
-                    />
-                    {index === 0 && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => addQuestion(rating.id)}
-                        aria-label={`Add question for rating ${rating.id}`}
-                      >
-                        <PlusCircle className="h-4 w-4" />
-                      </Button>
-                    )}
-                    {rating.questions.length > 1 && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeQuestion(rating.id, index)}
-                        aria-label={`Remove question ${index + 1} for rating ${rating.id}`}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    )}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleGenerateReviewQuestions}>
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              {settings.questions.map((rating) => (
+                <div key={rating.id} className="mb-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-lg font-semibold">
+                      Rating {rating.id}
+                    </h3>
                   </div>
-                ))}
-              </div>
-            ))}
-          </TabsContent>
-          <TabsContent value="email">
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="clientEmail">Client Email</Label>
-                <Input
-                  id="clientEmail"
-                  type="email"
-                  value={settings.clientEmail}
-                  onChange={(e) =>
-                    handleSettingChange("clientEmail", e.target.value)
-                  }
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="emailAppPassword">App Password</Label>
-                <Input
-                  id="emailAppPassword"
-                  type="password"
-                  value={settings.emailAppPassword}
-                  onChange={(e) =>
-                    handleSettingChange("emailAppPassword", e.target.value)
-                  }
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="emailIntro">Email Introduction</Label>
-                <Textarea
-                  id="emailIntro"
-                  value={settings.emailIntro}
-                  onChange={(e) =>
-                    handleSettingChange("emailIntro", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="emailBody">Email Body</Label>
-                <Textarea
-                  id="emailBody"
-                  value={settings.emailBody}
-                  onChange={(e) =>
-                    handleSettingChange("emailBody", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="emailSignature">Email Signature</Label>
-                <Textarea
-                  id="emailSignature"
-                  value={settings.emailSignature}
-                  onChange={(e) =>
-                    handleSettingChange("emailSignature", e.target.value)
-                  }
-                />
-              </div>
-            </div>
-          </TabsContent>
-          <TabsContent value="ratings">
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="worryRating">Worry Rating Threshold</Label>
-                <Input
-                  id="worryRating"
-                  type="number"
-                  min="1"
-                  max="5"
-                  value={settings.worryRating}
-                  onChange={(e) =>
-                    handleSettingChange("worryRating", parseInt(e.target.value))
-                  }
-                />
-              </div>
-              <div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="showWorryDialog"
-                    checked={settings.showWorryDialog}
-                    onCheckedChange={(checked) =>
-                      handleSettingChange("showWorryDialog", checked)
+                  {rating.questions.map((question, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center mb-2 space-x-2"
+                    >
+                      <Input
+                        placeholder={`Question ${index + 1} for rating ${rating.id}`}
+                        value={question}
+                        onChange={(e) =>
+                          handleQuestionChange(rating.id, index, e.target.value)
+                        }
+                        className="w-3/4"
+                      />
+                      {index === 0 && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => addQuestion(rating.id)}
+                          aria-label={`Add question for rating ${rating.id}`}
+                        >
+                          <PlusCircle className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {rating.questions.length > 1 && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeQuestion(rating.id, index)}
+                          aria-label={`Remove question ${index + 1} for rating ${rating.id}`}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </TabsContent>
+            <TabsContent value="email">
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="clientEmail">Client Email</Label>
+                  <Input
+                    id="clientEmail"
+                    type="email"
+                    value={settings.clientEmail}
+                    onChange={(e) =>
+                      handleSettingChange("clientEmail", e.target.value)
+                    }
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="emailAppPassword">App Password</Label>
+                  <Input
+                    id="emailAppPassword"
+                    type="password"
+                    value={settings.emailAppPassword}
+                    onChange={(e) =>
+                      handleSettingChange("emailAppPassword", e.target.value)
+                    }
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="emailIntro">Email Introduction</Label>
+                  <Textarea
+                    id="emailIntro"
+                    value={settings.emailIntro}
+                    onChange={(e) =>
+                      handleSettingChange("emailIntro", e.target.value)
                     }
                   />
-                  <Label htmlFor="showWorryDialog">Show Worry Dialog</Label>
                 </div>
+                <div>
+                  <Label htmlFor="emailBody">Email Body</Label>
+                  <Textarea
+                    id="emailBody"
+                    value={settings.emailBody}
+                    onChange={(e) =>
+                      handleSettingChange("emailBody", e.target.value)
+                    }
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="emailSignature">Email Signature</Label>
+                  <Textarea
+                    id="emailSignature"
+                    value={settings.emailSignature}
+                    onChange={(e) =>
+                      handleSettingChange("emailSignature", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+            </TabsContent>
+            <TabsContent value="ratings">
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="worryRating">Worry Rating Threshold</Label>
+                  <p className="text-gray-500 text-xs">
+                    Sets the rating threshold to block customers from posting
+                    reviews on Google, best kept at 4.
+                  </p>
+                  <Input
+                    id="worryRating"
+                    type="number"
+                    min="1"
+                    max="5"
+                    value={settings.worryRating}
+                    onChange={(e) =>
+                      handleSettingChange(
+                        "worryRating",
+                        parseInt(e.target.value)
+                      )
+                    }
+                  />
+                </div>
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="showWorryDialog"
+                      checked={settings.showWorryDialog}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("showWorryDialog", checked)
+                      }
+                    />
+                    <Label htmlFor="showWorryDialog">Show Worry Dialog</Label>
+                  </div>
 
-                {settings.showWorryDialog && (
+                  {settings.showWorryDialog && (
+                    <div>
+                      <div className="mt-2">
+                        <Label htmlFor="dialogTitle">Dialog Title</Label>
+                        <p className="text-gray-500 text-xs">
+                          This is the worry dialog title that will be shown to
+                          customers who select a review rating less than the
+                          worry rating threshold.
+                        </p>
+                        <Input
+                          id="dialogTitle"
+                          type="text"
+                          value={settings.dialogTitle}
+                          onChange={(e) =>
+                            handleSettingChange("dialogTitle", e.target.value)
+                          }
+                          required
+                        />
+                      </div>
+
+                      <div className="mt-2">
+                        <Label htmlFor="dialogBody">Dialog Body</Label>
+                        <p className="text-gray-500 text-xs">
+                          This is the worry dialog body that will be shown to
+                          customers who select a review rating less than the
+                          worry rating threshold.
+                        </p>
+                        <Textarea
+                          id="dialogBody"
+                          value={settings.dialogBody}
+                          rows={5}
+                          onChange={(e) =>
+                            handleSettingChange("dialogBody", e.target.value)
+                          }
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </TabsContent>
+            <TabsContent value="locations">
+              <div className="space-y-4">
+                <div>
+                  <div className="mb-4">
+                    {" "}
+                    {/* Add margin-bottom to create space */}
+                    <Label htmlFor="placeIds">Registered Places</Label>
+                    {websiteURLS.map((website, index) => (
+                      <a
+                        href={website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <div className="text-lg font-medium">
+                          <Badge className="text-white">
+                            {" " + placesInfo[index].name}
+                          </Badge>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="showComplimentaryItem"
+                    checked={settings.showComplimentaryItem}
+                    onCheckedChange={(checked) =>
+                      handleSettingChange("showComplimentaryItem", checked)
+                    }
+                  />
+                  <Label htmlFor="showComplimentaryItem">
+                    Offer Complimentary Item
+                  </Label>
+                </div>
+                {settings.showComplimentaryItem && (
                   <div>
-                    <div className="mt-2">
-                      <Label htmlFor="dialogTitle">Dialog Title</Label>
-                      <Input
-                        id="dialogTitle"
-                        type="text"
-                        value={settings.dialogTitle}
-                        onChange={(e) =>
-                          handleSettingChange("dialogTitle", e.target.value)
-                        }
-                        required
-                      />
-                    </div>
-
-                    <div className="mt-2">
-                      <Label htmlFor="dialogBody">Dialog Body</Label>
-                      <Textarea
-                        id="dialogBody"
-                        value={settings.dialogBody}
-                        rows={5}
-                        onChange={(e) =>
-                          handleSettingChange("dialogBody", e.target.value)
-                        }
-                        className="w-full"
-                      />
-                    </div>
+                    <Label htmlFor="complimentaryItem">
+                      Complimentary Item
+                    </Label>
+                    <p className="text-gray-500 text-xs">
+                      Specify the complimentary items you'd like to offer, which
+                      will be included in the email when addressing concerns.
+                    </p>
+                    <Input
+                      id="complimentaryItem"
+                      placeholder="10% off Item A, $2 off next purchase, etc..."
+                      value={settings.complimentaryItem}
+                      onChange={(e) =>
+                        handleSettingChange("complimentaryItem", e.target.value)
+                      }
+                    />
                   </div>
                 )}
               </div>
-            </div>
-          </TabsContent>
-          <TabsContent value="locations">
-            <div className="space-y-4">
-              <div>
-                <div className="mb-4">
-                  {" "}
-                  {/* Add margin-bottom to create space */}
-                  <Label htmlFor="placeIds">Registered Places</Label>
-                  {websiteURLS.map((website, index) => (
-                    <a href={website} target="_blank" rel="noopener noreferrer">
-                      <div className="text-lg font-medium">
-                        <Badge className="text-white">
-                          {" " + placesInfo[index].name}
-                        </Badge>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="showComplimentaryItem"
-                  checked={settings.showComplimentaryItem}
-                  onCheckedChange={(checked) =>
-                    handleSettingChange("showComplimentaryItem", checked)
-                  }
-                />
-                <Label htmlFor="showComplimentaryItem">
-                  Offer Complimentary Item
-                </Label>
-              </div>
-              {settings.showComplimentaryItem && (
-                <div>
-                  <Label htmlFor="complimentaryItem">Complimentary Item</Label>
-                  <Input
-                    id="complimentaryItem"
-                    value={settings.complimentaryItem}
-                    onChange={(e) =>
-                      handleSettingChange("complimentaryItem", e.target.value)
-                    }
-                  />
-                </div>
-              )}
-            </div>
-          </TabsContent>
-        </Tabs>
+            </TabsContent>
+          </Tabs>
+        )}
       </CardContent>
       <CardFooter>
         <Button onClick={handleSave}>Save Settings</Button>

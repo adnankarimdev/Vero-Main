@@ -98,7 +98,7 @@ const SmartReviewBuilder = () => {
       .writeText(allReviews)
       .then(() => {
         toast({
-          title: "Copied to clipboard",
+          title: "Your text is ready to paste!",
           description:
             "Your review has been copied to the clipboard! You can now paste it into the Google review form.",
         });
@@ -124,7 +124,7 @@ const SmartReviewBuilder = () => {
       .writeText(sophisticatedReview)
       .then(() => {
         toast({
-          title: "Copied to clipboard",
+          title: "Your text is ready to paste!",
           description:
             "Your review has been copied to the clipboard! You can now paste it into the Google review form.",
         });
