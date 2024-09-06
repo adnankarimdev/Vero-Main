@@ -333,7 +333,7 @@ export default function ClientSettings() {
                       key={index}
                       className="flex items-center mb-2 space-x-2"
                     >
-                      <Input
+                      <Textarea
                         placeholder={`Question ${index + 1} for rating ${rating.id}`}
                         value={question}
                         onChange={(e) =>
