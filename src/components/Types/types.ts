@@ -17,8 +17,8 @@ export interface Place {
   place_id: string;
   currentRating?: string;
   currentTotalReviews?: string;
-  websiteUrl?:string;
-  googleTypes?:string[];
+  websiteUrl?: string;
+  googleTypes?: string[];
 }
 
 export interface Settings {

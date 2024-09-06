@@ -44,7 +44,7 @@ export default function ReviewsTab({
   const [reviews, setReviews] = useState<CustomerReviewInfoFromSerializer[]>(
     []
   );
-  const [googleKeywords, setGoogleKeywords] = useState<string[]>([])
+  const [googleKeywords, setGoogleKeywords] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     setIsLoading(true);
@@ -88,7 +88,10 @@ export default function ReviewsTab({
           return {
             ...review,
             badges: Array.isArray(badgesArray) ? badgesArray : [],
-            internal_google_key_words: findKeywordsInReview(review.final_review_body, reviewSettingsResponse.data.keywords)
+            internal_google_key_words: findKeywordsInReview(
+              review.final_review_body,
+              reviewSettingsResponse.data.keywords
+            ),
           };
         });
         setReviews(updatedReviews);
@@ -108,17 +111,17 @@ export default function ReviewsTab({
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
-  const findKeywordsInReview =(textBody:string, keywordsArray:string[]) => {
-    const foundKeywords:string[] = [];
+  const findKeywordsInReview = (textBody: string, keywordsArray: string[]) => {
+    const foundKeywords: string[] = [];
 
     keywordsArray.forEach((keyword) => {
       if (textBody.toLowerCase().includes(keyword.toLowerCase())) {
         foundKeywords.push(keyword);
       }
     });
-  
-    return foundKeywords
-  }
+
+    return foundKeywords;
+  };
   return (
     <div className="space-y-8">
       {isLoading && <ReviewsSkeletonLoader />}
@@ -205,8 +208,10 @@ export default function ReviewsTab({
               </div>
             </div>
             <div>
-            <Separator className="mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Google Keywords Mentioned</h3>
+              <Separator className="mb-4" />
+              <h3 className="text-lg font-semibold mb-2">
+                Google Keywords Mentioned
+              </h3>
               <div className="flex flex-wrap gap-2">
                 {review.rating == 5 &&
                   review.internal_google_key_words.map((badge, index) => (
@@ -217,10 +222,9 @@ export default function ReviewsTab({
                       {badge}
                     </Badge>
                   ))}
-                {review.rating <= 5 && review.final_review_body == '' && (
+                {review.rating <= 5 && review.final_review_body == "" && (
                   <span className="text-sm text-muted-foreground">
                     {
-                      
                       "No keywords mentioned since this review was not posted to Google."
                     }
                   </span>

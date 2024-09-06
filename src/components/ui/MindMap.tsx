@@ -36,7 +36,7 @@ export default function MindMap() {
             <div className="font-semibold">Customer</div>
             <ArrowRight className="w-6 h-6" />
             <div className="font-semibold">
-              <Logo size={50}/>
+              <Logo size={50} />
             </div>
             <ArrowRight className="w-6 h-6" />
             <div className=" p-2 text-sm whitespace-nowrap">

@@ -65,7 +65,7 @@ export default function ClientSettings() {
   const [websiteURLS, setWebsiteURLS] = useState([]);
   const [areasToFocusOn, setAreasToFocusOn] = useState("");
   const [websiteAndLocation, setWebsiteAndLocation] = useState([]);
-  const [keywords, setKeyWords] = useState([])
+  const [keywords, setKeyWords] = useState([]);
   const [isTabsLoading, setIsTabsLoading] = useState(true);
 
   const handleQuestionChange = (
@@ -183,6 +183,7 @@ export default function ClientSettings() {
   };
 
   const handleGenerateReviewQuestions = () => {
+    setIsTabsLoading(true);
     var fullContext =
       "Questions should focus on these topics: " +
       areasToFocusOn +
@@ -201,6 +202,7 @@ export default function ClientSettings() {
         const generatedQuestionsAsJson = JSON.parse(generatedQuestions);
         console.log(generatedQuestionsAsJson);
         handleSettingChange("questions", generatedQuestionsAsJson["questions"]);
+        setIsTabsLoading(false);
         toast({
           title: "Success",
           description: "Questions generated.",
@@ -208,6 +210,7 @@ export default function ClientSettings() {
       })
       .catch((error) => {
         console.log(error);
+        setIsTabsLoading(false);
         toast({
           title: "Failed to generate",
           description: "try again",
@@ -249,7 +252,7 @@ export default function ClientSettings() {
 
         // Update the settings state
         setSettings(reviewSettingsResponse.data);
-        setKeyWords(reviewSettingsResponse.data.keywords)
+        setKeyWords(reviewSettingsResponse.data.keywords);
         setIsTabsLoading(false);
         if (reviewSettingsResponse.data.questions.length == 0) {
           handleSettingChange(
@@ -524,22 +527,22 @@ export default function ClientSettings() {
                         </div>
                       </a>
                     ))}
-                    <Separator className="mt-5 mb-5"/>
-                   <Label htmlFor="keywords">Google Keywords</Label>
-                  <div className="flex flex-wrap gap-2">
-                    {keywords.map((keyword) => (
-                      <Badge
-                        key={keyword}
-                        variant="destructive"
-                        className="bg-green-500 text-white hover:bg-green-500 hover:text-white cursor-pointer"
-                      >
-                        {keyword}
-                      </Badge>
-                    ))}
-                  </div>
+                    <Separator className="mt-5 mb-5" />
+                    <Label htmlFor="keywords">Google Keywords</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {keywords.map((keyword) => (
+                        <Badge
+                          key={keyword}
+                          variant="destructive"
+                          className="bg-green-500 text-white hover:bg-green-500 hover:text-white cursor-pointer"
+                        >
+                          {keyword}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <Separator className="mt-5 mb-5"/>
+                <Separator className="mt-5 mb-5" />
                 <div className="flex items-center space-x-2">
                   <Switch
                     id="showComplimentaryItem"
@@ -577,7 +580,9 @@ export default function ClientSettings() {
         )}
       </CardContent>
       <CardFooter>
-        <Button onClick={handleSave}>Save Settings</Button>
+        <Button onClick={handleSave} disabled={isTabsLoading}>
+          Save Settings
+        </Button>
       </CardFooter>
     </Card>
   );

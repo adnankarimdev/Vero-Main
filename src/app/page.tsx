@@ -173,9 +173,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
-              <span className="ml-2 text-xl font-bold text-gray-900">
-                Vero
-              </span>
+              <span className="ml-2 text-xl font-bold text-gray-900">Vero</span>
             </div>
             <nav className="flex flex-wrap justify-center md:justify-end gap-6">
               <Link
