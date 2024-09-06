@@ -7,6 +7,7 @@ import {
   FilePenLine,
   LogOut,
   MonitorCheck,
+  Star,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,8 +17,8 @@ import Logo from "./Logo";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Home", href: "/dashboard" },
-  { icon: ListStart, label: "Onboarding", href: "/onboarding" },
-  // { icon: Star, label: "Reviews", href: "/reviews" },
+  // { icon: ListStart, label: "Onboarding", href: "/onboarding" },
+  { icon: Star, label: "Reviews", href: "/reviews" },
   { icon: Infinity, label: "Auto Respond", href: "/autorespond" },
   { icon: FilePenLine, label: "Settings", href: "/settings" },
   { icon: LogOut, label: "Logout", href: "/" }, // 'href' can remain for consistency, but will be overridden

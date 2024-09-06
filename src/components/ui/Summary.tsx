@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Place } from "../Types/types";
 import { Separator } from "@/components/ui/separator";
+import { CustomerReviewInfoFromSerializer } from "../Types/types";
 import {
   Table,
   TableBody,
@@ -49,6 +50,10 @@ export default function SummaryTab({
 }: any) {
   const [placesInfo, setPlacesInfo] = useState<Place[]>([]);
   const [isTableLoading, setIsTableLoading] = useState(true);
+  const [totalNumberOfFiveStarReviews, setTotalNumberOfFiveStarReviews] =
+    useState(0);
+  const [totalNegativeReviewsPrevented, setTotalNegativeReviewsPrevented] =
+    useState(0);
 
   const calculateAdditionalReviews = (
     currentRating: number,
@@ -85,11 +90,29 @@ export default function SummaryTab({
           return;
         }
 
-        // First, fetch the placeId
         const placeIdResponse = await axios.get(
           `http://localhost:8021/backend/get-place-id-by-email/${email}/`
         );
         setPlacesInfo(placeIdResponse.data.places);
+        const placeIdsAsArray = placeIdResponse.data.places.map(
+          (place: any) => place.place_id
+        );
+        const response = await axios.get(
+          "http://localhost:8021/backend/get-reviews-by-client-ids/",
+          {
+            params: {
+              clientIds: placeIdsAsArray,
+            },
+          }
+        );
+        console.log("Reviews:", response.data);
+        const data = response.data as CustomerReviewInfoFromSerializer[];
+        setTotalNegativeReviewsPrevented(
+          data.filter((item) => item.posted_to_google_review === false).length
+        );
+        setTotalNumberOfFiveStarReviews(
+          data.filter((item) => item.rating === 5).length
+        );
         setIsTableLoading(false);
       } catch (err) {
         console.error(err);
@@ -103,7 +126,7 @@ export default function SummaryTab({
     <Card>
       <CardHeader>
         <CardTitle>All Locations</CardTitle>
-        <CardDescription>Snapshot of Your Google Reviews</CardDescription>
+        <CardDescription>Overview</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4 md:grid-cols-2 mb-10">
@@ -137,7 +160,9 @@ export default function SummaryTab({
               <Ban className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{totalReviews}</div>
+              <div className="text-2xl font-bold">
+                {totalNegativeReviewsPrevented}
+              </div>
             </CardContent>
           </Card>
           <Card>
@@ -149,7 +174,7 @@ export default function SummaryTab({
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {calculateAdditionalReviews(averageRating, totalReviews, 4.4)}
+                {totalNumberOfFiveStarReviews}
               </div>
             </CardContent>
           </Card>
@@ -216,7 +241,7 @@ export default function SummaryTab({
         <Separator className="my-4" />
         <CardHeader>
           <CardTitle>Per Location</CardTitle>
-          <CardDescription>Snapshot of Your Google Reviews</CardDescription>
+          <CardDescription>Overview</CardDescription>
         </CardHeader>
 
         {isTableLoading && <TableSkeletonLoader />}
@@ -227,7 +252,7 @@ export default function SummaryTab({
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Current Rating</TableHead>
-                <TableHead>Total Number of Reviews</TableHead>
+                <TableHead>Total Google Reviews</TableHead>
                 <TableHead>5-Star Reviews Needed (+0.1)</TableHead>
                 <TableHead>5-Star Reviews with Redefeyn</TableHead>
               </TableRow>
