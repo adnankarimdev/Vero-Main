@@ -17,6 +17,8 @@ export interface Place {
   place_id: string;
   currentRating?: string;
   currentTotalReviews?: string;
+  websiteUrl?:string;
+  googleTypes?:string[];
 }
 
 export interface Settings {
@@ -63,4 +65,5 @@ export interface CustomerReviewInfoFromSerializer {
   rating: number;
   time_taken_to_write_review_in_seconds: number;
   review_date?: string;
+  internal_google_key_words?: string[];
 }

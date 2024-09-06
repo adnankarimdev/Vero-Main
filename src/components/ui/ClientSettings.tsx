@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Place } from "../Types/types";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -63,6 +65,7 @@ export default function ClientSettings() {
   const [websiteURLS, setWebsiteURLS] = useState([]);
   const [areasToFocusOn, setAreasToFocusOn] = useState("");
   const [websiteAndLocation, setWebsiteAndLocation] = useState([]);
+  const [keywords, setKeyWords] = useState([])
   const [isTabsLoading, setIsTabsLoading] = useState(true);
 
   const handleQuestionChange = (
@@ -246,6 +249,7 @@ export default function ClientSettings() {
 
         // Update the settings state
         setSettings(reviewSettingsResponse.data);
+        setKeyWords(reviewSettingsResponse.data.keywords)
         setIsTabsLoading(false);
         if (reviewSettingsResponse.data.questions.length == 0) {
           handleSettingChange(
@@ -520,8 +524,22 @@ export default function ClientSettings() {
                         </div>
                       </a>
                     ))}
+                    <Separator className="mt-5 mb-5"/>
+                   <Label htmlFor="keywords">Google Keywords</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {keywords.map((keyword) => (
+                      <Badge
+                        key={keyword}
+                        variant="destructive"
+                        className="bg-green-500 text-white hover:bg-green-500 hover:text-white cursor-pointer"
+                      >
+                        {keyword}
+                      </Badge>
+                    ))}
+                  </div>
                   </div>
                 </div>
+                <Separator className="mt-5 mb-5"/>
                 <div className="flex items-center space-x-2">
                   <Switch
                     id="showComplimentaryItem"

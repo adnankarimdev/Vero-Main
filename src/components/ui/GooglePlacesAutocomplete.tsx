@@ -48,6 +48,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
         );
         autocomplete.addListener("place_changed", async () => {
           const selectedPlace = autocomplete.getPlace();
+
           const newPlace: Place = {
             name: selectedPlace.name,
             formatted_address: selectedPlace.formatted_address,
@@ -57,8 +58,14 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
             `http://localhost:8021/backend/get-place-details/${selectedPlace.place_id}/`
           );
           const data = response.data;
+          const website = data.result["website"] || '';
+          const types = data.result["types"]
+          const typesToRemove = new Set(["store", "point_of_interest", "establishment"]);
+          const finalTypes = types.filter(type => !typesToRemove.has(type));
           newPlace.currentRating = data.result["rating"];
           newPlace.currentTotalReviews = data.result["user_ratings_total"];
+          newPlace.websiteUrl = website
+          newPlace.googleTypes = finalTypes
           setPlaces((prevPlaces) => [...prevPlaces, newPlace]);
           if (inputRef.current) {
             inputRef.current.value = "";
