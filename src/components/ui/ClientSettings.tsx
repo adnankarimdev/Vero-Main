@@ -250,7 +250,7 @@ export default function ClientSettings() {
         if (reviewSettingsResponse.data.questions.length == 0) {
           handleSettingChange(
             "questions",
-            Array(5)
+            Array(4)
               .fill(null)
               .map((_, i) => ({
                 id: i + 1,
