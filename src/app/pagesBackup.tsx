@@ -127,7 +127,7 @@ export default function Dashboard() {
     {
       title: "Step 2: See the Magic",
       description:
-        "If you want, Redefeyn will enhance your response, making sure it's the best it can be based on what you wrote!",
+        "If you want, Vero will enhance your response, making sure it's the best it can be based on what you wrote!",
       emoji: "✨",
     },
     {
@@ -179,7 +179,7 @@ export default function Dashboard() {
     );
   };
 
-  const goToRedefeyn = () => {
+  const goToVero = () => {
     setShowReviewPlatform(true);
   };
 
@@ -310,7 +310,7 @@ export default function Dashboard() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Redefeyn Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-4">Vero Dashboard</h1>
       <Tabs defaultValue="summary">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="signup">Sign Up </TabsTrigger>

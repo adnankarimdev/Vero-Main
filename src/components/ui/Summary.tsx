@@ -133,7 +133,7 @@ export default function SummaryTab({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {"Average Review Rating with Customers using Redefeyn"}
+                {"Average Review Rating with Customers using Vero"}
               </CardTitle>
               <Star className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -155,7 +155,7 @@ export default function SummaryTab({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {"Negative Reviews Prevented with Redefeyn"}
+                {"Negative Reviews Prevented with Vero"}
               </CardTitle>
               <Ban className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -168,7 +168,7 @@ export default function SummaryTab({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {"5 Star Reviews Posted with Redefeyn"}
+                {"5 Star Reviews Posted with Vero"}
               </CardTitle>
               <MessageSquare className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -254,7 +254,7 @@ export default function SummaryTab({
                 <TableHead>Current Rating</TableHead>
                 <TableHead>Total Google Reviews</TableHead>
                 <TableHead>5-Star Reviews Needed (+0.1)</TableHead>
-                <TableHead>5-Star Reviews with Redefeyn</TableHead>
+                <TableHead>5-Star Reviews with Vero</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -197,7 +197,7 @@ const SmartReviewBuilder = () => {
             onClick={() => setShowInitialChoice(false)}
             className="w-full"
           >
-            Continue to Redefeyn
+            Continue to Vero
           </Button>
           <Button onClick={handleGoToGoogleReview} className="w-full">
             Go Directly to Google Review

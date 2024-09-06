@@ -44,7 +44,7 @@ export default function AuthPage() {
         localStorage.setItem("userEmail", email);
         toast({
           title: "Successfully Logged In",
-          description: "Welcome to Redefeyn.",
+          description: "Welcome to Vero.",
         });
         setTimeout(() => {
           router.push("/dashboard");
@@ -69,7 +69,7 @@ export default function AuthPage() {
       .then((response) => {
         toast({
           title: "User Created",
-          description: "Welcome to Redefeyn.",
+          description: "Welcome to Vero.",
         });
         localStorage.setItem("userEmail", email);
         setTimeout(() => {

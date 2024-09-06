@@ -44,7 +44,7 @@ export default function LandingPage() {
       >
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link className="flex items-center justify-center" href="#">
-            <Logo></Logo>
+            <Logo size={50}></Logo>
             {/* <span className="text-2xl font-bold text-gray-900">edefeyn</span> */}
           </Link>
           <nav className="hidden md:flex space-x-8">
@@ -129,10 +129,10 @@ export default function LandingPage() {
         <section className="container mx-auto px-4 py-24 md:py-32 lg:py-40">
           <div className="max-w-3xl mx-auto text-center space-y-8">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              Redefeyn
+              Vero
             </h1>
             {/* <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            At Redefeyn, we’re committed to helping you connect with customers authentically. We simplify gathering genuine reviews, managing feedback, and boosting your online reputation, all with a personal touch.
+            At Vero, we’re committed to helping you connect with customers authentically. We simplify gathering genuine reviews, managing feedback, and boosting your online reputation, all with a personal touch.
             </p> */}
             <MindMap />
             <div className="flex justify-center space-x-4">
@@ -151,7 +151,7 @@ export default function LandingPage() {
               Ready to Improve Your Online Reputation?
             </h2>
             <p className="text-xl text-gray-600">
-              Join Redefeyn today and start collecting better, more meaningful
+              Join Vero today and start collecting better, more meaningful
               reviews for your business.
             </p>
             <form className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
@@ -174,7 +174,7 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
               <span className="ml-2 text-xl font-bold text-gray-900">
-                Redefeyn
+                Vero
               </span>
             </div>
             <nav className="flex flex-wrap justify-center md:justify-end gap-6">
@@ -199,7 +199,7 @@ export default function LandingPage() {
             </nav>
           </div>
           <div className="mt-8 text-center text-sm text-gray-500">
-            © {new Date().getFullYear()} Redefeyn. All rights reserved.
+            © {new Date().getFullYear()} Vero. All rights reserved.
           </div>
         </div>
       </footer>

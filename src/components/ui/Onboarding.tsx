@@ -83,7 +83,7 @@ export default function Onboarding() {
     emailBody: "",
     emailAppPassword: "",
     clientEmail: "",
-    worryRating: 3,
+    worryRating: 4,
     showWorryDialog: true,
     placeIds: [],
     showComplimentaryItem: false,
@@ -216,7 +216,7 @@ export default function Onboarding() {
       .then((response) => {
         toast({
           title: "Success",
-          description: "Settings Updated. Welcome to Redefeyn",
+          description: "Settings Updated. Welcome to Vero",
         });
         setTimeout(() => {
           router.push("/dashboard");

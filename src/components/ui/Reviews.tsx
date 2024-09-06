@@ -223,7 +223,7 @@ export default function ReviewsTab({
             <CardHeader>
               <CardTitle className="flex items-center justify-center">
                 <span className="flex items-center text-md font-semibold justify-center">
-                  Watch Redefeyn work its magic. Reviews coming soon! 🚀
+                  Watch Vero work its magic. Reviews coming soon! 🚀
                 </span>
               </CardTitle>
             </CardHeader>

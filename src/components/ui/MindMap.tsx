@@ -30,13 +30,13 @@ export default function MindMap() {
         {/* Divider */}
         <div className="w-full border-t border-gray-300 my-4"></div>
 
-        {/* Redefeyn Process */}
+        {/* Vero Process */}
         <div className="flex flex-col space-y-4 w-full">
           <div className="flex items-center space-x-4 flex-wrap">
             <div className="font-semibold">Customer</div>
             <ArrowRight className="w-6 h-6" />
             <div className="font-semibold">
-              <Logo />
+              <Logo size={50}/>
             </div>
             <ArrowRight className="w-6 h-6" />
             <div className=" p-2 text-sm whitespace-nowrap">
