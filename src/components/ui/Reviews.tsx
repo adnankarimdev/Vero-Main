@@ -202,7 +202,7 @@ export default function ReviewsTab({}: any) {
               <Separator className="mb-4" />
               <h3 className="text-lg font-semibold mb-2">Badges</h3>
               <div className="flex flex-wrap gap-2">
-                {review.rating == 5 &&
+                {review.posted_with_bubble_rating_platform &&
                   review.badges.map((badge, index) => (
                     <Badge
                       key={index}
@@ -212,10 +212,10 @@ export default function ReviewsTab({}: any) {
                       {badge}
                     </Badge>
                   ))}
-                {review.rating < 5 && (
+                {!review.posted_with_bubble_rating_platform && (
                   <span className="text-sm text-muted-foreground">
                     {
-                      "Badges are given by customers for perfect ratings of 5 stars."
+                      "Free form platform was used."
                     }
                   </span>
                 )}
@@ -227,7 +227,7 @@ export default function ReviewsTab({}: any) {
                 Google Keywords Mentioned
               </h3>
               <div className="flex flex-wrap gap-2">
-                {review.rating == 5 &&
+                {review.posted_to_google_review &&
                   review.internal_google_key_words.map((badge, index) => (
                     <Badge
                       key={index}
@@ -236,7 +236,7 @@ export default function ReviewsTab({}: any) {
                       {badge}
                     </Badge>
                   ))}
-                {review.rating <= 5 && review.final_review_body == "" && (
+                {!review.posted_to_google_review && (
                   <span className="text-sm text-muted-foreground">
                     {
                       "No keywords mentioned since this review was not posted to Google."
@@ -266,7 +266,7 @@ export default function ReviewsTab({}: any) {
               {Object.keys(review.analyzed_review_details).length == 0 && (
                 <p className="text-sm text-muted-foreground">
                   {
-                    "A 5 star review was left, but no review body was created by the customer."
+                    "Since there is no review body, there is no analysis."
                   }
                 </p>
               )}

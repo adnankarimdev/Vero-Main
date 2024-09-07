@@ -66,4 +66,5 @@ export interface CustomerReviewInfoFromSerializer {
   time_taken_to_write_review_in_seconds: number;
   review_date?: string;
   internal_google_key_words?: string[];
+  posted_with_bubble_rating_platform?: boolean;
 }

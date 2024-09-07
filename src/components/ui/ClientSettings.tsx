@@ -59,6 +59,7 @@ export default function ClientSettings() {
     websiteUrls: [],
     userEmail: "",
     places: [],
+    useBubblePlatform: false,
   });
   const [placeIds, setPlaceIds] = useState([]);
   const [placesInfo, setPlacesInfo] = useState<Place[]>([]);
@@ -437,7 +438,7 @@ export default function ClientSettings() {
                   <Label htmlFor="worryRating">Worry Rating Threshold</Label>
                   <p className="text-gray-500 text-xs">
                     Sets the rating threshold to block customers from posting
-                    reviews on Google, best kept at 4.
+                    reviews on Google when writing free form reviews, best kept at 4.
                   </p>
                   <Input
                     id="worryRating"
@@ -454,7 +455,18 @@ export default function ClientSettings() {
                   />
                 </div>
                 <div>
-                  <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2">
+                    <Switch
+                      id="useBubblePlatform"
+                      checked={settings.useBubblePlatform}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("useBubblePlatform", checked)
+                      }
+                    />
+                    <Label htmlFor="showWorryDialog">Bubble Review Platform</Label>
+                  </div>
+
+                  <div className="flex items-center space-x-2 mt-4">
                     <Switch
                       id="showWorryDialog"
                       checked={settings.showWorryDialog}
