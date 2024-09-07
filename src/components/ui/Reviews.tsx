@@ -7,13 +7,9 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import {
-  Star
-} from "lucide-react";
+import { Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import {
-  CustomerReviewInfoFromSerializer,
-} from "../Types/types";
+import { CustomerReviewInfoFromSerializer } from "../Types/types";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ReviewsSkeletonLoader from "./Skeletons/ReviewsSkeletonLoader";
@@ -25,31 +21,31 @@ export default function ReviewsTab({}: any) {
   );
   const customerProfiles = [
     {
-      "id": 1,
-      "customerProfile": "Grumpy Gus",
-      "Description": "Totally unimpressed and ready to rant."
+      id: 1,
+      customerProfile: "Grumpy Gus",
+      Description: "Totally unimpressed and ready to rant.",
     },
     {
-      "id": 2,
-      "customerProfile": "Meh Maggie",
-      "Description": "Couldn’t care less, just average."
+      id: 2,
+      customerProfile: "Meh Maggie",
+      Description: "Couldn’t care less, just average.",
     },
     {
-      "id": 3,
-      "customerProfile": "Content Carl",
-      "Description": "Fine with it, nothing to write home about."
+      id: 3,
+      customerProfile: "Content Carl",
+      Description: "Fine with it, nothing to write home about.",
     },
     {
-      "id": 4,
-      "customerProfile": "Chipper Charlie",
-      "Description": "Quite happy, had a good time!"
+      id: 4,
+      customerProfile: "Chipper Charlie",
+      Description: "Quite happy, had a good time!",
     },
     {
-      "id": 5,
-      "customerProfile": "Raving Ricky",
-      "Description": "Absolutely thrilled, shouting from the rooftops!"
-    }
-  ]
+      id: 5,
+      customerProfile: "Raving Ricky",
+      Description: "Absolutely thrilled, shouting from the rooftops!",
+    },
+  ];
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     setIsLoading(true);
@@ -128,10 +124,9 @@ export default function ReviewsTab({}: any) {
     return foundKeywords;
   };
 
-  const avatarImage = (rating:number) => 
-  {
+  const avatarImage = (rating: number) => {
     return `/Avatars/rating${rating}.png`;
-  }
+  };
   return (
     <div className="space-y-8">
       {isLoading && <ReviewsSkeletonLoader />}
@@ -139,11 +134,10 @@ export default function ReviewsTab({}: any) {
         <Card key={review.id} className="w-full max-w-2xl mx-auto">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-            <Avatar className="w-12 h-12">
-  <AvatarImage src={avatarImage(review.rating)} />
-</Avatar>
+              <Avatar className="w-12 h-12">
+                <AvatarImage src={avatarImage(review.rating)} />
+              </Avatar>
               <div className="flex flex-col">
-
                 <span className="flex items-center">{review.location}</span>
                 <span className="text-sm text-muted-foreground">
                   {review.review_date}
@@ -214,9 +208,7 @@ export default function ReviewsTab({}: any) {
                   ))}
                 {!review.posted_with_bubble_rating_platform && (
                   <span className="text-sm text-muted-foreground">
-                    {
-                      "Free form platform was used."
-                    }
+                    {"Free form platform was used."}
                   </span>
                 )}
               </div>
@@ -265,9 +257,7 @@ export default function ReviewsTab({}: any) {
 
               {Object.keys(review.analyzed_review_details).length == 0 && (
                 <p className="text-sm text-muted-foreground">
-                  {
-                    "Since there is no review body, there is no analysis."
-                  }
+                  {"Since there is no review body, there is no analysis."}
                 </p>
               )}
             </div>
