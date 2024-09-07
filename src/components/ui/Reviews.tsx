@@ -5,46 +5,51 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import {
-  Star,
-  MapPin,
-  ThumbsUp,
-  ThumbsDown,
-  Send,
-  Clock,
-  Mail,
+  Star
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
-  CustomerReviewInfo,
   CustomerReviewInfoFromSerializer,
 } from "../Types/types";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ReviewsSkeletonLoader from "./Skeletons/ReviewsSkeletonLoader";
 
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-export default function ReviewsTab({
-  searchQuery,
-  setSearchQuery,
-  uniqueLocations,
-  setSelectedLocation,
-  finalFilteredReviews,
-}: any) {
+export default function ReviewsTab({}: any) {
   const [placeIds, setPlaceIds] = useState([]);
   const [reviews, setReviews] = useState<CustomerReviewInfoFromSerializer[]>(
     []
   );
-  const [googleKeywords, setGoogleKeywords] = useState<string[]>([]);
+  const customerProfiles = [
+    {
+      "id": 1,
+      "customerProfile": "Grumpy Gus",
+      "Description": "Totally unimpressed and ready to rant."
+    },
+    {
+      "id": 2,
+      "customerProfile": "Meh Maggie",
+      "Description": "Couldn’t care less, just average."
+    },
+    {
+      "id": 3,
+      "customerProfile": "Content Carl",
+      "Description": "Fine with it, nothing to write home about."
+    },
+    {
+      "id": 4,
+      "customerProfile": "Chipper Charlie",
+      "Description": "Quite happy, had a good time!"
+    },
+    {
+      "id": 5,
+      "customerProfile": "Raving Ricky",
+      "Description": "Absolutely thrilled, shouting from the rooftops!"
+    }
+  ]
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     setIsLoading(true);
@@ -122,6 +127,11 @@ export default function ReviewsTab({
 
     return foundKeywords;
   };
+
+  const avatarImage = (rating:number) => 
+  {
+    return `/Avatars/rating${rating}.png`;
+  }
   return (
     <div className="space-y-8">
       {isLoading && <ReviewsSkeletonLoader />}
@@ -129,7 +139,11 @@ export default function ReviewsTab({
         <Card key={review.id} className="w-full max-w-2xl mx-auto">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
+            <Avatar className="w-12 h-12">
+  <AvatarImage src={avatarImage(review.rating)} />
+</Avatar>
               <div className="flex flex-col">
+
                 <span className="flex items-center">{review.location}</span>
                 <span className="text-sm text-muted-foreground">
                   {review.review_date}
@@ -140,7 +154,7 @@ export default function ReviewsTab({
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`w-5 h-5 ${i < review.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
+                    className={`w-5 h-5 ${i < review.rating ? "text-black fill-black" : "text-gray-300"}`}
                   />
                 ))}
               </span>
