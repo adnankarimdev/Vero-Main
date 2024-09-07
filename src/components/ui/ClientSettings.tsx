@@ -68,6 +68,7 @@ export default function ClientSettings() {
   const [websiteAndLocation, setWebsiteAndLocation] = useState([]);
   const [keywords, setKeyWords] = useState([]);
   const [isTabsLoading, setIsTabsLoading] = useState(true);
+  const [companyWebsites, setCompanyWebsites] = useState([])
 
   const handleQuestionChange = (
     ratingId: number,
@@ -124,7 +125,7 @@ export default function ClientSettings() {
 
     // Validate questions
     settings.questions.forEach((rating) => {
-      if (rating.questions.length === 0 || rating.questions[0].trim() === "") {
+      if ((rating.questions.length === 0 || rating.questions[0].trim() === "") && !settings.useBubblePlatform) {
         errors.push(`Rating ${rating.id} must have at least one question`);
       }
     });
@@ -133,12 +134,12 @@ export default function ClientSettings() {
     if (settings.worryRating < 1 || settings.worryRating > 4) {
       errors.push("Worry rating must be a value between 1 and 4");
     }
-    if (!settings.emailAppPassword) {
-      errors.push("Email app password is required");
-    }
-    if (!settings.clientEmail) {
-      errors.push("Client email is required");
-    }
+    // if (!settings.emailAppPassword) {
+    //   errors.push("Email app password is required");
+    // }
+    // if (!settings.clientEmail) {
+    //   errors.push("Client email is required");
+    // }
 
     return errors;
   };
@@ -189,8 +190,8 @@ export default function ClientSettings() {
       "Questions should focus on these topics: " +
       areasToFocusOn +
       "\n" +
-      "All Locations Context: " +
-      JSON.stringify(placesInfo);
+      "All Locations Context: \n" +
+      JSON.stringify(placesInfo); + "\n" + "Company Websites: " + companyWebsites.join("\n")
     axios
       .post("http://localhost:8021/backend/generate-review-questions/", {
         context: fullContext,
@@ -254,6 +255,7 @@ export default function ClientSettings() {
         // Update the settings state
         setSettings(reviewSettingsResponse.data);
         setKeyWords(reviewSettingsResponse.data.keywords);
+        setCompanyWebsites(reviewSettingsResponse.data.companyUrls)
         setIsTabsLoading(false);
         if (reviewSettingsResponse.data.questions.length == 0) {
           handleSettingChange(
@@ -290,16 +292,19 @@ export default function ClientSettings() {
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="questions">Questions</TabsTrigger>
               <TabsTrigger value="email">Email</TabsTrigger>
-              <TabsTrigger value="ratings">Ratings</TabsTrigger>
+              <TabsTrigger value="ratings">Worry Ratings</TabsTrigger>
               <TabsTrigger value="locations">Locations</TabsTrigger>
             </TabsList>
             <TabsContent value="questions">
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <div className="flex justify-end">
+                    {!settings.useBubblePlatform && (
                     <Button variant="ghost">
-                      <RiAiGenerate size={24} />
-                    </Button>
+                    <RiAiGenerate size={24} />
+                  </Button>
+                    )}
+
                   </div>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -329,7 +334,19 @@ export default function ClientSettings() {
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
-              {settings.questions.map((rating) => (
+              <div className="flex items-center space-x-2">
+                    <Switch
+                      id="useBubblePlatform"
+                      checked={settings.useBubblePlatform}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("useBubblePlatform", checked)
+                      }
+                    />
+                    <Label htmlFor="showWorryDialog">
+                      Bubble Review Platform
+                    </Label>
+                  </div>
+              {!settings.useBubblePlatform && settings.questions.map((rating) => (
                 <div key={rating.id} className="mb-6">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-lg font-semibold">
@@ -456,18 +473,6 @@ export default function ClientSettings() {
                   />
                 </div>
                 <div>
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="useBubblePlatform"
-                      checked={settings.useBubblePlatform}
-                      onCheckedChange={(checked) =>
-                        handleSettingChange("useBubblePlatform", checked)
-                      }
-                    />
-                    <Label htmlFor="showWorryDialog">
-                      Bubble Review Platform
-                    </Label>
-                  </div>
 
                   <div className="flex items-center space-x-2 mt-4">
                     <Switch
