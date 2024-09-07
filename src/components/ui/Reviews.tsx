@@ -186,10 +186,10 @@ export default function ReviewsTab({}: any) {
                     ? "Email Sent: ✅"
                     : "Email Sent: ❌"}
                 </Badge>
-                <Badge variant="outline">
+                {/* <Badge variant="outline">
                   {"Review Writing Time: "}
                   {review.time_taken_to_write_review_in_seconds.toFixed(2)}s
-                </Badge>
+                </Badge> */}
               </div>
             </div>
             <div>

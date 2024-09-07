@@ -34,6 +34,7 @@ declare global {
 export default function GooglePlacesAutocomplete(): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
   const [places, setPlaces] = useState<Place[]>([]);
+  const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast();
   const router = useRouter();
 
@@ -70,7 +71,12 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
           newPlace.currentTotalReviews = data.result["user_ratings_total"];
           newPlace.websiteUrl = website;
           newPlace.googleTypes = finalTypes;
-          setPlaces((prevPlaces) => [...prevPlaces, newPlace]);
+          setPlaces((prevPlaces) => {
+            if (!prevPlaces.includes(newPlace)) {
+              return [...prevPlaces, newPlace];
+            }
+            return prevPlaces;
+          });
           if (inputRef.current) {
             inputRef.current.value = "";
           }
@@ -96,6 +102,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
   };
 
   const handleLocationsSubmit = () => {
+    setIsLoading(true)
     axios
       .post("http://localhost:8021/backend/set-place-ids/", {
         places: places,
@@ -111,6 +118,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
         }, 2000);
       })
       .catch((error) => {
+        setIsLoading(false)
         console.log(error);
         toast({
           title: "Failed to update",
@@ -183,7 +191,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
             </div>
           </CardContent>
           <CardFooter className="flex justify-end p-4">
-            <Button onClick={handleLocationsSubmit} variant="outline">
+            <Button onClick={handleLocationsSubmit} variant="outline" disabled={isLoading}>
               Submit
             </Button>
           </CardFooter>

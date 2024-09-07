@@ -29,9 +29,10 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { PlusCircle, Trash2, MapPin, Mail } from "lucide-react"; 
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
+import { MdOutlineFormatListNumbered, MdLockOutline } from "react-icons/md"
 import { PlaceType } from "../Types/types";
 import TabsSkeletonLoader from "./Skeletons/TabsSkeletonLoader";
 
