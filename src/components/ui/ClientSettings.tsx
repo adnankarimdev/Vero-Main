@@ -297,15 +297,14 @@ export default function ClientSettings() {
             </TabsList>
             <TabsContent value="questions">
               <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <div className="flex justify-end">
+              <div className="flex justify-end items-center">
+                <AlertDialogTrigger >
                     {!settings.useBubblePlatform && (
                     <Button variant="ghost">
                     <RiAiGenerate size={24} />
                   </Button>
                     )}
 
-                  </div>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
@@ -333,8 +332,10 @@ export default function ClientSettings() {
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
+                </div>
+
               </AlertDialog>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 mb-5">
                     <Switch
                       id="useBubblePlatform"
                       checked={settings.useBubblePlatform}
