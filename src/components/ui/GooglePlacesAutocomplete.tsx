@@ -112,6 +112,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
         toast({
           title: "Success",
           description: "Places stored.",
+          duration:1000
         });
         setTimeout(() => {
           router.push("/dashboard");
@@ -123,6 +124,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
         toast({
           title: "Failed to update",
           description: error.response.data.error,
+          duration:1000
         });
       });
   };

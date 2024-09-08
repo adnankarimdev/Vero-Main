@@ -35,6 +35,7 @@ import axios from "axios";
 import { MdOutlineFormatListNumbered, MdLockOutline } from "react-icons/md"
 import { PlaceType } from "../Types/types";
 import TabsSkeletonLoader from "./Skeletons/TabsSkeletonLoader";
+import Logo from "../../app/favicon.ico"
 
 export default function ClientSettings() {
   const { toast } = useToast();
@@ -158,6 +159,7 @@ export default function ClientSettings() {
           variant: "destructive",
           title: "Validation Error",
           description: error,
+          duration:1000
         });
       });
     } else {
@@ -169,6 +171,7 @@ export default function ClientSettings() {
           toast({
             title: "Success",
             description: "Settings Updated.",
+            duration:1000
           });
         })
         .catch((error) => {
@@ -176,11 +179,13 @@ export default function ClientSettings() {
           toast({
             title: "Failed to update",
             description: error.response.data.error,
+            duration:1000
           });
         });
       toast({
         title: "Settings Saved",
         description: "Your settings have been successfully updated.",
+        duration:1000
       });
     }
   };
@@ -209,6 +214,7 @@ export default function ClientSettings() {
         toast({
           title: "Success",
           description: "Questions generated.",
+          duration:1000
         });
       })
       .catch((error) => {
@@ -217,6 +223,7 @@ export default function ClientSettings() {
         toast({
           title: "Failed to generate",
           description: "try again",
+          duration:1000
         });
       });
   };
@@ -281,10 +288,10 @@ export default function ClientSettings() {
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
-        <CardTitle>Customer Review Settings</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-center"> Configure Vero Review Settings</CardTitle>
+        {/* <CardDescription className="text-center">
           Configure your customer feedback system
-        </CardDescription>
+        </CardDescription> */}
       </CardHeader>
       <CardContent>
         {isTabsLoading && <TabsSkeletonLoader />}

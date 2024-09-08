@@ -201,7 +201,7 @@ export default function ReviewsTab({}: any) {
                     <Badge
                       key={index}
                       variant="outline"
-                      className="bg-white-500 text-black hover:bg-white-500 hover:text-white cursor-pointer"
+                      className="bg-white-500 text-black "
                     >
                       {badge}
                     </Badge>

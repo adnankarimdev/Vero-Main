@@ -45,6 +45,7 @@ export default function AuthPage() {
         toast({
           title: "Successfully Logged In",
           description: "Welcome to Vero.",
+          duration:1000
         });
         setTimeout(() => {
           router.push("/dashboard");
@@ -55,6 +56,7 @@ export default function AuthPage() {
         toast({
           title: "Failed to login",
           description: error.response.data.error,
+          duration:1000
         });
       });
   };
@@ -70,6 +72,7 @@ export default function AuthPage() {
         toast({
           title: "User Created",
           description: "Welcome to Vero.",
+          duration:1000
         });
         localStorage.setItem("userEmail", email);
         setTimeout(() => {
@@ -80,6 +83,7 @@ export default function AuthPage() {
         toast({
           title: "Failed to sign up.",
           description: "It's not you, it's us. Please try again.",
+          duration:1000
         });
       });
   };
