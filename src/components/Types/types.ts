@@ -68,3 +68,10 @@ export interface CustomerReviewInfoFromSerializer {
   internal_google_key_words?: string[];
   posted_with_bubble_rating_platform?: boolean;
 }
+
+export interface AnalyzedReviewInfo {
+  score?: number;
+  reasoning?: string;
+  emotion?: string;
+  tone?: string;
+}

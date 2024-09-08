@@ -1,6 +1,6 @@
-import { Card, CardHeader } from "@/components/ui/card"
-import { Avatar } from "@/components/ui/avatar"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Card, CardHeader } from "@/components/ui/card";
+import { Avatar } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ReviewFlipCardSkeleton() {
   return (
@@ -16,5 +16,5 @@ export default function ReviewFlipCardSkeleton() {
         <Skeleton className="h-4 w-1/2" />
       </CardHeader>
     </Card>
-  )
+  );
 }

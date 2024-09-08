@@ -1,41 +1,39 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Star } from "lucide-react"
-import { CustomerReviewInfoFromSerializer } from '../Types/types'
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Star } from "lucide-react";
+import { CustomerReviewInfoFromSerializer } from "../Types/types";
 import { MdFlip } from "react-icons/md";
 
-
 type Review = {
-  id: string
-  rating: number
-  location: string
-  review_date: string
+  id: string;
+  rating: number;
+  location: string;
+  review_date: string;
   analyzed_review_details: {
-    emotion?: string
-    tone?: string
-    reasoning?: string
-  }
-  posted_to_google_review: boolean
-  generated_review_body: string
-  email_sent_to_company: boolean
-  posted_with_bubble_rating_platform: boolean
-  badges: string[]
-  internal_google_key_words: string[]
-  final_review_body: string
-}
-
+    emotion?: string;
+    tone?: string;
+    reasoning?: string;
+  };
+  posted_to_google_review: boolean;
+  generated_review_body: string;
+  email_sent_to_company: boolean;
+  posted_with_bubble_rating_platform: boolean;
+  badges: string[];
+  internal_google_key_words: string[];
+  final_review_body: string;
+};
 
 function capitalizeFirstLetter(string: string) {
-  return string.charAt(0).toUpperCase() + string.slice(1)
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
-  const [isFlipped, setIsFlipped] = useState(false)
+  const [isFlipped, setIsFlipped] = useState(false);
 
   const avatarImage = (rating: number) => {
     return `/Avatars/rating${rating}.png`;
@@ -47,7 +45,7 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
     >
       <div
         className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
-          isFlipped ? 'rotate-y-180' : ''
+          isFlipped ? "rotate-y-180" : ""
         }`}
       >
         {/* Front of the card */}
@@ -62,7 +60,9 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
                 <Star
                   key={i}
                   className={`w-5 h-5 ${
-                    i < review.rating ? "text-primary fill-primary" : "text-muted"
+                    i < review.rating
+                      ? "text-primary fill-primary"
+                      : "text-muted"
                   }`}
                 />
               ))}
@@ -73,9 +73,11 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
 
         {/* Back of the card */}
         <Card className="absolute w-full h-full backface-hidden rotate-y-180 overflow-auto">
-        <CardContent className="grid gap-4">
+          <CardContent className="grid gap-4">
             <div>
-              <h3 className="text-lg font-semibold mb-2 mt-4">Review Analysis</h3>
+              <h3 className="text-lg font-semibold mb-2 mt-4">
+                Review Analysis
+              </h3>
               <div className="flex flex-wrap gap-2">
                 {Object.keys(review.analyzed_review_details).length != 0 && (
                   <Badge variant="outline">
@@ -183,10 +185,14 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
         </Card>
       </div>
     </div>
-  )
+  );
 }
 
-export default function FlipCards({ reviews }: { reviews: CustomerReviewInfoFromSerializer[] }) {
+export default function FlipCards({
+  reviews,
+}: {
+  reviews: CustomerReviewInfoFromSerializer[];
+}) {
   return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -195,5 +201,5 @@ export default function FlipCards({ reviews }: { reviews: CustomerReviewInfoFrom
         ))}
       </div>
     </div>
-  )
+  );
 }

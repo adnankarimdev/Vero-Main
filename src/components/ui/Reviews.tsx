@@ -1,20 +1,16 @@
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { CustomerReviewInfoFromSerializer } from "../Types/types";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ReviewsSkeletonLoader from "./Skeletons/ReviewsSkeletonLoader";
 import FlipCards from "./FlipCards";
 import ReviewsClassic from "./ReviewsClassic";
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 export default function ReviewsTab({}: any) {
   const [placeIds, setPlaceIds] = useState([]);
-  const [streamlinedView, setStreamlinedView] = useState(true)
+  const [streamlinedView, setStreamlinedView] = useState(true);
   const [reviews, setReviews] = useState<CustomerReviewInfoFromSerializer[]>(
     []
   );
@@ -128,20 +124,23 @@ export default function ReviewsTab({}: any) {
   };
   return (
     <div className="space-y-8">
-<div className="relative flex justify-end">
-  <div className="flex items-center">
-    <Switch id="airplane-mode" 
-                      checked={streamlinedView}
-                      onCheckedChange={(checked) =>
-                        setStreamlinedView(checked)}/>
-    <Label htmlFor="airplane-mode" className="ml-2">Streamlined View</Label>
-  </div>
-</div>
+      <div className="relative flex justify-end">
+        <div className="flex items-center">
+          <Switch
+            id="airplane-mode"
+            checked={streamlinedView}
+            onCheckedChange={(checked) => setStreamlinedView(checked)}
+          />
+          <Label htmlFor="airplane-mode" className="ml-2">
+            Streamlined View
+          </Label>
+        </div>
+      </div>
       {isLoading && <ReviewsSkeletonLoader />}
 
-      {!isLoading && streamlinedView && <FlipCards reviews={reviews}/>}
+      {!isLoading && streamlinedView && <FlipCards reviews={reviews} />}
 
-      {!isLoading && !streamlinedView && <ReviewsClassic reviews={reviews}/>}
+      {!isLoading && !streamlinedView && <ReviewsClassic reviews={reviews} />}
 
       {!isLoading && reviews.length == 0 && (
         <div className="flex justify-center items-center h-screen">
