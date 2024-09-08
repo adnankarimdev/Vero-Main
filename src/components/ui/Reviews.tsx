@@ -1,14 +1,8 @@
 import {
   Card,
-  CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { Star } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { CustomerReviewInfoFromSerializer } from "../Types/types";
 import { useState, useEffect } from "react";
 import axios from "axios";
