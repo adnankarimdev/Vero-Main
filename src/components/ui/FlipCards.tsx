@@ -49,8 +49,8 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
         }`}
       >
         {/* Front of the card */}
-        <Card className="absolute w-full h-full backface-hidden">
-          <CardHeader className="flex flex-col items-center justify-center h-full">
+        <Card className="absolute w-full h-full backface-hidden ">
+          <CardHeader className="flex flex-col items-center justify-center h-full ">
             <Avatar className="w-24 h-24 mb-4">
               <AvatarImage src={avatarImage(review.rating)} />
             </Avatar>
@@ -95,11 +95,11 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
                 )}
                 <Badge variant="outline">
                   {review.posted_to_google_review
-                    ? "Posted to Google: 🥳"
+                    ? "Posted to Google: ✅"
                     : "Posted to Google: 🚫"}
                 </Badge>
                 {review.generated_review_body !== "" && (
-                  <Badge variant="outline">{"AI-assisted review: 🤖"}</Badge>
+                  <Badge variant="outline">{"AI-assisted review: ✅"}</Badge>
                 )}
                 <Badge variant="outline">
                   {review.email_sent_to_company
@@ -168,7 +168,7 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
             </div>
             <div>
               <Separator className="mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Analysis Reasoning</h3>
+              <h3 className="text-lg font-semibold mb-2">Suggested Improvements</h3>
               {review.analyzed_review_details.reasoning !== "" && (
                 <p className="text-sm text-muted-foreground">
                   {review.analyzed_review_details.reasoning}
