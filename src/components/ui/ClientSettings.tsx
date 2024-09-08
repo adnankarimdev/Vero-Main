@@ -29,13 +29,13 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { PlusCircle, Trash2, MapPin, Mail } from "lucide-react"; 
+import { PlusCircle, Trash2, MapPin, Mail } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
-import { MdOutlineFormatListNumbered, MdLockOutline } from "react-icons/md"
+import { MdOutlineFormatListNumbered, MdLockOutline } from "react-icons/md";
 import { PlaceType } from "../Types/types";
 import TabsSkeletonLoader from "./Skeletons/TabsSkeletonLoader";
-import Logo from "../../app/favicon.ico"
+import Logo from "../../app/favicon.ico";
 
 export default function ClientSettings() {
   const { toast } = useToast();
@@ -70,7 +70,7 @@ export default function ClientSettings() {
   const [websiteAndLocation, setWebsiteAndLocation] = useState([]);
   const [keywords, setKeyWords] = useState([]);
   const [isTabsLoading, setIsTabsLoading] = useState(true);
-  const [companyWebsites, setCompanyWebsites] = useState([])
+  const [companyWebsites, setCompanyWebsites] = useState([]);
 
   const handleQuestionChange = (
     ratingId: number,
@@ -127,7 +127,10 @@ export default function ClientSettings() {
 
     // Validate questions
     settings.questions.forEach((rating) => {
-      if ((rating.questions.length === 0 || rating.questions[0].trim() === "") && !settings.useBubblePlatform) {
+      if (
+        (rating.questions.length === 0 || rating.questions[0].trim() === "") &&
+        !settings.useBubblePlatform
+      ) {
         errors.push(`Rating ${rating.id} must have at least one question`);
       }
     });
@@ -159,7 +162,7 @@ export default function ClientSettings() {
           variant: "destructive",
           title: "Validation Error",
           description: error,
-          duration:1000
+          duration: 1000,
         });
       });
     } else {
@@ -171,7 +174,7 @@ export default function ClientSettings() {
           toast({
             title: "Success",
             description: "Settings Updated.",
-            duration:1000
+            duration: 1000,
           });
         })
         .catch((error) => {
@@ -179,13 +182,13 @@ export default function ClientSettings() {
           toast({
             title: "Failed to update",
             description: error.response.data.error,
-            duration:1000
+            duration: 1000,
           });
         });
       toast({
         title: "Settings Saved",
         description: "Your settings have been successfully updated.",
-        duration:1000
+        duration: 1000,
       });
     }
   };
@@ -197,7 +200,8 @@ export default function ClientSettings() {
       areasToFocusOn +
       "\n" +
       "All Locations Context: \n" +
-      JSON.stringify(placesInfo); + "\n" + "Company Websites: " + companyWebsites.join("\n")
+      JSON.stringify(placesInfo);
+    +"\n" + "Company Websites: " + companyWebsites.join("\n");
     axios
       .post("http://localhost:8021/backend/generate-review-questions/", {
         context: fullContext,
@@ -214,7 +218,7 @@ export default function ClientSettings() {
         toast({
           title: "Success",
           description: "Questions generated.",
-          duration:1000
+          duration: 1000,
         });
       })
       .catch((error) => {
@@ -223,7 +227,7 @@ export default function ClientSettings() {
         toast({
           title: "Failed to generate",
           description: "try again",
-          duration:1000
+          duration: 1000,
         });
       });
   };
@@ -263,7 +267,7 @@ export default function ClientSettings() {
         // Update the settings state
         setSettings(reviewSettingsResponse.data);
         setKeyWords(reviewSettingsResponse.data.keywords);
-        setCompanyWebsites(reviewSettingsResponse.data.companyUrls)
+        setCompanyWebsites(reviewSettingsResponse.data.companyUrls);
         setIsTabsLoading(false);
         if (reviewSettingsResponse.data.questions.length == 0) {
           handleSettingChange(
@@ -288,7 +292,10 @@ export default function ClientSettings() {
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-center"> Configure Vero Review Settings</CardTitle>
+        <CardTitle className="text-center">
+          {" "}
+          Configure Vero Review Settings
+        </CardTitle>
         {/* <CardDescription className="text-center">
           Configure your customer feedback system
         </CardDescription> */}
@@ -305,100 +312,103 @@ export default function ClientSettings() {
             </TabsList>
             <TabsContent value="questions">
               <AlertDialog>
-              <div className="flex justify-end items-center">
-                <AlertDialogTrigger >
+                <div className="flex justify-end items-center">
+                  <AlertDialogTrigger>
                     {!settings.useBubblePlatform && (
-                    <Button variant="ghost">
-                    <RiAiGenerate size={24} />
-                  </Button>
+                      <Button variant="ghost">
+                        <RiAiGenerate size={24} />
+                      </Button>
                     )}
-
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Generate Review Questions
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      {
-                        "This will generate a review questions for each rating. You can input which areas you'd like the questions to be focused on. Otherwise, the questions will be generated more generically."
-                      }{" "}
-                      {/* <Label htmlFor="areaFocus">Areas of focus</Label> */}
-                      <Input
-                        id="areaFocus"
-                        type="text"
-                        className="mt-4" // Add margin-top here
-                        value={areasToFocusOn}
-                        onChange={(e) => setAreasToFocusOn(e.target.value)}
-                      />
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleGenerateReviewQuestions}>
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Generate Review Questions
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        {
+                          "This will generate a review questions for each rating. You can input which areas you'd like the questions to be focused on. Otherwise, the questions will be generated more generically."
+                        }{" "}
+                        {/* <Label htmlFor="areaFocus">Areas of focus</Label> */}
+                        <Input
+                          id="areaFocus"
+                          type="text"
+                          className="mt-4" // Add margin-top here
+                          value={areasToFocusOn}
+                          onChange={(e) => setAreasToFocusOn(e.target.value)}
+                        />
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={handleGenerateReviewQuestions}
+                      >
+                        Continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
                 </div>
-
               </AlertDialog>
               <div className="flex items-center space-x-2 mb-5">
-                    <Switch
-                      id="useBubblePlatform"
-                      checked={settings.useBubblePlatform}
-                      onCheckedChange={(checked) =>
-                        handleSettingChange("useBubblePlatform", checked)
-                      }
-                    />
-                    <Label htmlFor="showWorryDialog">
-                      Bubble Review Platform
-                    </Label>
-                  </div>
-              {!settings.useBubblePlatform && settings.questions.map((rating) => (
-                <div key={rating.id} className="mb-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-semibold">
-                      Rating {rating.id}
-                    </h3>
-                  </div>
-                  {rating.questions.map((question, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center mb-2 space-x-2"
-                    >
-                      <Textarea
-                        placeholder={`Question ${index + 1} for rating ${rating.id}`}
-                        value={question}
-                        onChange={(e) =>
-                          handleQuestionChange(rating.id, index, e.target.value)
-                        }
-                        className="w-3/4"
-                      />
-                      {index === 0 && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => addQuestion(rating.id)}
-                          aria-label={`Add question for rating ${rating.id}`}
-                        >
-                          <PlusCircle className="h-4 w-4" />
-                        </Button>
-                      )}
-                      {rating.questions.length > 1 && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeQuestion(rating.id, index)}
-                          aria-label={`Remove question ${index + 1} for rating ${rating.id}`}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      )}
+                <Switch
+                  id="useBubblePlatform"
+                  checked={settings.useBubblePlatform}
+                  onCheckedChange={(checked) =>
+                    handleSettingChange("useBubblePlatform", checked)
+                  }
+                />
+                <Label htmlFor="showWorryDialog">Bubble Review Platform</Label>
+              </div>
+              {!settings.useBubblePlatform &&
+                settings.questions.map((rating) => (
+                  <div key={rating.id} className="mb-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-lg font-semibold">
+                        Rating {rating.id}
+                      </h3>
                     </div>
-                  ))}
-                </div>
-              ))}
+                    {rating.questions.map((question, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center mb-2 space-x-2"
+                      >
+                        <Textarea
+                          placeholder={`Question ${index + 1} for rating ${rating.id}`}
+                          value={question}
+                          onChange={(e) =>
+                            handleQuestionChange(
+                              rating.id,
+                              index,
+                              e.target.value
+                            )
+                          }
+                          className="w-3/4"
+                        />
+                        {index === 0 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => addQuestion(rating.id)}
+                            aria-label={`Add question for rating ${rating.id}`}
+                          >
+                            <PlusCircle className="h-4 w-4" />
+                          </Button>
+                        )}
+                        {rating.questions.length > 1 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeQuestion(rating.id, index)}
+                            aria-label={`Remove question ${index + 1} for rating ${rating.id}`}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))}
             </TabsContent>
             <TabsContent value="email">
               <div className="space-y-4">
@@ -482,7 +492,6 @@ export default function ClientSettings() {
                   />
                 </div>
                 <div>
-
                   <div className="flex items-center space-x-2 mt-4">
                     <Switch
                       id="showWorryDialog"

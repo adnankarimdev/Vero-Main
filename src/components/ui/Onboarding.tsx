@@ -217,7 +217,7 @@ export default function Onboarding() {
         toast({
           title: "Success",
           description: "Settings Updated. Welcome to Vero",
-          duration:1000
+          duration: 1000,
         });
         setTimeout(() => {
           router.push("/dashboard");
@@ -228,7 +228,7 @@ export default function Onboarding() {
         toast({
           title: "Failed to update",
           description: error.response.data.error,
-          duration:1000
+          duration: 1000,
         });
       });
   };

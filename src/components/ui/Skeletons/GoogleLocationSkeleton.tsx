@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function GoogleLocationSkeleton() {
   return (
@@ -17,5 +17,5 @@ export default function GoogleLocationSkeleton() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

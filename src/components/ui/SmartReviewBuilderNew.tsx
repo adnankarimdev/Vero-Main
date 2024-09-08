@@ -115,7 +115,7 @@ const SmartReviewBuilderNew = () => {
           title: "Your text is ready to paste!",
           description:
             "Your review has been copied to the clipboard! You can now paste it into the Google review form.",
-            duration:1000
+          duration: 1000,
         });
         setTimeout(() => {
           window.open(
@@ -130,7 +130,7 @@ const SmartReviewBuilderNew = () => {
         toast({
           title: "Review failed to Process",
           description: "It's not you, it's us. Please try again.",
-          duration:1000
+          duration: 1000,
         });
       });
   };
@@ -143,7 +143,7 @@ const SmartReviewBuilderNew = () => {
           title: "Your text is ready to paste!",
           description:
             "Your review has been copied to the clipboard! You can now paste it into the Google review form.",
-            duration:1000
+          duration: 1000,
         });
         setTimeout(() => {
           window.open(
@@ -158,7 +158,7 @@ const SmartReviewBuilderNew = () => {
         toast({
           title: "Review failed to Process",
           description: "It's not you, it's us. Please try again.",
-          duration:1000
+          duration: 1000,
         });
       });
   };
@@ -173,7 +173,7 @@ const SmartReviewBuilderNew = () => {
         setSophisticatedReview(response.data.content);
         toast({
           title: "Sophisticated Review Generated",
-          duration:1000
+          duration: 1000,
         });
         // axios
         //   .post("http://localhost:8021/backend/create-review-score/", {
