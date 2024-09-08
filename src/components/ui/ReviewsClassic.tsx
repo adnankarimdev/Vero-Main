@@ -196,16 +196,20 @@ export default function ReviewsClassic({
             </div>
             <div>
               <Separator className="mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Suggested Improvements</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                Suggested Improvements
+              </h3>
               {review.analyzed_review_details.reasoning !== "" && (
                 <p className="text-sm text-muted-foreground">
                   {review.analyzed_review_details.reasoning}
                 </p>
               )}
 
-              {Object.keys(review.analyzed_review_details).length == 0 && (
+              {review.posted_with_bubble_rating_platform && (
                 <p className="text-sm text-muted-foreground">
-                  {"Since there is no review body, there is no analysis."}
+                  {
+                    "Posted with Bubble Platform. Analysis is given by the badges."
+                  }
                 </p>
               )}
             </div>

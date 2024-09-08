@@ -144,7 +144,9 @@ export default function ReviewsTab({}: any) {
 
       {!isLoading && reviews.length == 0 && (
         <div className="flex justify-center items-center h-screen">
-          <h1 className="text-xl md:text-xl lg:text-xl font-bold tracking-tight">Watch Vero work its magic. Reviews coming soon! 🚀</h1>
+          <h1 className="text-xl md:text-xl lg:text-xl font-bold tracking-tight">
+            Watch Vero work its magic. Reviews coming soon! 🚀
+          </h1>
         </div>
       )}
     </div>
