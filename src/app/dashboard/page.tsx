@@ -90,7 +90,7 @@ export default function Dashboard() {
     setLoading(true);
     setReturnedGraph("");
     axios
-      .post("http://localhost:8021/backend/create-charts/", {
+      .post("https://vero.ngrok.dev/backend/create-charts/", {
         query: searchQueryGpt,
       })
       .then((response) => {

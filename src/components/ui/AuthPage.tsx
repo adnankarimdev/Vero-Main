@@ -35,7 +35,7 @@ export default function AuthPage() {
 
   const handleLogin = () => {
     axios
-      .post("http://localhost:8021/backend/login/", {
+      .post("https://vero.ngrok.dev/backend/login/", {
         email: email,
         password: password,
       })
@@ -63,7 +63,7 @@ export default function AuthPage() {
   const handleSignUp = () => {
     // TODO: add valdiation steps here
     axios
-      .post("http://localhost:8021/backend/sign-up/", {
+      .post("https://vero.ngrok.dev/backend/sign-up/", {
         email: email,
         password: password,
         business_name: buisnessName,

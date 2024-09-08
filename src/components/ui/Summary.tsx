@@ -91,14 +91,14 @@ export default function SummaryTab({
         }
 
         const placeIdResponse = await axios.get(
-          `http://localhost:8021/backend/get-place-id-by-email/${email}/`
+          `https://vero.ngrok.dev/backend/get-place-id-by-email/${email}/`
         );
         setPlacesInfo(placeIdResponse.data.places);
         const placeIdsAsArray = placeIdResponse.data.places.map(
           (place: any) => place.place_id
         );
         const response = await axios.get(
-          "http://localhost:8021/backend/get-reviews-by-client-ids/",
+          "https://vero.ngrok.dev/backend/get-reviews-by-client-ids/",
           {
             params: {
               clientIds: placeIdsAsArray,

@@ -60,7 +60,7 @@ export default function ReviewsTab({}: any) {
 
         // First, fetch the placeId
         const placeIdResponse = await axios.get(
-          `http://localhost:8021/backend/get-place-id-by-email/${email}/`
+          `https://vero.ngrok.dev/backend/get-place-id-by-email/${email}/`
         );
         setPlaceIds(placeIdResponse.data.placeIds);
 
@@ -71,10 +71,10 @@ export default function ReviewsTab({}: any) {
         const placeIdsQuery = placeIdsAsArray.join(",");
 
         const reviewSettingsResponse = await axios.get(
-          `http://localhost:8021/backend/get-review-settings/${placeIdsQuery}/`
+          `https://vero.ngrok.dev/backend/get-review-settings/${placeIdsQuery}/`
         );
         const response = await axios.get(
-          "http://localhost:8021/backend/get-reviews-by-client-ids/",
+          "https://vero.ngrok.dev/backend/get-reviews-by-client-ids/",
           {
             params: {
               clientIds: placeIdsAsArray,

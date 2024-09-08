@@ -107,7 +107,7 @@ export default function Onboarding() {
 
         // First, fetch the placeId
         const placeIdResponse = await axios.get(
-          `http://localhost:8021/backend/get-place-id-by-email/${email}/`
+          `https://vero.ngrok.dev/backend/get-place-id-by-email/${email}/`
         );
         handleSettingChange("placeIds", placeIdResponse.data.placeIds);
         console.log("my place idss", placeIdResponse.data.places);
@@ -124,7 +124,7 @@ export default function Onboarding() {
 
         // Then, use the fetched placeId to get the review settings
         const reviewSettingsResponse = await axios.get(
-          `http://localhost:8021/backend/get-review-settings/${placeIdsQuery}/`
+          `https://vero.ngrok.dev/backend/get-review-settings/${placeIdsQuery}/`
         );
         console.log("Fetched review settings:", reviewSettingsResponse);
 
@@ -212,7 +212,7 @@ export default function Onboarding() {
 
   const handleSave = () => {
     axios
-      .post("http://localhost:8021/backend/save-review-settings/", settings)
+      .post("https://vero.ngrok.dev/backend/save-review-settings/", settings)
       .then((response) => {
         toast({
           title: "Success",

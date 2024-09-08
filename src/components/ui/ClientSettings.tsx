@@ -169,7 +169,7 @@ export default function ClientSettings() {
       // Here you would typically send the settings to your backend
       console.log("Saving settings:", settings);
       axios
-        .post("http://localhost:8021/backend/save-review-settings/", settings)
+        .post("https://vero.ngrok.dev/backend/save-review-settings/", settings)
         .then((response) => {
           toast({
             title: "Success",
@@ -185,11 +185,6 @@ export default function ClientSettings() {
             duration: 1000,
           });
         });
-      toast({
-        title: "Settings Saved",
-        description: "Your settings have been successfully updated.",
-        duration: 1000,
-      });
     }
   };
 
@@ -203,7 +198,7 @@ export default function ClientSettings() {
       JSON.stringify(placesInfo);
     +"\n" + "Company Websites: " + companyWebsites.join("\n");
     axios
-      .post("http://localhost:8021/backend/generate-review-questions/", {
+      .post("https://vero.ngrok.dev/backend/generate-review-questions/", {
         context: fullContext,
       })
       .then((response) => {
@@ -243,7 +238,7 @@ export default function ClientSettings() {
 
         // First, fetch the placeId
         const placeIdResponse = await axios.get(
-          `http://localhost:8021/backend/get-place-id-by-email/${email}/`
+          `https://vero.ngrok.dev/backend/get-place-id-by-email/${email}/`
         );
         handleSettingChange("placeIds", placeIdResponse.data.placeIds);
         console.log("my place idss", placeIdResponse.data.places);
@@ -260,7 +255,7 @@ export default function ClientSettings() {
 
         // Then, use the fetched placeId to get the review settings
         const reviewSettingsResponse = await axios.get(
-          `http://localhost:8021/backend/get-review-settings/${placeIdsQuery}/`
+          `https://vero.ngrok.dev/backend/get-review-settings/${placeIdsQuery}/`
         );
         console.log("Fetched review settings:", reviewSettingsResponse);
 
