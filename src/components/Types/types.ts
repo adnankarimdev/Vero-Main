@@ -67,6 +67,7 @@ export interface CustomerReviewInfoFromSerializer {
   review_date?: string;
   internal_google_key_words?: string[];
   posted_with_bubble_rating_platform?: boolean;
+  posted_with_in_store_mode?: boolean;
 }
 
 export interface AnalyzedReviewInfo {

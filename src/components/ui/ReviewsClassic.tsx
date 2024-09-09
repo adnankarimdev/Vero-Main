@@ -126,12 +126,19 @@ export default function ReviewsClassic({
                     ? "Posted to Google: ✅"
                     : "Posted to Google: 🚫"}
                 </Badge>
+                <Badge variant="outline">
+                  {review.posted_with_in_store_mode
+                    ? "In Store Review: ✅"
+                    : "In Store Review: 🚫"}
+                </Badge>
                 {review.generated_review_body !== "" && (
                   <Badge variant="outline">{"AI-assisted review: ✅"}</Badge>
                 )}
                 <Badge variant="outline">
                   {review.email_sent_to_company
-                    ? "Email Sent: ✅"
+                    ? review.posted_with_in_store_mode
+                      ? "Email Sent with Generated Review: ✅"
+                      : "Email Sent: ✅ (No Follow-up)"
                     : "Email Sent: ❌"}
                 </Badge>
                 {/* <Badge variant="outline">

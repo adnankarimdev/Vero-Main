@@ -59,6 +59,7 @@ export default function ClientSettings() {
     dialogBody: "",
     dialogTitle: "",
     websiteUrls: [],
+    inStoreUrls: [],
     userEmail: "",
     places: [],
     useBubblePlatform: false,
@@ -66,6 +67,7 @@ export default function ClientSettings() {
   const [placeIds, setPlaceIds] = useState([]);
   const [placesInfo, setPlacesInfo] = useState<Place[]>([]);
   const [websiteURLS, setWebsiteURLS] = useState([]);
+  const [locationURLS, setLocationURLS] = useState([]);
   const [areasToFocusOn, setAreasToFocusOn] = useState("");
   const [websiteAndLocation, setWebsiteAndLocation] = useState([]);
   const [keywords, setKeyWords] = useState([]);
@@ -246,6 +248,7 @@ export default function ClientSettings() {
         setPlaceIds(placeIdResponse.data.placeIds);
         setPlacesInfo(placeIdResponse.data.places);
         setWebsiteURLS(placeIdResponse.data.websiteUrls);
+        setLocationURLS(placeIdResponse.data.locationUrls);
 
         const placeIdsAsArray = placeIdResponse.data.places.map(
           (place: any) => place.place_id
@@ -548,6 +551,21 @@ export default function ClientSettings() {
                     {/* Add margin-bottom to create space */}
                     <Label htmlFor="placeIds">Registered Places</Label>
                     {websiteURLS.map((website, index) => (
+                      <a
+                        href={website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <div className="text-lg font-medium">
+                          <Badge className="text-white">
+                            {" " + placesInfo[index].name}
+                          </Badge>
+                        </div>
+                      </a>
+                    ))}
+                    <Separator className="mt-5 mb-5" />
+                    <Label htmlFor="placeIds">In Store Urls</Label>
+                    {locationURLS.map((website, index) => (
                       <a
                         href={website}
                         target="_blank"
