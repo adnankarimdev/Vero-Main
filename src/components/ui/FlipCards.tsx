@@ -93,11 +93,17 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
                     {capitalizeFirstLetter(review.analyzed_review_details.tone)}
                   </Badge>
                 )}
-                <Badge variant="outline">
-                  {review.posted_to_google_review
-                    ? "Posted to Google: ✅"
-                    : "Posted to Google: 🚫"}
-                </Badge>
+                {review.pending_google_review ? (
+                  <Badge variant="outline">
+                    {"Pending Review to Google: ⏳"}
+                  </Badge>
+                ) : (
+                  <Badge variant="outline">
+                    {review.posted_to_google_review
+                      ? "Posted to Google: ✅"
+                      : "Posted to Google: 🚫"}
+                  </Badge>
+                )}
                 <Badge variant="outline">
                   {review.posted_with_in_store_mode
                     ? "In Store Review: ✅"

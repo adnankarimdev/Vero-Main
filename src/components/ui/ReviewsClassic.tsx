@@ -121,11 +121,17 @@ export default function ReviewsClassic({
                     {capitalizeFirstLetter(review.analyzed_review_details.tone)}
                   </Badge>
                 )}
-                <Badge variant="outline">
-                  {review.posted_to_google_review
-                    ? "Posted to Google: ✅"
-                    : "Posted to Google: 🚫"}
-                </Badge>
+                {review.pending_google_review ? (
+                  <Badge variant="outline">
+                    {"Pending Review to Google: ⏳"}
+                  </Badge>
+                ) : (
+                  <Badge variant="outline">
+                    {review.posted_to_google_review
+                      ? "Posted to Google: ✅"
+                      : "Posted to Google: 🚫"}
+                  </Badge>
+                )}
                 <Badge variant="outline">
                   {review.posted_with_in_store_mode
                     ? "In Store Review: ✅"
@@ -136,9 +142,7 @@ export default function ReviewsClassic({
                 )}
                 <Badge variant="outline">
                   {review.email_sent_to_company
-                    ? review.posted_with_in_store_mode
-                      ? "Email Sent with Generated Review: ✅"
-                      : "Email Sent: ✅ (No Follow-up)"
+                    ? "Email Sent: ✅"
                     : "Email Sent: ❌"}
                 </Badge>
                 {/* <Badge variant="outline">

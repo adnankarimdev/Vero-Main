@@ -68,6 +68,8 @@ export interface CustomerReviewInfoFromSerializer {
   internal_google_key_words?: string[];
   posted_with_bubble_rating_platform?: boolean;
   posted_with_in_store_mode?: boolean;
+  pending_google_review?: boolean;
+  posted_to_google_after_email_sent?: boolean;
 }
 
 export interface AnalyzedReviewInfo {
