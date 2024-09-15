@@ -128,14 +128,14 @@ export default function ClientSettings() {
     const errors = [];
 
     // Validate questions
-    settings.questions.forEach((rating) => {
-      if (
-        (rating.questions.length === 0 || rating.questions[0].trim() === "") &&
-        !settings.useBubblePlatform
-      ) {
-        errors.push(`Rating ${rating.id} must have at least one question`);
-      }
-    });
+    // settings.questions.forEach((rating) => {
+    //   if (
+    //     (rating.questions.length === 0 || rating.questions[0].trim() === "") &&
+    //     !settings.useBubblePlatform
+    //   ) {
+    //     errors.push(`Rating ${rating.id} must have at least one question`);
+    //   }
+    // });
 
     // Validate email fields
     if (settings.worryRating < 1 || settings.worryRating > 4) {
@@ -464,6 +464,37 @@ export default function ClientSettings() {
                     }
                   />
                 </div>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="showComplimentaryItem"
+                    checked={settings.showComplimentaryItem}
+                    onCheckedChange={(checked) =>
+                      handleSettingChange("showComplimentaryItem", checked)
+                    }
+                  />
+                  <Label htmlFor="showComplimentaryItem">
+                    Offer Complimentary Item
+                  </Label>
+                </div>
+                {settings.showComplimentaryItem && (
+                  <div>
+                    <Label htmlFor="complimentaryItem">
+                      Complimentary Item
+                    </Label>
+                    <p className="text-gray-500 text-xs">
+                      Specify the complimentary items you'd like to offer, which
+                      will be included in the email when addressing concerns.
+                    </p>
+                    <Input
+                      id="complimentaryItem"
+                      placeholder="10% off Item A, $2 off next purchase, etc..."
+                      value={settings.complimentaryItem}
+                      onChange={(e) =>
+                        handleSettingChange("complimentaryItem", e.target.value)
+                      }
+                    />
+                  </div>
+                )}
               </div>
             </TabsContent>
             <TabsContent value="ratings">
@@ -471,9 +502,8 @@ export default function ClientSettings() {
                 <div>
                   <Label htmlFor="worryRating">Worry Rating Threshold</Label>
                   <p className="text-gray-500 text-xs">
-                    Sets the rating threshold to block customers from posting
-                    reviews on Google when writing free form reviews, best kept
-                    at 4.
+                    Sets the rating threshold to not allow customers from posting generated 
+                    reviews on Google, best kept at 4.
                   </p>
                   <Input
                     id="worryRating"
@@ -593,38 +623,6 @@ export default function ClientSettings() {
                     </div>
                   </div>
                 </div>
-                <Separator className="mt-5 mb-5" />
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="showComplimentaryItem"
-                    checked={settings.showComplimentaryItem}
-                    onCheckedChange={(checked) =>
-                      handleSettingChange("showComplimentaryItem", checked)
-                    }
-                  />
-                  <Label htmlFor="showComplimentaryItem">
-                    Offer Complimentary Item
-                  </Label>
-                </div>
-                {settings.showComplimentaryItem && (
-                  <div>
-                    <Label htmlFor="complimentaryItem">
-                      Complimentary Item
-                    </Label>
-                    <p className="text-gray-500 text-xs">
-                      Specify the complimentary items you'd like to offer, which
-                      will be included in the email when addressing concerns.
-                    </p>
-                    <Input
-                      id="complimentaryItem"
-                      placeholder="10% off Item A, $2 off next purchase, etc..."
-                      value={settings.complimentaryItem}
-                      onChange={(e) =>
-                        handleSettingChange("complimentaryItem", e.target.value)
-                      }
-                    />
-                  </div>
-                )}
               </div>
             </TabsContent>
           </Tabs>
