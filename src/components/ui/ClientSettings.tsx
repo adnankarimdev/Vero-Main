@@ -502,8 +502,8 @@ export default function ClientSettings() {
                 <div>
                   <Label htmlFor="worryRating">Worry Rating Threshold</Label>
                   <p className="text-gray-500 text-xs">
-                    Sets the rating threshold to not allow customers from posting generated 
-                    reviews on Google, best kept at 4.
+                    Sets the rating threshold to not allow customers from
+                    posting generated reviews on Google, best kept at 4.
                   </p>
                   <Input
                     id="worryRating"
