@@ -128,18 +128,12 @@ export default function ClientSettings() {
   const validateSettings = () => {
     const errors = [];
 
-    // Validate questions
-    // settings.questions.forEach((rating) => {
-    //   if (
-    //     (rating.questions.length === 0 || rating.questions[0].trim() === "") &&
-    //     !settings.useBubblePlatform
-    //   ) {
-    //     errors.push(`Rating ${rating.id} must have at least one question`);
-    //   }
-    // });
-
     // Validate email fields
-    if (settings.worryRating < 1 || settings.worryRating > 4) {
+    if (
+      settings.worryRating < 1 ||
+      isNaN(settings.worryRating) ||
+      settings.worryRating > 4
+    ) {
       errors.push("Worry rating must be a value between 1 and 4");
     }
 
@@ -415,7 +409,9 @@ export default function ClientSettings() {
             <TabsContent value="email">
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="clientEmail">Client Email</Label>
+                  <Label htmlFor="clientEmail">
+                    Client Email <span className="text-red-500">*</span>
+                  </Label>
                   <p className="text-gray-500 text-xs">
                     The email address to receive all customer concerns.
                   </p>
@@ -430,11 +426,12 @@ export default function ClientSettings() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="clientEmail">Email Delay</Label>
+                  <Label htmlFor="clientEmail">
+                    Email Delay <span className="text-red-500">*</span>
+                  </Label>
                   <p className="text-gray-500 text-xs">
                     The time to wait, <strong>in minutes</strong>, before
-                    sending the email addressing customer concerns. Defaults to
-                    60 minutes if not specified.
+                    sending the email addressing customer concerns.
                   </p>
                   <Input
                     id="emailDelay"
@@ -489,7 +486,10 @@ export default function ClientSettings() {
                   />
                 </div> */}
                 <div>
-                  <Label htmlFor="worryRating">Worry Rating Threshold</Label>
+                  <Label htmlFor="worryRating">
+                    Worry Rating Threshold{" "}
+                    <span className="text-red-500">*</span>
+                  </Label>
                   <p className="text-gray-500 text-xs">
                     Sets the rating limit to not allow customers from being
                     prompted to post reviews on Google, best kept at 4.
@@ -575,7 +575,7 @@ export default function ClientSettings() {
                   </div>
 
                   {settings.showComplimentaryItem && (
-                    <div>
+                    <div className="mt-2">
                       <Label htmlFor="complimentaryItem">
                         Complimentary Item
                       </Label>

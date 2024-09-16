@@ -54,7 +54,7 @@ export default function SummaryTab({
     useState(0);
   const [totalNegativeReviewsPrevented, setTotalNegativeReviewsPrevented] =
     useState(0);
-  const [totalReviewsWithVero, setTotalReviewsWithVero] = useState(0)
+  const [totalReviewsWithVero, setTotalReviewsWithVero] = useState(0);
 
   const calculateAdditionalReviews = (
     currentRating: number,
@@ -106,19 +106,26 @@ export default function SummaryTab({
             },
           }
         );
-        const placeIdsQuery = placeIdsAsArray.join(",")
+        const placeIdsQuery = placeIdsAsArray.join(",");
         const reviewSettingsResponse = await axios.get(
           `https://vero.ngrok.dev/backend/get-review-settings/${placeIdsQuery}/`
         );
         console.log("Reviews:", response.data);
-        console.log(reviewSettingsResponse)
+        console.log(reviewSettingsResponse);
         const data = response.data as CustomerReviewInfoFromSerializer[];
-        setTotalReviewsWithVero(data.length)
+        setTotalReviewsWithVero(data.length);
         setTotalNegativeReviewsPrevented(
-          data.filter((item) => item.rating <= reviewSettingsResponse.data.worryRating).length
+          data.filter(
+            (item) => item.rating <= reviewSettingsResponse.data.worryRating
+          ).length
         );
         setTotalNumberOfFiveStarReviews(
-          data.filter((item) => item.rating === 5 && (item.posted_to_google_review || item.posted_to_google_after_email_sent)).length
+          data.filter(
+            (item) =>
+              item.rating === 5 &&
+              (item.posted_to_google_review ||
+                item.posted_to_google_after_email_sent)
+          ).length
         );
         setIsTableLoading(false);
       } catch (err) {
