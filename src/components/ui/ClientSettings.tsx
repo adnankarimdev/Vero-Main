@@ -63,6 +63,7 @@ export default function ClientSettings() {
     userEmail: "",
     places: [],
     useBubblePlatform: false,
+    emailDelay: 60,
   });
   const [placeIds, setPlaceIds] = useState([]);
   const [placesInfo, setPlacesInfo] = useState<Place[]>([]);
@@ -144,9 +145,9 @@ export default function ClientSettings() {
     // if (!settings.emailAppPassword) {
     //   errors.push("Email app password is required");
     // }
-    // if (!settings.clientEmail) {
-    //   errors.push("Client email is required");
-    // }
+    if (!settings.clientEmail) {
+      errors.push("Client email is required");
+    }
 
     return errors;
   };
@@ -412,6 +413,9 @@ export default function ClientSettings() {
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="clientEmail">Client Email</Label>
+                  <p className="text-gray-500 text-xs">
+                    The email address to receive all customer concerns.
+                  </p>
                   <Input
                     id="clientEmail"
                     type="email"
@@ -423,6 +427,22 @@ export default function ClientSettings() {
                   />
                 </div>
                 <div>
+                  <Label htmlFor="clientEmail">Email Delay</Label>
+                  <p className="text-gray-500 text-xs">
+                    The amount of time, <strong>in minutes</strong>, that should
+                    be awaited to send the email addressing customer concerns.
+                  </p>
+                  <Input
+                    id="emailDelay"
+                    type="number"
+                    value={settings.emailDelay}
+                    onChange={(e) =>
+                      handleSettingChange("emailDelay", e.target.value)
+                    }
+                    required
+                  />
+                </div>
+                {/* <div>
                   <Label htmlFor="emailAppPassword">App Password</Label>
                   <Input
                     id="emailAppPassword"
@@ -433,8 +453,8 @@ export default function ClientSettings() {
                     }
                     required
                   />
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                   <Label htmlFor="emailIntro">Email Introduction</Label>
                   <Textarea
                     id="emailIntro"
@@ -463,7 +483,7 @@ export default function ClientSettings() {
                       handleSettingChange("emailSignature", e.target.value)
                     }
                   />
-                </div>
+                </div> */}
                 <div className="flex items-center space-x-2">
                   <Switch
                     id="showComplimentaryItem"
