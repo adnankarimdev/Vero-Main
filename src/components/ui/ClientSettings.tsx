@@ -564,6 +564,7 @@ export default function ClientSettings() {
                     <Switch
                       id="showComplimentaryItem"
                       checked={settings.showComplimentaryItem}
+                      disabled={!settings.showWorryDialog}
                       onCheckedChange={(checked) =>
                         handleSettingChange("showComplimentaryItem", checked)
                       }

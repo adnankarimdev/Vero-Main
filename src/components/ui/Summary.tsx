@@ -54,6 +54,7 @@ export default function SummaryTab({
     useState(0);
   const [totalNegativeReviewsPrevented, setTotalNegativeReviewsPrevented] =
     useState(0);
+  const [totalReviewsWithVero, setTotalReviewsWithVero] = useState(0)
 
   const calculateAdditionalReviews = (
     currentRating: number,
@@ -105,13 +106,19 @@ export default function SummaryTab({
             },
           }
         );
+        const placeIdsQuery = placeIdsAsArray.join(",")
+        const reviewSettingsResponse = await axios.get(
+          `https://vero.ngrok.dev/backend/get-review-settings/${placeIdsQuery}/`
+        );
         console.log("Reviews:", response.data);
+        console.log(reviewSettingsResponse)
         const data = response.data as CustomerReviewInfoFromSerializer[];
+        setTotalReviewsWithVero(data.length)
         setTotalNegativeReviewsPrevented(
-          data.filter((item) => item.posted_to_google_review === false).length
+          data.filter((item) => item.rating <= reviewSettingsResponse.data.worryRating).length
         );
         setTotalNumberOfFiveStarReviews(
-          data.filter((item) => item.rating === 5).length
+          data.filter((item) => item.rating === 5 && (item.posted_to_google_review || item.posted_to_google_after_email_sent)).length
         );
         setIsTableLoading(false);
       } catch (err) {
@@ -144,12 +151,12 @@ export default function SummaryTab({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {"Customer Ratings Directly on Google"}
+                {"Total Reviews with Vero"}
               </CardTitle>
               <Star className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{averageRating}</div>
+              <div className="text-2xl font-bold">{totalReviewsWithVero}</div>
             </CardContent>
           </Card>
           <Card>
