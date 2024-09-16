@@ -142,6 +142,10 @@ export default function ClientSettings() {
     if (settings.worryRating < 1 || settings.worryRating > 4) {
       errors.push("Worry rating must be a value between 1 and 4");
     }
+
+    if (isNaN(settings.emailDelay) || settings.emailDelay < 1) {
+      errors.push("Email Delay must be a postive whole number greater than 0.");
+    }
     // if (!settings.emailAppPassword) {
     //   errors.push("Email app password is required");
     // }
@@ -163,9 +167,9 @@ export default function ClientSettings() {
       errors.forEach((error) => {
         toast({
           variant: "destructive",
-          title: "Validation Error",
+          title: "Could not Save Settings",
           description: error,
-          duration: 1000,
+          duration: 3000,
         });
       });
     } else {
@@ -303,10 +307,9 @@ export default function ClientSettings() {
         {isTabsLoading && <TabsSkeletonLoader />}
         {!isTabsLoading && (
           <Tabs defaultValue="questions">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="questions">Questions</TabsTrigger>
               <TabsTrigger value="email">Email</TabsTrigger>
-              <TabsTrigger value="ratings">Worry Ratings</TabsTrigger>
               <TabsTrigger value="locations">Locations</TabsTrigger>
             </TabsList>
             <TabsContent value="questions">
@@ -429,8 +432,9 @@ export default function ClientSettings() {
                 <div>
                   <Label htmlFor="clientEmail">Email Delay</Label>
                   <p className="text-gray-500 text-xs">
-                    The amount of time, <strong>in minutes</strong>, that should
-                    be awaited to send the email addressing customer concerns.
+                    The time to wait, <strong>in minutes</strong>, before
+                    sending the email addressing customer concerns. Defaults to
+                    60 minutes if not specified.
                   </p>
                   <Input
                     id="emailDelay"
@@ -484,46 +488,11 @@ export default function ClientSettings() {
                     }
                   />
                 </div> */}
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="showComplimentaryItem"
-                    checked={settings.showComplimentaryItem}
-                    onCheckedChange={(checked) =>
-                      handleSettingChange("showComplimentaryItem", checked)
-                    }
-                  />
-                  <Label htmlFor="showComplimentaryItem">
-                    Offer Complimentary Item
-                  </Label>
-                </div>
-                {settings.showComplimentaryItem && (
-                  <div>
-                    <Label htmlFor="complimentaryItem">
-                      Complimentary Item
-                    </Label>
-                    <p className="text-gray-500 text-xs">
-                      Specify the complimentary items you'd like to offer, which
-                      will be included in the email when addressing concerns.
-                    </p>
-                    <Input
-                      id="complimentaryItem"
-                      placeholder="10% off Item A, $2 off next purchase, etc..."
-                      value={settings.complimentaryItem}
-                      onChange={(e) =>
-                        handleSettingChange("complimentaryItem", e.target.value)
-                      }
-                    />
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-            <TabsContent value="ratings">
-              <div className="space-y-4">
                 <div>
                   <Label htmlFor="worryRating">Worry Rating Threshold</Label>
                   <p className="text-gray-500 text-xs">
-                    Sets the rating threshold to not allow customers from
-                    posting generated reviews on Google, best kept at 4.
+                    Sets the rating limit to not allow customers from being
+                    prompted to post reviews on Google, best kept at 4.
                   </p>
                   <Input
                     id="worryRating"
@@ -539,6 +508,7 @@ export default function ClientSettings() {
                     }
                   />
                 </div>
+
                 <div>
                   <div className="flex items-center space-x-2 mt-4">
                     <Switch
@@ -557,8 +527,8 @@ export default function ClientSettings() {
                         <Label htmlFor="dialogTitle">Dialog Title</Label>
                         <p className="text-gray-500 text-xs">
                           This is the worry dialog title that will be shown to
-                          customers who select a review rating less than the
-                          worry rating threshold.
+                          customers whose overall rating is less than the worry
+                          rating threshold.
                         </p>
                         <Input
                           id="dialogTitle"
@@ -575,8 +545,8 @@ export default function ClientSettings() {
                         <Label htmlFor="dialogBody">Dialog Body</Label>
                         <p className="text-gray-500 text-xs">
                           This is the worry dialog body that will be shown to
-                          customers who select a review rating less than the
-                          worry rating threshold.
+                          customers whose overall rating is less than the worry
+                          rating threshold.
                         </p>
                         <Textarea
                           id="dialogBody"
@@ -588,6 +558,42 @@ export default function ClientSettings() {
                           className="w-full"
                         />
                       </div>
+                    </div>
+                  )}
+                  <div className="flex items-center space-x-2 mt-2">
+                    <Switch
+                      id="showComplimentaryItem"
+                      checked={settings.showComplimentaryItem}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("showComplimentaryItem", checked)
+                      }
+                    />
+                    <Label htmlFor="showComplimentaryItem">
+                      Offer Complimentary Item
+                    </Label>
+                  </div>
+
+                  {settings.showComplimentaryItem && (
+                    <div>
+                      <Label htmlFor="complimentaryItem">
+                        Complimentary Item
+                      </Label>
+                      <p className="text-gray-500 text-xs">
+                        Specify the complimentary items you'd like to offer,
+                        which will be included in the email when addressing
+                        concerns.
+                      </p>
+                      <Input
+                        id="complimentaryItem"
+                        placeholder="10% off Item A, $2 off next purchase, etc..."
+                        value={settings.complimentaryItem}
+                        onChange={(e) =>
+                          handleSettingChange(
+                            "complimentaryItem",
+                            e.target.value
+                          )
+                        }
+                      />
                     </div>
                   )}
                 </div>
