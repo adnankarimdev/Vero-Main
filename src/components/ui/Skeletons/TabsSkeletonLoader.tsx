@@ -9,15 +9,14 @@ import { Badge } from "@/components/ui/badge";
 
 export default function TabsSkeletonLoader() {
   return (
-    <Tabs defaultValue="questions">
-      <TabsList className="grid w-full grid-cols-4">
-        <TabsTrigger value="questions">Questions</TabsTrigger>
+    <Tabs defaultValue="badges">
+      <TabsList className="grid w-full grid-cols-3">
+        <TabsTrigger value="badges">Badges</TabsTrigger>
         <TabsTrigger value="email">Email</TabsTrigger>
-        <TabsTrigger value="ratings">Ratings</TabsTrigger>
         <TabsTrigger value="locations">Locations</TabsTrigger>
       </TabsList>
 
-      <TabsContent value="questions">
+      <TabsContent value="badges">
         <div className="flex justify-end mb-4">
           <Skeleton className="h-10 w-10" />
         </div>

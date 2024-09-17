@@ -103,12 +103,12 @@ export default function AuthPage() {
             <form onSubmit={onSubmit}>
               <div className="grid gap-2">
                 <div className="grid gap-1">
-                  <Label className="sr-only" htmlFor="email">
+                  <Label className="mt-2" htmlFor="email">
                     Email
                   </Label>
                   <Input
                     id="email"
-                    placeholder="name@example.com"
+                    placeholder="abc@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     type="email"
@@ -117,14 +117,14 @@ export default function AuthPage() {
                     autoCorrect="off"
                     disabled={isLoading}
                   />
-                  <Label className="sr-only" htmlFor="password">
+                  <Label className="mt-2" htmlFor="password">
                     Password
                   </Label>
                   <Input
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
+                    placeholder="****"
                     type="password"
                     autoCapitalize="none"
                     autoComplete="current-password"
@@ -144,7 +144,7 @@ export default function AuthPage() {
             <form onSubmit={onSubmit}>
               <div className="grid gap-2">
                 <div className="grid gap-1">
-                  <Label className="sr-only" htmlFor="email">
+                  <Label className="mt-2" htmlFor="email">
                     Buisness Name
                   </Label>
                   <Input
@@ -157,28 +157,28 @@ export default function AuthPage() {
                     autoCorrect="off"
                     disabled={isLoading}
                   />
-                  <Label className="sr-only" htmlFor="email">
+                  <Label className="mt-2" htmlFor="email">
                     Email
                   </Label>
                   <Input
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="name@example.com"
+                    placeholder="abc@example.com"
                     type="email"
                     autoCapitalize="none"
                     autoComplete="email"
                     autoCorrect="off"
                     disabled={isLoading}
                   />
-                  <Label className="sr-only" htmlFor="password">
+                  <Label className="mt-2" htmlFor="password">
                     Password
                   </Label>
                   <Input
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
+                    placeholder="****"
                     type="password"
                     autoCapitalize="none"
                     autoComplete="new-password"

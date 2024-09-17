@@ -36,9 +36,168 @@ import { MdOutlineFormatListNumbered, MdLockOutline } from "react-icons/md";
 import { PlaceType } from "../Types/types";
 import TabsSkeletonLoader from "./Skeletons/TabsSkeletonLoader";
 import Logo from "../../app/favicon.ico";
+import RatingBubbleCardClient from "./RatingBubbleCardClient";
+
+interface Category {
+  name: string;
+  badges: { rating: number; badges: string[] }[];
+}
 
 export default function ClientSettings() {
+  const initialCategories = [
+    {
+      name: "Course Quality",
+      badges: [
+        {
+          rating: 1,
+          badges: [
+            "greens were unplayable 😡",
+            "fairways were in terrible condition 😠",
+            "bunkers were full of water 😡",
+            "course layout was confusing 😠",
+          ],
+        },
+        {
+          rating: 2,
+          badges: [
+            "greens were patchy 😕",
+            "fairways had many divots 😞",
+            "bunkers were poorly maintained 😕",
+            "course signage was lacking 😞",
+          ],
+        },
+        {
+          rating: 3,
+          badges: [
+            "greens could be smoother 😐",
+            "fairways need more care ⏳",
+            "bunkers need better sand ⏳",
+            "course layout needs improvement 😐",
+          ],
+        },
+        {
+          rating: 4,
+          badges: [
+            "greens were decent 🧐",
+            "fairways were mostly good 🧐",
+            "bunkers were okay 🧹",
+            "course layout was fine 🧐",
+          ],
+        },
+        {
+          rating: 5,
+          badges: [
+            "greens were perfect 😊",
+            "fairways were pristine 🌟",
+            "bunkers were excellent 😊",
+            "course layout was fantastic 🌟",
+          ],
+        },
+      ],
+    },
+    {
+      name: "Customer Service",
+      badges: [
+        {
+          rating: 1,
+          badges: [
+            "staff were rude 😡",
+            "service was terrible 😠",
+            "no assistance available 😡",
+            "staff ignored us 😠",
+          ],
+        },
+        {
+          rating: 2,
+          badges: [
+            "staff were unhelpful 😕",
+            "service was slow 😞",
+            "staff seemed disinterested 😕",
+            "assistance was hard to find 😞",
+          ],
+        },
+        {
+          rating: 3,
+          badges: [
+            "staff could be friendlier 😐",
+            "service was okay ⏳",
+            "staff were somewhat helpful ⏳",
+            "assistance was average 😐",
+          ],
+        },
+        {
+          rating: 4,
+          badges: [
+            "staff were polite 🧐",
+            "service was good 🧹",
+            "staff were helpful 🧐",
+            "assistance was timely 🧹",
+          ],
+        },
+        {
+          rating: 5,
+          badges: [
+            "staff were excellent 😊",
+            "service was outstanding 🌟",
+            "staff were very helpful 😊",
+            "assistance was superb 🌟",
+          ],
+        },
+      ],
+    },
+    {
+      name: "Facilities",
+      badges: [
+        {
+          rating: 1,
+          badges: [
+            "restrooms were filthy 😡",
+            "clubhouse was in disrepair 😠",
+            "practice areas were unusable 😡",
+            "parking was a nightmare 😠",
+          ],
+        },
+        {
+          rating: 2,
+          badges: [
+            "restrooms need cleaning 😕",
+            "clubhouse was outdated 😞",
+            "practice areas need work 😕",
+            "parking was difficult 😞",
+          ],
+        },
+        {
+          rating: 3,
+          badges: [
+            "restrooms could be cleaner 😐",
+            "clubhouse was okay ⏳",
+            "practice areas were average ⏳",
+            "parking was manageable 😐",
+          ],
+        },
+        {
+          rating: 4,
+          badges: [
+            "restrooms were clean 🧹",
+            "clubhouse was nice 🧐",
+            "practice areas were good 🧹",
+            "parking was fine 🧐",
+          ],
+        },
+        {
+          rating: 5,
+          badges: [
+            "restrooms were spotless 😊",
+            "clubhouse was excellent 🌟",
+            "practice areas were top-notch 😊",
+            "parking was easy 🌟",
+          ],
+        },
+      ],
+    },
+  ];
   const { toast } = useToast();
+  const [categories, setCategories] = useState<Category[]>([]);
   const [settings, setSettings] = useState({
     questions: Array(4)
       .fill(null)
@@ -46,6 +205,7 @@ export default function ClientSettings() {
         id: i + 1,
         questions: [""],
       })),
+    categories: [],
     emailIntro: "",
     emailSignature: "",
     emailBody: "",
@@ -120,7 +280,12 @@ export default function ClientSettings() {
 
   const handleSettingChange = (
     key: string,
-    value: string | number | boolean | { id: number; questions: string[] }[]
+    value:
+      | string
+      | number
+      | boolean
+      | { id: number; questions: string[] }[]
+      | any
   ) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
@@ -191,15 +356,16 @@ export default function ClientSettings() {
 
   const handleGenerateReviewQuestions = () => {
     setIsTabsLoading(true);
+
     var fullContext =
-      "Questions should focus on these topics: " +
+      "Badge Categories should focus on these topics: " +
       areasToFocusOn +
       "\n" +
-      "All Locations Context: \n" +
-      JSON.stringify(placesInfo);
-    +"\n" + "Company Websites: " + companyWebsites.join("\n");
+      "Business name \n" +
+      placesInfo[0].name;
+
     axios
-      .post("https://vero.ngrok.dev/backend/generate-review-questions/", {
+      .post("https://vero.ngrok.dev/backend/generate-categories/", {
         context: fullContext,
       })
       .then((response) => {
@@ -209,11 +375,15 @@ export default function ClientSettings() {
           .replace(/```/g, "");
         const generatedQuestionsAsJson = JSON.parse(generatedQuestions);
         console.log(generatedQuestionsAsJson);
-        handleSettingChange("questions", generatedQuestionsAsJson["questions"]);
+        setCategories(generatedQuestionsAsJson["categories"]);
+        handleSettingChange(
+          "categories",
+          generatedQuestionsAsJson["categories"]
+        );
         setIsTabsLoading(false);
         toast({
           title: "Success",
-          description: "Questions generated.",
+          description: "Badges generated.",
           duration: 1000,
         });
       })
@@ -264,6 +434,7 @@ export default function ClientSettings() {
         // Update the settings state
         setSettings(reviewSettingsResponse.data);
         setKeyWords(reviewSettingsResponse.data.keywords);
+        setCategories(reviewSettingsResponse.data.categories);
         setCompanyWebsites(reviewSettingsResponse.data.companyUrls);
         setIsTabsLoading(false);
         if (reviewSettingsResponse.data.questions.length == 0) {
@@ -300,30 +471,30 @@ export default function ClientSettings() {
       <CardContent>
         {isTabsLoading && <TabsSkeletonLoader />}
         {!isTabsLoading && (
-          <Tabs defaultValue="questions">
+          <Tabs defaultValue="badges">
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="questions">Questions</TabsTrigger>
+              <TabsTrigger value="badges">Badges</TabsTrigger>
               <TabsTrigger value="email">Email</TabsTrigger>
               <TabsTrigger value="locations">Locations</TabsTrigger>
             </TabsList>
-            <TabsContent value="questions">
+            <TabsContent value="badges">
               <AlertDialog>
                 <div className="flex justify-end items-center">
                   <AlertDialogTrigger>
-                    {!settings.useBubblePlatform && (
+                    {
                       <Button variant="ghost">
                         <RiAiGenerate size={24} />
                       </Button>
-                    )}
+                    }
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>
-                        Generate Review Questions
+                        Generate Categories & Badges
                       </AlertDialogTitle>
                       <AlertDialogDescription>
                         {
-                          "This will generate a review questions for each rating. You can input which areas you'd like the questions to be focused on. Otherwise, the questions will be generated more generically."
+                          "This will generate badges for each category. You can input which areas you'd like the Categories to be focused on. Otherwise, the Categories will be generated more generically."
                         }{" "}
                         {/* <Label htmlFor="areaFocus">Areas of focus</Label> */}
                         <Input
@@ -346,7 +517,7 @@ export default function ClientSettings() {
                   </AlertDialogContent>
                 </div>
               </AlertDialog>
-              <div className="flex items-center space-x-2 mb-5">
+              {/* <div className="flex items-center space-x-2 mb-5">
                 <Switch
                   id="useBubblePlatform"
                   checked={settings.useBubblePlatform}
@@ -355,6 +526,14 @@ export default function ClientSettings() {
                   }
                 />
                 <Label htmlFor="showWorryDialog">Bubble Review Platform</Label>
+              </div> */}
+              <div className="flex items-center justify-center space-x-2 mb-5">
+                <RatingBubbleCardClient
+                  categories={categories}
+                  setCategories={setCategories}
+                  businessName={placesInfo[0].name}
+                  handleSettingChange={handleSettingChange}
+                />
               </div>
               {!settings.useBubblePlatform &&
                 settings.questions.map((rating) => (
