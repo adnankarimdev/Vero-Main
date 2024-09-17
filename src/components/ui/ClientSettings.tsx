@@ -293,6 +293,34 @@ export default function ClientSettings() {
   const validateSettings = () => {
     const errors = [];
 
+    // Validate categories
+    if (!settings.categories || settings.categories.length === 0) {
+      errors.push("There must be at least one category.");
+    } else {
+      settings.categories.forEach((category: Category) => {
+        // Check if the category has badges with ratings from 1 to 5
+        const expectedRatings = [1, 2, 3, 4, 5]; // Expected ratings
+        const actualRatings = category.badges.map((badge) => badge.rating);
+
+        expectedRatings.forEach((rating) => {
+          if (!actualRatings.includes(rating)) {
+            errors.push(
+              `Category "${category.name}" is missing badges for rating ${rating}.`
+            );
+          } else {
+            const badgeForRating = category.badges.find(
+              (badge) => badge.rating === rating
+            );
+            if (badgeForRating && badgeForRating.badges.length === 0) {
+              errors.push(
+                `Category "${category.name}" must have at least one badge for rating ${rating}.`
+              );
+            }
+          }
+        });
+      });
+    }
+
     // Validate email fields
     if (
       settings.worryRating < 1 ||

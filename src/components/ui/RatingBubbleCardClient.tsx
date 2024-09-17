@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -49,6 +49,10 @@ export default function RatingBubbleCardClient({
   const [newBadgeRating, setNewBadgeRating] = useState(1);
   const [editingCategory, setEditingCategory] = useState<string | null>(null);
 
+  useEffect(() => {
+    handleSettingChange("categories", categories);
+  }, [categories]); // Whenever categories update, this effect will trigger
+
   const handleCategoryRating = (categoryName: string, newRating: number) => {
     setCategoryRatings((prev) => ({ ...prev, [categoryName]: newRating }));
     setSelectedBadges((prevBadges) => ({
@@ -72,12 +76,20 @@ export default function RatingBubbleCardClient({
   const addCategory = () => {
     if (newCategory.trim()) {
       setCategories((prev: Category[]) => {
-        const updatedCategories = [...prev, { name: newCategory, badges: [] }];
+        const updatedCategories = [
+          ...prev,
+          {
+            name: newCategory,
+            badges: [
+              { rating: 1, badges: [] },
+              { rating: 2, badges: [] },
+              { rating: 3, badges: [] },
+              { rating: 4, badges: [] },
+              { rating: 5, badges: [] },
+            ],
+          },
+        ];
 
-        // Call handleSettingChange with the updated categories
-        handleSettingChange("categories", updatedCategories);
-
-        // Return the updated categories to update the state
         return updatedCategories;
       });
 
@@ -87,11 +99,7 @@ export default function RatingBubbleCardClient({
   };
 
   const addBadgeToCategory = (categoryName: string) => {
-    console.log(categoryName);
     if (newBadge.trim()) {
-      console.log("in hereeee", newBadge);
-
-      // Update the categories state
       setCategories((prev: Category[]) => {
         const updatedCategories = prev.map((category) =>
           category["name"] === categoryName
@@ -109,10 +117,6 @@ export default function RatingBubbleCardClient({
             : category
         );
 
-        // Call handleSettingChange with the updated categories
-        handleSettingChange("categories", updatedCategories);
-
-        // Return the updated categories to update the state
         return updatedCategories;
       });
 
@@ -126,9 +130,6 @@ export default function RatingBubbleCardClient({
       const updatedCategories = prev.filter(
         (category) => category.name !== categoryName
       );
-
-      // Call handleSettingChange with the updated categories
-      handleSettingChange("categories", updatedCategories);
 
       // Return the updated categories to update the state
       return updatedCategories;
@@ -164,9 +165,6 @@ export default function RatingBubbleCardClient({
             }
           : category
       );
-
-      // Call handleSettingChange with the updated categories
-      handleSettingChange("categories", updatedCategories);
 
       // Return the updated categories to update the state
       return updatedCategories;
