@@ -90,7 +90,7 @@ export default function ReviewsTab({}: any) {
             ),
           };
         });
-        setReviews(updatedReviews.reverse());
+        setReviews(updatedReviews.reverse() as any);
         console.log(updatedReviews);
         setIsLoading(false);
       } catch (err) {

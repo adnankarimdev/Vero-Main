@@ -79,18 +79,18 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
                 Review Analysis
               </h3>
               <div className="flex flex-wrap gap-2">
-                {Object.keys(review.analyzed_review_details).length != 0 && (
+                {Object.keys((review as any).analyzed_review_details).length != 0 && (
                   <Badge variant="outline">
                     Emotion:{" "}
                     {capitalizeFirstLetter(
-                      review.analyzed_review_details.emotion
+                      (review.analyzed_review_details as any).emotion
                     )}
                   </Badge>
                 )}
                 {Object.keys(review.analyzed_review_details).length != 0 && (
                   <Badge variant="outline">
                     Tone:{" "}
-                    {capitalizeFirstLetter(review.analyzed_review_details.tone)}
+                    {capitalizeFirstLetter((review.analyzed_review_details as any).tone)}
                   </Badge>
                 )}
                 {review.pending_google_review ? (
@@ -130,7 +130,7 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
               <h3 className="text-lg font-semibold mb-2">Badges</h3>
               <div className="flex flex-wrap gap-2">
                 {review.posted_with_bubble_rating_platform &&
-                  review.badges.map((badge, index) => (
+                  (review.badges as any).map((badge:any, index:any) => (
                     <Badge
                       key={index}
                       variant="outline"
@@ -153,7 +153,7 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
               </h3>
               <div className="flex flex-wrap gap-2">
                 {review.posted_to_google_review &&
-                  review.internal_google_key_words.map((badge, index) => (
+                  review.internal_google_key_words?.map((badge, index) => (
                     <Badge
                       key={index}
                       className="bg-green-500 text-white hover:bg-green-500 hover:text-white cursor-pointer"
@@ -184,9 +184,9 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
               <h3 className="text-lg font-semibold mb-2">
                 Suggested Improvements
               </h3>
-              {review.analyzed_review_details.reasoning !== "" && (
+              {(review.analyzed_review_details as any).reasoning !== "" && (
                 <p className="text-sm text-muted-foreground">
-                  {review.analyzed_review_details.reasoning}
+                  {(review.analyzed_review_details as any).reasoning}
                 </p>
               )}
 

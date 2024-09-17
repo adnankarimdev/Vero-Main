@@ -109,8 +109,7 @@ export default function TabsSkeletonLoader() {
           <div>
             <Label>Complimentary Item</Label>
             <p className="text-gray-500 text-xs">
-              Specify the complimentary items you'd like to offer, which will be
-              included in the email when addressing concerns.
+              {"Specify the complimentary items you'd like to offer, which will be included in the email when addressing concerns."}
             </p>
             <Skeleton className="h-10 w-full mt-2" />
           </div>

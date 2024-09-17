@@ -66,7 +66,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
             "point_of_interest",
             "establishment",
           ]);
-          const finalTypes = types.filter((type) => !typesToRemove.has(type));
+          const finalTypes = types.filter((type:any) => !typesToRemove.has(type));
           newPlace.currentRating = data.result["rating"];
           newPlace.currentTotalReviews = data.result["user_ratings_total"];
           newPlace.websiteUrl = website;

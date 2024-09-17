@@ -787,9 +787,7 @@ export default function ClientSettings() {
                         Complimentary Item
                       </Label>
                       <p className="text-gray-500 text-xs">
-                        Specify the complimentary items you'd like to offer,
-                        which will be included in the email when addressing
-                        concerns.
+                        {"Specify the complimentary items you'd like to offer, which will be included in the email when addressing concerns."}
                       </p>
                       <Input
                         id="complimentaryItem"
@@ -817,6 +815,7 @@ export default function ClientSettings() {
                     {websiteURLS.map((website, index) => (
                       <a
                         href={website}
+                        key={index}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -832,6 +831,7 @@ export default function ClientSettings() {
                     {locationURLS.map((website, index) => (
                       <a
                         href={website}
+                        key={index}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
