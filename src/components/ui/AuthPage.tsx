@@ -63,13 +63,12 @@ export default function AuthPage() {
   const handleSignUp = () => {
     // TODO: add valdiation steps here
     axios
-      .post("https://3.137.148.202/backend/sign-up/", {
+      .post("https://vero.ngrok.dev/backend/sign-up/", {
         email: email,
         password: password,
         business_name: buisnessName,
       })
       .then((response) => {
-        console.log(response)
         toast({
           title: "User Created",
           description: "Welcome to Vero.",
@@ -81,7 +80,6 @@ export default function AuthPage() {
         }, 2000);
       })
       .catch((error) => {
-        console.log(error)
         toast({
           title: "Failed to sign up.",
           description: "It's not you, it's us. Please try again.",
