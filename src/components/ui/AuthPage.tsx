@@ -63,7 +63,7 @@ export default function AuthPage() {
   const handleSignUp = () => {
     // TODO: add valdiation steps here
     axios
-      .post("https://ec2-3-137-148-202.us-east-2.compute.amazonaws.com/backend/sign-up/", {
+      .post("https://vero.ngrok.dev/backend/sign-up/", {
         email: email,
         password: password,
         business_name: buisnessName,
