@@ -29,10 +29,8 @@ export default function Sidebar() {
   const router = useRouter();
 
   const handleLogout = () => {
-    console.log("logged out");
     localStorage.removeItem("authToken");
     localStorage.removeItem("userEmail");
-    console.log("logged out");
     router.push("/");
   };
 

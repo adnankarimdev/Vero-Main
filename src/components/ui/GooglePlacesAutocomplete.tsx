@@ -143,7 +143,6 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
       })
       .catch((error) => {
         setIsLoading(false);
-        console.log(error);
         toast({
           title: "Failed to update",
           description: error.response.data.error,

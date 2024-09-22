@@ -33,7 +33,6 @@ export default function RatingBubbleCardClient({
   setCategories,
   handleSettingChange,
 }: RatingBubbleCardClientProps) {
-  console.log("categoriesss", categories);
   const [categoryRatings, setCategoryRatings] = useState<{
     [key: string]: number;
   }>(

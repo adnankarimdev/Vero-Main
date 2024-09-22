@@ -47,7 +47,6 @@ export default function ReviewsTab({}: any) {
     const fetchData = async () => {
       try {
         const email = localStorage.getItem("userEmail");
-        console.log("email in local", email);
         if (!email) {
           console.error("Email not found in localStorage");
           return;
@@ -62,7 +61,6 @@ export default function ReviewsTab({}: any) {
         const placeIdsAsArray = placeIdResponse.data.places.map(
           (place: any) => place.place_id
         );
-        console.log(placeIdsAsArray);
         const placeIdsQuery = placeIdsAsArray.join(",");
 
         const reviewSettingsResponse = await axios.get(
@@ -76,7 +74,6 @@ export default function ReviewsTab({}: any) {
             },
           }
         );
-        console.log("Reviews:", response.data);
         const data = response.data as CustomerReviewInfoFromSerializer[];
         const updatedReviews = data.map((review) => {
           // Convert badges JSON string to array or empty array if invalid
@@ -91,7 +88,6 @@ export default function ReviewsTab({}: any) {
           };
         });
         setReviews(updatedReviews.reverse() as any);
-        console.log(updatedReviews);
         setIsLoading(false);
       } catch (err) {
         console.error(err);

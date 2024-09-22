@@ -52,7 +52,6 @@ export default function AuthPage() {
         }, 2000);
       })
       .catch((error) => {
-        console.log(error);
         toast({
           title: "Failed to login",
           description: error.response.data.error,

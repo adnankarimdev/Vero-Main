@@ -99,7 +99,6 @@ export default function Onboarding() {
     const fetchData = async () => {
       try {
         const email = localStorage.getItem("userEmail");
-        console.log("email in local", email);
         if (!email) {
           console.error("Email not found in localStorage");
           return;
@@ -110,7 +109,6 @@ export default function Onboarding() {
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
         );
         handleSettingChange("placeIds", placeIdResponse.data.placeIds);
-        console.log("my place idss", placeIdResponse.data.places);
         handleSettingChange("userEmail", email as string);
         setPlaceIds(placeIdResponse.data.placeIds);
         setPlacesInfo(placeIdResponse.data.places);
@@ -119,14 +117,12 @@ export default function Onboarding() {
         const placeIdsAsArray = placeIdResponse.data.places.map(
           (place: any) => place.place_id
         );
-        console.log(placeIdsAsArray);
         const placeIdsQuery = placeIdsAsArray.join(",");
 
         // Then, use the fetched placeId to get the review settings
         const reviewSettingsResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-review-settings/${placeIdsQuery}/`
         );
-        console.log("Fetched review settings:", reviewSettingsResponse);
 
         // Update the settings state
         setSettings(reviewSettingsResponse.data);
@@ -224,7 +220,6 @@ export default function Onboarding() {
         }, 2000);
       })
       .catch((error) => {
-        console.log(error);
         toast({
           title: "Failed to update",
           description: error.response.data.error,
