@@ -50,6 +50,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
         autocomplete.addListener("place_changed", async () => {
           // For now, we'll save the number of locations as 1. 
           // Eventually, we'll need to set up the backend to select the number of locations based on pricing. 
+          console.log(Number(process.env.NEXT_PUBLIC_NUMBER_OF_LOCATIONS_ALLOWED))
           if(places.length > Number(process.env.NEXT_PUBLIC_NUMBER_OF_LOCATIONS_ALLOWED))
           {
             toast({
