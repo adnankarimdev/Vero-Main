@@ -842,11 +842,13 @@ export default function ClientSettings() {
                       </a>
                     ))} */}
                     <Separator className="mt-5 mb-5" />
-                    <Label htmlFor="placeIds">In Store Urls</Label>
+                    <Label htmlFor="placeIds">In Store QR Codes</Label>
                     {locationURLS.map((website, index) => (
                       <div key={index}>
                         <Button
                           variant="ghost"
+                          disabled={categories.length == 0}
+                          className="p-0 inline-flex items-center justify-center hover:bg-transparent hover:text-current focus:ring-0 active:bg-transparent"
                           onClick={() =>
                             openQrCode(placesInfo[index].name, website)
                           }
