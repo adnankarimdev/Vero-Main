@@ -73,7 +73,7 @@ const SmartReviewBuilder = () => {
     } else {
       const userReviews = reviews.join("\n");
       axios
-        .post("https://vero.ngrok.dev/backend/create-review-score/", {
+        .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/create-review-score/`, {
           userReview: userReviews,
         })
         .then((response) => {
@@ -152,7 +152,7 @@ const SmartReviewBuilder = () => {
   const handleSophisticateReview = () => {
     const allReviews = reviews.join("\n");
     axios
-      .post("https://vero.ngrok.dev/backend/create-review/", {
+      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/create-review/`, {
         allReviewsToSend: allReviews,
       })
       .then((response) => {
@@ -162,7 +162,7 @@ const SmartReviewBuilder = () => {
           duration: 1000,
         });
         // axios
-        //   .post("https://vero.ngrok.dev/backend/create-review-score/", {
+        //   .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/create-review-score/`, {
         //     userReview: allReviews,
         //   })
         //   .then((response) => {

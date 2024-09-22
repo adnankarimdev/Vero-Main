@@ -363,7 +363,7 @@ export default function ClientSettings() {
       // Here you would typically send the settings to your backend
       console.log("Saving settings:", settings);
       axios
-        .post("https://vero.ngrok.dev/backend/save-review-settings/", settings)
+        .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/save-review-settings/`, settings)
         .then((response) => {
           toast({
             title: "Success",
@@ -393,7 +393,7 @@ export default function ClientSettings() {
       placesInfo[0].name;
 
     axios
-      .post("https://vero.ngrok.dev/backend/generate-categories/", {
+      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/generate-categories/`, {
         context: fullContext,
       })
       .then((response) => {
@@ -437,7 +437,7 @@ export default function ClientSettings() {
 
         // First, fetch the placeId
         const placeIdResponse = await axios.get(
-          `https://vero.ngrok.dev/backend/get-place-id-by-email/${email}/`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
         );
         handleSettingChange("placeIds", placeIdResponse.data.placeIds);
         console.log("my place idss", placeIdResponse.data.places);
@@ -455,7 +455,7 @@ export default function ClientSettings() {
 
         // Then, use the fetched placeId to get the review settings
         const reviewSettingsResponse = await axios.get(
-          `https://vero.ngrok.dev/backend/get-review-settings/${placeIdsQuery}/`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-review-settings/${placeIdsQuery}/`
         );
         console.log("Fetched review settings:", reviewSettingsResponse);
 

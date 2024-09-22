@@ -56,7 +56,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
             place_id: selectedPlace.place_id,
           };
           const response = await axios.get(
-            `https://vero.ngrok.dev/backend/get-place-details/${selectedPlace.place_id}/`
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-details/${selectedPlace.place_id}/`
           );
           const data = response.data;
           const website = data.result["website"] || "";
@@ -104,7 +104,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
   const handleLocationsSubmit = () => {
     setIsLoading(true);
     axios
-      .post("https://vero.ngrok.dev/backend/set-place-ids/", {
+      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/set-place-ids/`, {
         places: places,
         userEmail: localStorage.getItem("userEmail"),
       })

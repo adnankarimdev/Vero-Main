@@ -92,14 +92,14 @@ export default function SummaryTab({
         }
 
         const placeIdResponse = await axios.get(
-          `https://vero.ngrok.dev/backend/get-place-id-by-email/${email}/`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
         );
         setPlacesInfo(placeIdResponse.data.places);
         const placeIdsAsArray = placeIdResponse.data.places.map(
           (place: any) => place.place_id
         );
         const response = await axios.get(
-          "https://vero.ngrok.dev/backend/get-reviews-by-client-ids/",
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-reviews-by-client-ids/`,
           {
             params: {
               clientIds: placeIdsAsArray,
@@ -108,7 +108,7 @@ export default function SummaryTab({
         );
         const placeIdsQuery = placeIdsAsArray.join(",");
         const reviewSettingsResponse = await axios.get(
-          `https://vero.ngrok.dev/backend/get-review-settings/${placeIdsQuery}/`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-review-settings/${placeIdsQuery}/`
         );
         console.log("Reviews:", response.data);
         console.log(reviewSettingsResponse);
