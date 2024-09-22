@@ -50,7 +50,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
         autocomplete.addListener("place_changed", async () => {
           // For now, we'll save the number of locations as 1. 
           // Eventually, we'll need to set up the backend to select the number of locations based on pricing. 
-          if(places.length > 0)
+          if(places.length > Number(process.env.NEXT_PUBLIC_NUMBER_OF_LOCATIONS_ALLOWED))
           {
             toast({
               title: "Failed",
@@ -116,7 +116,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
   };
 
   const handleLocationsSubmit = () => {
-    if (places.length > 1)
+    if (places.length >  Number(process.env.NEXT_PUBLIC_NUMBER_OF_LOCATIONS_ALLOWED))
     {
       toast({
         title: "Failed",
@@ -124,6 +124,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
         duration: 3000,
         variant:"destructive"
       });
+      return;
     }
     setIsLoading(true);
     axios

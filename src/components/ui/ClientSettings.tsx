@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Place } from "../Types/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { QRCodeSVG } from 'qrcode.react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +20,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import {
   Card,
   CardContent,
@@ -37,6 +46,7 @@ import { PlaceType } from "../Types/types";
 import TabsSkeletonLoader from "./Skeletons/TabsSkeletonLoader";
 import Logo from "../../app/favicon.ico";
 import RatingBubbleCardClient from "./RatingBubbleCardClient";
+import LocationLinkQR from "./LocationQRCodes";
 
 interface Category {
   name: string;
@@ -198,6 +208,9 @@ export default function ClientSettings() {
   ];
   const { toast } = useToast();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [openQrLinkDialog, setOpenQrLinkDialog] = useState(false)
+  const [qrLink, setQrLink] = useState("")
+  const [qrName, setQrName] = useState("")
   const [settings, setSettings] = useState({
     questions: Array(4)
       .fill(null)
@@ -425,6 +438,14 @@ export default function ClientSettings() {
         });
       });
   };
+
+  const openQrCode = (placeName:string, locationUrl:string) =>
+  {
+    setOpenQrLinkDialog(true)
+    setQrLink(locationUrl)
+    setQrName(placeName)
+    
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -811,7 +832,7 @@ export default function ClientSettings() {
                   <div className="mb-4">
                     {" "}
                     {/* Add margin-bottom to create space */}
-                    <Label htmlFor="placeIds">Registered Places</Label>
+                    {/* <Label htmlFor="placeIds">Registered Places</Label>
                     {websiteURLS.map((website, index) => (
                       <a
                         href={website}
@@ -825,23 +846,37 @@ export default function ClientSettings() {
                           </Badge>
                         </div>
                       </a>
-                    ))}
+                    ))} */}
                     <Separator className="mt-5 mb-5" />
                     <Label htmlFor="placeIds">In Store Urls</Label>
                     {locationURLS.map((website, index) => (
-                      <a
-                        href={website}
-                        key={index}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
+                      <div key={index}>
+                      <Button variant="ghost" onClick={() => openQrCode(placesInfo[index].name, website)}>
                         <div className="text-lg font-medium">
                           <Badge className="text-white">
                             {" " + placesInfo[index].name}
                           </Badge>
                         </div>
-                      </a>
+                        </Button>
+                        </div>
                     ))}
+                      {openQrLinkDialog && (
+                          <div className="flex justify-center p-4">
+                          <Dialog open={openQrLinkDialog} onOpenChange={setOpenQrLinkDialog}>
+                            <DialogContent className="sm:max-w-md">
+                              <DialogHeader>
+                                <DialogTitle>{qrName} QR Code</DialogTitle>
+                                <DialogDescription>
+                                  Scan this QR code to open the link for {qrName}
+                                </DialogDescription>
+                              </DialogHeader>
+                              <div className="flex justify-center p-6 bg-background rounded-lg">
+                                <QRCodeSVG value={qrLink} size={200} />
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        </div>
+                    )}
                     <Separator className="mt-5 mb-5" />
                     <Label htmlFor="keywords">Google Keywords</Label>
                     <div className="flex flex-wrap gap-2">
