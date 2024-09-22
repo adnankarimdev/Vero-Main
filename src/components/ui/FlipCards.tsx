@@ -79,7 +79,8 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
                 Review Analysis
               </h3>
               <div className="flex flex-wrap gap-2">
-                {Object.keys((review as any).analyzed_review_details).length != 0 && (
+                {Object.keys((review as any).analyzed_review_details).length !=
+                  0 && (
                   <Badge variant="outline">
                     Emotion:{" "}
                     {capitalizeFirstLetter(
@@ -90,7 +91,9 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
                 {Object.keys(review.analyzed_review_details).length != 0 && (
                   <Badge variant="outline">
                     Tone:{" "}
-                    {capitalizeFirstLetter((review.analyzed_review_details as any).tone)}
+                    {capitalizeFirstLetter(
+                      (review.analyzed_review_details as any).tone
+                    )}
                   </Badge>
                 )}
                 {review.pending_google_review ? (
@@ -130,7 +133,7 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
               <h3 className="text-lg font-semibold mb-2">Badges</h3>
               <div className="flex flex-wrap gap-2">
                 {review.posted_with_bubble_rating_platform &&
-                  (review.badges as any).map((badge:any, index:any) => (
+                  (review.badges as any).map((badge: any, index: any) => (
                     <Badge
                       key={index}
                       variant="outline"

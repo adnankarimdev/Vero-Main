@@ -85,7 +85,6 @@ export default function SummaryTab({
     const fetchData = async () => {
       try {
         const email = localStorage.getItem("userEmail");
-        console.log("email in local", email);
         if (!email) {
           console.error("Email not found in localStorage");
           return;
@@ -110,8 +109,6 @@ export default function SummaryTab({
         const reviewSettingsResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-review-settings/${placeIdsQuery}/`
         );
-        console.log("Reviews:", response.data);
-        console.log(reviewSettingsResponse);
         const data = response.data as CustomerReviewInfoFromSerializer[];
         setTotalReviewsWithVero(data.length);
         setTotalNegativeReviewsPrevented(

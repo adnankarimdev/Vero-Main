@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import { QRCodeSVG } from 'qrcode.react'
-import { Badge } from "@/components/ui/badge"
+import { QRCodeSVG } from "qrcode.react";
+import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -9,16 +9,21 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
 interface LocationLinkQRProps {
-  locationURL: string
-  placeName: string
+  locationURL: string;
+  placeName: string;
   setQrLinkOpen?: (value: boolean) => void;
   openDialog?: boolean;
 }
 
-export default function LocationLinkQR({ locationURL, placeName, openDialog, setQrLinkOpen }: LocationLinkQRProps) {
+export default function LocationLinkQR({
+  locationURL,
+  placeName,
+  openDialog,
+  setQrLinkOpen,
+}: LocationLinkQRProps) {
   return (
     <div className="flex justify-center p-4">
       <Dialog onOpenChange={setQrLinkOpen}>
@@ -35,5 +40,5 @@ export default function LocationLinkQR({ locationURL, placeName, openDialog, set
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

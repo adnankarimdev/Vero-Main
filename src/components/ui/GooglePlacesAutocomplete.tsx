@@ -48,16 +48,17 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
           }
         );
         autocomplete.addListener("place_changed", async () => {
-          // For now, we'll save the number of locations as 1. 
-          // Eventually, we'll need to set up the backend to select the number of locations based on pricing. 
-          console.log(Number(process.env.NEXT_PUBLIC_NUMBER_OF_LOCATIONS_ALLOWED))
-          if(places.length > Number(process.env.NEXT_PUBLIC_NUMBER_OF_LOCATIONS_ALLOWED))
-          {
+          // For now, we'll save the number of locations as 1.
+          // Eventually, we'll need to set up the backend to select the number of locations based on pricing.
+          if (
+            places.length >
+            Number(process.env.NEXT_PUBLIC_NUMBER_OF_LOCATIONS_ALLOWED)
+          ) {
             toast({
               title: "Failed",
               description: "Can only add one location on free trial.",
               duration: 3000,
-              variant:"destructive"
+              variant: "destructive",
             });
 
             return;
@@ -81,7 +82,9 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
             "point_of_interest",
             "establishment",
           ]);
-          const finalTypes = types.filter((type:any) => !typesToRemove.has(type));
+          const finalTypes = types.filter(
+            (type: any) => !typesToRemove.has(type)
+          );
           newPlace.currentRating = data.result["rating"];
           newPlace.currentTotalReviews = data.result["user_ratings_total"];
           newPlace.websiteUrl = website;
@@ -117,13 +120,15 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
   };
 
   const handleLocationsSubmit = () => {
-    if (places.length >  Number(process.env.NEXT_PUBLIC_NUMBER_OF_LOCATIONS_ALLOWED))
-    {
+    if (
+      places.length >
+      Number(process.env.NEXT_PUBLIC_NUMBER_OF_LOCATIONS_ALLOWED)
+    ) {
       toast({
         title: "Failed",
         description: "Can only add one location on free trial.",
         duration: 3000,
-        variant:"destructive"
+        variant: "destructive",
       });
       return;
     }

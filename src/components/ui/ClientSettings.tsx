@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Place } from "../Types/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { QRCodeSVG } from 'qrcode.react'
+import { QRCodeSVG } from "qrcode.react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,7 +27,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   Card,
   CardContent,
@@ -208,9 +208,9 @@ export default function ClientSettings() {
   ];
   const { toast } = useToast();
   const [categories, setCategories] = useState<Category[]>([]);
-  const [openQrLinkDialog, setOpenQrLinkDialog] = useState(false)
-  const [qrLink, setQrLink] = useState("")
-  const [qrName, setQrName] = useState("")
+  const [openQrLinkDialog, setOpenQrLinkDialog] = useState(false);
+  const [qrLink, setQrLink] = useState("");
+  const [qrName, setQrName] = useState("");
   const [settings, setSettings] = useState({
     questions: Array(4)
       .fill(null)
@@ -358,10 +358,6 @@ export default function ClientSettings() {
 
   const handleSave = () => {
     const errors = validateSettings();
-    console.log(
-      "user emaillll in settings:",
-      localStorage.getItem("userEmail")
-    );
 
     if (errors.length > 0) {
       errors.forEach((error) => {
@@ -374,9 +370,11 @@ export default function ClientSettings() {
       });
     } else {
       // Here you would typically send the settings to your backend
-      console.log("Saving settings:", settings);
       axios
-        .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/save-review-settings/`, settings)
+        .post(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/save-review-settings/`,
+          settings
+        )
         .then((response) => {
           toast({
             title: "Success",
@@ -385,7 +383,6 @@ export default function ClientSettings() {
           });
         })
         .catch((error) => {
-          console.log(error);
           toast({
             title: "Failed to update",
             description: error.response.data.error,
@@ -406,16 +403,18 @@ export default function ClientSettings() {
       placesInfo[0].name;
 
     axios
-      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/generate-categories/`, {
-        context: fullContext,
-      })
+      .post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/generate-categories/`,
+        {
+          context: fullContext,
+        }
+      )
       .then((response) => {
         //this will be a string rep of json
         const generatedQuestions = response.data["content"]
           .replace(/```json/g, "")
           .replace(/```/g, "");
         const generatedQuestionsAsJson = JSON.parse(generatedQuestions);
-        console.log(generatedQuestionsAsJson);
         setCategories(generatedQuestionsAsJson["categories"]);
         handleSettingChange(
           "categories",
@@ -429,7 +428,6 @@ export default function ClientSettings() {
         });
       })
       .catch((error) => {
-        console.log(error);
         setIsTabsLoading(false);
         toast({
           title: "Failed to generate",
@@ -439,18 +437,15 @@ export default function ClientSettings() {
       });
   };
 
-  const openQrCode = (placeName:string, locationUrl:string) =>
-  {
-    setOpenQrLinkDialog(true)
-    setQrLink(locationUrl)
-    setQrName(placeName)
-    
-  }
+  const openQrCode = (placeName: string, locationUrl: string) => {
+    setOpenQrLinkDialog(true);
+    setQrLink(locationUrl);
+    setQrName(placeName);
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
         const email = localStorage.getItem("userEmail");
-        console.log("email in local", email);
         if (!email) {
           console.error("Email not found in localStorage");
           return;
@@ -461,7 +456,6 @@ export default function ClientSettings() {
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
         );
         handleSettingChange("placeIds", placeIdResponse.data.placeIds);
-        console.log("my place idss", placeIdResponse.data.places);
         handleSettingChange("userEmail", email as string);
         setPlaceIds(placeIdResponse.data.placeIds);
         setPlacesInfo(placeIdResponse.data.places);
@@ -471,14 +465,12 @@ export default function ClientSettings() {
         const placeIdsAsArray = placeIdResponse.data.places.map(
           (place: any) => place.place_id
         );
-        console.log(placeIdsAsArray);
         const placeIdsQuery = placeIdsAsArray.join(",");
 
         // Then, use the fetched placeId to get the review settings
         const reviewSettingsResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-review-settings/${placeIdsQuery}/`
         );
-        console.log("Fetched review settings:", reviewSettingsResponse);
 
         // Update the settings state
         setSettings(reviewSettingsResponse.data);
@@ -808,7 +800,9 @@ export default function ClientSettings() {
                         Complimentary Item
                       </Label>
                       <p className="text-gray-500 text-xs">
-                        {"Specify the complimentary items you'd like to offer, which will be included in the email when addressing concerns."}
+                        {
+                          "Specify the complimentary items you'd like to offer, which will be included in the email when addressing concerns."
+                        }
                       </p>
                       <Input
                         id="complimentaryItem"
@@ -851,31 +845,39 @@ export default function ClientSettings() {
                     <Label htmlFor="placeIds">In Store Urls</Label>
                     {locationURLS.map((website, index) => (
                       <div key={index}>
-                      <Button variant="ghost" onClick={() => openQrCode(placesInfo[index].name, website)}>
-                        <div className="text-lg font-medium">
-                          <Badge className="text-white">
-                            {" " + placesInfo[index].name}
-                          </Badge>
-                        </div>
+                        <Button
+                          variant="ghost"
+                          onClick={() =>
+                            openQrCode(placesInfo[index].name, website)
+                          }
+                        >
+                          <div className="text-lg font-medium">
+                            <Badge className="text-white">
+                              {" " + placesInfo[index].name}
+                            </Badge>
+                          </div>
                         </Button>
-                        </div>
+                      </div>
                     ))}
-                      {openQrLinkDialog && (
-                          <div className="flex justify-center p-4">
-                          <Dialog open={openQrLinkDialog} onOpenChange={setOpenQrLinkDialog}>
-                            <DialogContent className="sm:max-w-md">
-                              <DialogHeader>
-                                <DialogTitle>{qrName} QR Code</DialogTitle>
-                                <DialogDescription>
-                                  Scan this QR code to open the link for {qrName}
-                                </DialogDescription>
-                              </DialogHeader>
-                              <div className="flex justify-center p-6 bg-background rounded-lg">
-                                <QRCodeSVG value={qrLink} size={200} />
-                              </div>
-                            </DialogContent>
-                          </Dialog>
-                        </div>
+                    {openQrLinkDialog && (
+                      <div className="flex justify-center p-4">
+                        <Dialog
+                          open={openQrLinkDialog}
+                          onOpenChange={setOpenQrLinkDialog}
+                        >
+                          <DialogContent className="sm:max-w-md">
+                            <DialogHeader>
+                              <DialogTitle>{qrName} QR Code</DialogTitle>
+                              <DialogDescription>
+                                Scan this QR code to open the link for {qrName}
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="flex justify-center p-6 bg-background rounded-lg">
+                              <QRCodeSVG value={qrLink} size={200} />
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     )}
                     <Separator className="mt-5 mb-5" />
                     <Label htmlFor="keywords">Google Keywords</Label>

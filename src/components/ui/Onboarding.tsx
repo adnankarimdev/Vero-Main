@@ -208,7 +208,10 @@ export default function Onboarding() {
 
   const handleSave = () => {
     axios
-      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/save-review-settings/`, settings)
+      .post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/save-review-settings/`,
+        settings
+      )
       .then((response) => {
         toast({
           title: "Success",

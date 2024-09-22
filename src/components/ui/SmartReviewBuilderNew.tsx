@@ -87,9 +87,12 @@ const SmartReviewBuilderNew = () => {
     } else {
       const userReviews = reviews.join("\n");
       axios
-        .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/create-review-score/`, {
-          userReview: userReviews,
-        })
+        .post(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/create-review-score/`,
+          {
+            userReview: userReviews,
+          }
+        )
         .then((response) => {
           setUserReviewScore(response.data.content);
           setIsReviewComplete(true);

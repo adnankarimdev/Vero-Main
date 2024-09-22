@@ -61,8 +61,8 @@ export default function AuthPage() {
   };
   const handleSignUp = () => {
     // TODO: add valdiation steps here
-    // For now, we'll save the number of locations as 1. 
-    // Eventually, we'll need to set up the backend to select the number of locations based on pricing. 
+    // For now, we'll save the number of locations as 1.
+    // Eventually, we'll need to set up the backend to select the number of locations based on pricing.
     axios
       .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/sign-up/`, {
         email: email,
