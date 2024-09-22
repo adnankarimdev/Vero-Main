@@ -62,8 +62,9 @@ export default function AuthPage() {
   };
   const handleSignUp = () => {
     // TODO: add valdiation steps here
+    // https://vero.ngrok.dev/backend/sign-up/ 
     axios
-      .post("https://vero.ngrok.dev/backend/sign-up/", {
+      .post("https://vero-io.com/backend/sign-up/", {
         email: email,
         password: password,
         business_name: buisnessName,
