@@ -48,6 +48,20 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
           }
         );
         autocomplete.addListener("place_changed", async () => {
+          // For now, we'll save the number of locations as 1. 
+          // Eventually, we'll need to set up the backend to select the number of locations based on pricing. 
+          if(places.length > 0)
+          {
+            toast({
+              title: "Failed",
+              description: "Can only add one location on free trial.",
+              duration: 3000,
+              variant:"destructive"
+            });
+
+            return;
+          }
+
           const selectedPlace = autocomplete.getPlace();
 
           const newPlace: Place = {
@@ -93,7 +107,7 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
       script.onload = initAutocomplete;
       document.head.appendChild(script);
     }
-  }, []);
+  }, [places]);
 
   const removePlace = (placeId: string) => {
     setPlaces((prevPlaces) =>
@@ -102,6 +116,15 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
   };
 
   const handleLocationsSubmit = () => {
+    if (places.length > 1)
+    {
+      toast({
+        title: "Failed",
+        description: "Can only add one location on free trial.",
+        duration: 3000,
+        variant:"destructive"
+      });
+    }
     setIsLoading(true);
     axios
       .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/set-place-ids/`, {
