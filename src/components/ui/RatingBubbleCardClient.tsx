@@ -183,10 +183,11 @@ export default function RatingBubbleCardClient({
       <CardContent>
         {categories.map((category: Category) => (
           <div key={category.name} className="mb-6">
-            <div className="flex items-center mb-2 justify-between">
-              <h3 className="text-lg font-semibold">{category.name}</h3>
-              <div className="flex items-center space-x-2">
-                <div className="flex items-center space-x-1">
+            <div className="flex items-center mb-2 justify-center">
+              {" "}
+              {/* Centered the stars horizontally */}
+              <div className="flex flex-col items-center mb-2">
+                <div className="flex items-center space-x-1 justify-center">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
@@ -199,13 +200,6 @@ export default function RatingBubbleCardClient({
                     />
                   ))}
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removeCategory(category.name)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
               </div>
             </div>
             <div className="flex flex-wrap gap-2 mb-2">
@@ -289,17 +283,6 @@ export default function RatingBubbleCardClient({
             </Button>
           </div>
         ))}
-        <div className="flex items-center space-x-2 mt-4">
-          <Input
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-            placeholder="New category"
-            className="flex-grow"
-          />
-          <Button onClick={addCategory} variant="outline">
-            Add Category
-          </Button>
-        </div>
       </CardContent>
     </Card>
   );

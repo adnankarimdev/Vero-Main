@@ -531,12 +531,10 @@ export default function ClientSettings() {
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Generate Categories & Badges
-                      </AlertDialogTitle>
+                      <AlertDialogTitle>Generate Badges</AlertDialogTitle>
                       <AlertDialogDescription>
                         {
-                          "This will generate badges for each category. You can input which areas you'd like the Categories to be focused on. Otherwise, the Categories will be generated more generically."
+                          "This will generate badges for the customers. You can input which areas you'd like the Badges to be focused on. Otherwise, the Badges will be generated more generically."
                         }{" "}
                         {/* <Label htmlFor="areaFocus">Areas of focus</Label> */}
                         <Input
