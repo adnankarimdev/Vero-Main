@@ -1,16 +1,16 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { RiAiGenerate } from "react-icons/ri"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Place } from "../Types/types"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import { QRCodeSVG } from "qrcode.react"
+import { useState, useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RiAiGenerate } from "react-icons/ri";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Place } from "../Types/types";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { QRCodeSVG } from "qrcode.react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,7 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import {
   Dialog,
   DialogContent,
@@ -30,7 +30,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   Card,
   CardContent,
@@ -38,30 +38,38 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { PlusCircle, Trash2, MapPin, Mail, NfcIcon, PlusIcon, XIcon } from "lucide-react"
-import { useToast } from "@/components/ui/use-toast"
-import axios from "axios"
-import { MdOutlineFormatListNumbered, MdLockOutline } from "react-icons/md"
-import { PlaceType } from "../Types/types"
-import TabsSkeletonLoader from "./Skeletons/TabsSkeletonLoader"
-import Logo from "../../app/favicon.ico"
-import RatingBubbleCardClient from "./RatingBubbleCardClient"
-import LocationLinkQR from "./LocationQRCodes"
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  PlusCircle,
+  Trash2,
+  MapPin,
+  Mail,
+  NfcIcon,
+  PlusIcon,
+  XIcon,
+} from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import axios from "axios";
+import { MdOutlineFormatListNumbered, MdLockOutline } from "react-icons/md";
+import { PlaceType } from "../Types/types";
+import TabsSkeletonLoader from "./Skeletons/TabsSkeletonLoader";
+import Logo from "../../app/favicon.ico";
+import RatingBubbleCardClient from "./RatingBubbleCardClient";
+import LocationLinkQR from "./LocationQRCodes";
 
 interface Category {
-  name: string
-  badges: { rating: number; badges: string[] }[]
+  name: string;
+  badges: { rating: number; badges: string[] }[];
 }
 
 export default function ClientSettings() {
-  const { toast } = useToast()
-  const [categories, setCategories] = useState<Category[]>([])
-  const [openQrLinkDialog, setOpenQrLinkDialog] = useState(false)
-  const [qrLink, setQrLink] = useState("")
-  const [qrName, setQrName] = useState("")
+  const { toast } = useToast();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [openQrLinkDialog, setOpenQrLinkDialog] = useState(false);
+  const [qrLink, setQrLink] = useState("");
+  const [qrName, setQrName] = useState("");
   const [settings, setSettings] = useState({
     questions: Array(4)
       .fill(null)
@@ -89,18 +97,39 @@ export default function ClientSettings() {
     useBubblePlatform: false,
     emailDelay: 60,
     keywords: [],
-  })
-  const [placeIds, setPlaceIds] = useState([])
-  const [placesInfo, setPlacesInfo] = useState<Place[]>([])
-  const [websiteURLS, setWebsiteURLS] = useState([])
-  const [locationURLS, setLocationURLS] = useState([])
-  const [areasToFocusOn, setAreasToFocusOn] = useState("")
-  const [websiteAndLocation, setWebsiteAndLocation] = useState([])
-  const [keywords, setKeywords] = useState<string[]>([])
-  const [isTabsLoading, setIsTabsLoading] = useState(true)
-  const [companyWebsites, setCompanyWebsites] = useState([])
-  const [newKeyword, setNewKeyword] = useState("")
-  const [isAddingKeyword, setIsAddingKeyword] = useState(false)
+  });
+  const [placeIds, setPlaceIds] = useState([]);
+  const [placesInfo, setPlacesInfo] = useState<Place[]>([]);
+  const [websiteURLS, setWebsiteURLS] = useState([]);
+  const [locationURLS, setLocationURLS] = useState([]);
+  const [areasToFocusOn, setAreasToFocusOn] = useState("");
+  const [websiteAndLocation, setWebsiteAndLocation] = useState([]);
+  const [keywords, setKeywords] = useState<string[]>([]);
+  const [isTabsLoading, setIsTabsLoading] = useState(true);
+  const [companyWebsites, setCompanyWebsites] = useState([]);
+  const [newKeyword, setNewKeyword] = useState("");
+  const [isAddingKeyword, setIsAddingKeyword] = useState(false);
+  const [clickedIndex, setClickedIndex] = useState<Number>(-1);
+
+  const handleBadgeClick = (index: number, website: string) => {
+    if (clickedIndex === index) {
+      // If the same index is clicked again, reset the clicked index
+      setClickedIndex(-1);
+    } else {
+      setClickedIndex(index); // Set the clicked index to the new index
+      navigator.clipboard
+        .writeText(website) // Copy the website to clipboard
+        .then(() => {
+          toast({
+            title: "Link copied to clipboard.",
+            duration: 3000,
+          });
+        })
+        .catch((err) => {
+          console.error("Failed to copy URL: ", err);
+        });
+    }
+  };
 
   const handleQuestionChange = (
     ratingId: number,
@@ -119,8 +148,8 @@ export default function ClientSettings() {
             }
           : q
       ),
-    }))
-  }
+    }));
+  };
 
   const addQuestion = (ratingId: number) => {
     setSettings((prev) => ({
@@ -128,8 +157,8 @@ export default function ClientSettings() {
       questions: prev.questions.map((q) =>
         q.id === ratingId ? { ...q, questions: [...q.questions, ""] } : q
       ),
-    }))
-  }
+    }));
+  };
 
   const removeQuestion = (ratingId: number, questionIndex: number) => {
     setSettings((prev) => ({
@@ -142,8 +171,8 @@ export default function ClientSettings() {
             }
           : q
       ),
-    }))
-  }
+    }));
+  };
 
   const handleSettingChange = (
     key: string,
@@ -154,36 +183,36 @@ export default function ClientSettings() {
       | { id: number; questions: string[] }[]
       | any
   ) => {
-    setSettings((prev) => ({ ...prev, [key]: value }))
-  }
+    setSettings((prev) => ({ ...prev, [key]: value }));
+  };
 
   const validateSettings = () => {
-    const errors = []
+    const errors = [];
 
     if (!settings.categories || settings.categories.length === 0) {
-      errors.push("There must be at least one category.")
+      errors.push("There must be at least one category.");
     } else {
       settings.categories.forEach((category: Category) => {
-        const expectedRatings = [1, 2, 3, 4, 5]
-        const actualRatings = category.badges.map((badge) => badge.rating)
+        const expectedRatings = [1, 2, 3, 4, 5];
+        const actualRatings = category.badges.map((badge) => badge.rating);
 
         expectedRatings.forEach((rating) => {
           if (!actualRatings.includes(rating)) {
             errors.push(
               `Category "${category.name}" is missing badges for rating ${rating}.`
-            )
+            );
           } else {
             const badgeForRating = category.badges.find(
               (badge) => badge.rating === rating
-            )
+            );
             if (badgeForRating && badgeForRating.badges.length === 0) {
               errors.push(
                 `Category "${category.name}" must have at least one badge for rating ${rating}.`
-              )
+              );
             }
           }
-        })
-      })
+        });
+      });
     }
 
     if (
@@ -191,22 +220,24 @@ export default function ClientSettings() {
       isNaN(settings.worryRating) ||
       settings.worryRating > 4
     ) {
-      errors.push("Worry rating must be a value between 1 and 4")
+      errors.push("Worry rating must be a value between 1 and 4");
     }
 
     if (isNaN(settings.emailDelay) || settings.emailDelay < 1) {
-      errors.push("Email Delay must be a positive whole number greater than 0.")
+      errors.push(
+        "Email Delay must be a positive whole number greater than 0."
+      );
     }
 
     if (!settings.clientEmail) {
-      errors.push("Client email is required")
+      errors.push("Client email is required");
     }
 
-    return errors
-  }
+    return errors;
+  };
 
   const handleSave = () => {
-    const errors = validateSettings()
+    const errors = validateSettings();
 
     if (errors.length > 0) {
       errors.forEach((error) => {
@@ -215,8 +246,8 @@ export default function ClientSettings() {
           title: "Could not Save Settings",
           description: error,
           duration: 3000,
-        })
-      })
+        });
+      });
     } else {
       axios
         .post(
@@ -228,27 +259,27 @@ export default function ClientSettings() {
             title: "Success",
             description: "Settings Updated.",
             duration: 1000,
-          })
+          });
         })
         .catch((error) => {
           toast({
             title: "Failed to update",
             description: error.response.data.error,
             duration: 1000,
-          })
-        })
+          });
+        });
     }
-  }
+  };
 
   const handleGenerateReviewQuestions = () => {
-    setIsTabsLoading(true)
+    setIsTabsLoading(true);
 
     var fullContext =
       "Badge Categories should focus on these topics: " +
       areasToFocusOn +
       "\n" +
       "Business name \n" +
-      placesInfo[0].name
+      placesInfo[0].name;
 
     axios
       .post(
@@ -260,85 +291,87 @@ export default function ClientSettings() {
       .then((response) => {
         const generatedQuestions = response.data["content"]
           .replace(/```json/g, "")
-          .replace(/```/g, "")
-        const generatedQuestionsAsJson = JSON.parse(generatedQuestions)
-        setCategories(generatedQuestionsAsJson["categories"])
+          .replace(/```/g, "");
+        const generatedQuestionsAsJson = JSON.parse(generatedQuestions);
+        setCategories(generatedQuestionsAsJson["categories"]);
         handleSettingChange(
           "categories",
           generatedQuestionsAsJson["categories"]
-        )
-        setIsTabsLoading(false)
+        );
+        setIsTabsLoading(false);
         toast({
           title: "Success",
           description: "Badges generated.",
           duration: 1000,
-        })
+        });
       })
       .catch((error) => {
-        setIsTabsLoading(false)
+        setIsTabsLoading(false);
         toast({
           title: "Failed to generate",
           description: "try again",
           duration: 1000,
-        })
-      })
-  }
+        });
+      });
+  };
 
   const openQrCode = (placeName: string, locationUrl: string) => {
-    setOpenQrLinkDialog(true)
-    setQrLink(locationUrl)
-    setQrName(placeName)
-  }
+    setOpenQrLinkDialog(true);
+    setQrLink(locationUrl);
+    setQrName(placeName);
+  };
 
   const handleAddKeyword = () => {
     if (newKeyword.trim() !== "") {
-      const updatedKeywords = [...keywords, newKeyword.trim()]
-      setKeywords(updatedKeywords)
-      setNewKeyword("")
-      setIsAddingKeyword(false)
-      handleSettingChange("keywords", updatedKeywords)
+      const updatedKeywords = [...keywords, newKeyword.trim()];
+      setKeywords(updatedKeywords);
+      setNewKeyword("");
+      setIsAddingKeyword(false);
+      handleSettingChange("keywords", updatedKeywords);
     }
-  }
+  };
 
   const handleRemoveKeyword = (keywordToRemove: string) => {
-    const updatedKeywords = keywords.filter(keyword => keyword !== keywordToRemove)
-    setKeywords(updatedKeywords)
-    handleSettingChange("keywords", updatedKeywords)
-  }
+    const updatedKeywords = keywords.filter(
+      (keyword) => keyword !== keywordToRemove
+    );
+    setKeywords(updatedKeywords);
+    handleSettingChange("keywords", updatedKeywords);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const email = localStorage.getItem("userEmail")
+        const email = localStorage.getItem("userEmail");
         if (!email) {
-          console.error("Email not found in localStorage")
-          return
+          console.error("Email not found in localStorage");
+          return;
         }
 
         const placeIdResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
-        )
-        handleSettingChange("placeIds", placeIdResponse.data.placeIds)
-        handleSettingChange("userEmail", email as string)
-        setPlaceIds(placeIdResponse.data.placeIds)
-        setPlacesInfo(placeIdResponse.data.places)
-        setWebsiteURLS(placeIdResponse.data.websiteUrls)
-        setLocationURLS(placeIdResponse.data.locationUrls)
+        );
+        handleSettingChange("placeIds", placeIdResponse.data.placeIds);
+        handleSettingChange("userEmail", email as string);
+        setPlaceIds(placeIdResponse.data.placeIds);
+        setPlacesInfo(placeIdResponse.data.places);
+        setWebsiteURLS(placeIdResponse.data.websiteUrls);
+        setLocationURLS(placeIdResponse.data.locationUrls);
 
         const placeIdsAsArray = placeIdResponse.data.places.map(
           (place: any) => place.place_id
-        )
-        const placeIdsQuery = placeIdsAsArray.join(",")
+        );
+        const placeIdsQuery = placeIdsAsArray.join(",");
 
         const reviewSettingsResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-review-settings/${placeIdsQuery}/`
-        )
+        );
 
-        setSettings(reviewSettingsResponse.data)
-        setKeywords(reviewSettingsResponse.data.keywords || [])
-        setCategories(reviewSettingsResponse.data.categories)
-        setCompanyWebsites(reviewSettingsResponse.data.companyUrls)
-        setIsTabsLoading(false)
+        setSettings(reviewSettingsResponse.data);
+        setKeywords(reviewSettingsResponse.data.keywords || []);
+        setCategories(reviewSettingsResponse.data.categories);
+        setCompanyWebsites(reviewSettingsResponse.data.companyUrls);
+        setIsTabsLoading(false);
         if (reviewSettingsResponse.data.questions.length == 0) {
           handleSettingChange(
             "questions",
@@ -348,16 +381,16 @@ export default function ClientSettings() {
                 id: i + 1,
                 questions: [""],
               }))
-          )
+          );
         }
       } catch (err) {
-        console.error(err)
-        setIsTabsLoading(false)
+        console.error(err);
+        setIsTabsLoading(false);
       }
-    }
+    };
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
@@ -502,7 +535,10 @@ export default function ClientSettings() {
                     type="number"
                     value={settings.emailDelay}
                     onChange={(e) =>
-                      handleSettingChange("emailDelay", parseInt(e.target.value))
+                      handleSettingChange(
+                        "emailDelay",
+                        parseInt(e.target.value)
+                      )
                     }
                     required
                   />
@@ -623,7 +659,7 @@ export default function ClientSettings() {
                 <div>
                   <div className="mb-4">
                     <Separator className="mt-5 mb-5" />
-                    <Label htmlFor="placeIds">In Store QR Codes</Label>
+                    <Label htmlFor="placeIds">Kiosk QR Codes</Label>
                     {locationURLS.map((website, index) => (
                       <div key={index}>
                         <Button
@@ -650,7 +686,7 @@ export default function ClientSettings() {
                         >
                           <DialogContent className="w-half max-w-2xl">
                             <DialogHeader className="justify-center items-center">
-                              <DialogTitle>QR Code/NFC Link</DialogTitle>
+                              <DialogTitle>QR Code</DialogTitle>
                               <DialogDescription>
                                 Scan this QR code to open the link for{" "}
                                 <a
@@ -665,20 +701,36 @@ export default function ClientSettings() {
                             <div className="flex justify-center p-6 bg-background rounded-lg">
                               <QRCodeSVG value={qrLink} size={200} />
                             </div>
-                            <div className=" p-6 bg-background">
-                              <p className="text-sm text-muted-foreground">
-                                NFC Link: <strong>{qrLink}</strong>
-                              </p>
-                            </div>
                           </DialogContent>
                         </Dialog>
                       </div>
                     )}
                     <Separator className="mt-5 mb-5" />
+                    <Label htmlFor="placeIds">NFC Links</Label>
+                    {websiteURLS.map((website, index) => (
+                      <div key={index}>
+                        <Button
+                          variant="ghost"
+                          disabled={categories.length === 0}
+                          className="p-0 inline-flex items-center justify-center hover:bg-transparent hover:text-current focus:ring-0 active:bg-transparent"
+                          onClick={() => handleBadgeClick(index, website)}
+                        >
+                          <div className="text-lg font-medium">
+                            <Badge className="text-white">
+                              {clickedIndex === index
+                                ? website
+                                : " " + placesInfo[index].name}
+                            </Badge>
+                          </div>
+                        </Button>
+                      </div>
+                    ))}
+                    <Separator className="mt-5 mb-5" />
                     <Label htmlFor="keywords">Google Keywords</Label>
                     <p className="text-gray-500 text-xs mb-2">
-                    Keywords that will be naturally integrated into customer-generated reviews for posting on Google Reviews.
-                  </p>
+                      Keywords that will be naturally integrated into
+                      customer-generated reviews for posting on Google Reviews.
+                    </p>
                     <div className="flex flex-wrap gap-2 mb-2">
                       {keywords.map((keyword) => (
                         <Badge
@@ -701,10 +753,18 @@ export default function ClientSettings() {
                           className="flex-grow"
                         />
                         <Button onClick={handleAddKeyword}>Save</Button>
-                        <Button variant="outline" onClick={() => setIsAddingKeyword(false)}>Cancel</Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => setIsAddingKeyword(false)}
+                        >
+                          Cancel
+                        </Button>
                       </div>
                     ) : (
-                      <Button onClick={() => setIsAddingKeyword(true)} variant="ghost">
+                      <Button
+                        onClick={() => setIsAddingKeyword(true)}
+                        variant="ghost"
+                      >
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Add Keyword
                       </Button>
@@ -722,5 +782,5 @@ export default function ClientSettings() {
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }
