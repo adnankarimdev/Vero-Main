@@ -71,6 +71,9 @@ export default function SummaryTab({
     useState(0);
   const [totalReviewsWithVero, setTotalReviewsWithVero] = useState(0);
   const [averageReviewTime, setAverageReviewTime] = useState(0);
+  const [averageInStoreReviewTime, setAverageInStoreReviewTime] = useState(0);
+  const [averagePersonalDeviceReviewTime, setAveragePersonalDeviceReviewTime] =
+    useState(0);
   const [averageReviewRating, setAverageReviewRating] = useState(0);
   const [organizedBadges, setOrganizedBadges] = useState<
     Record<number, Record<string, number>>
@@ -128,6 +131,45 @@ export default function SummaryTab({
     setAverageReviewTime(averageReviewTime);
   };
 
+  const calculateAverageInStoreReviewTime = (
+    data: CustomerReviewInfoFromSerializer[]
+  ) => {
+    // Filter reviews where instoremode is true
+    const filteredReviews = data.filter(
+      (review) => review.posted_with_in_store_mode
+    );
+
+    if (filteredReviews.length === 0) return 0; // Return 0 if there are no matching reviews
+
+    const totalReviewTime = filteredReviews.reduce((total, review) => {
+      return total + review.time_taken_to_write_review_in_seconds;
+    }, 0);
+
+    const averageInStoreReviewTime = Math.round(
+      totalReviewTime / filteredReviews.length
+    ); // Calculate average
+    setAverageInStoreReviewTime(averageInStoreReviewTime);
+  };
+
+  const calculateAveragePersonalDeviceReviewTime = (
+    data: CustomerReviewInfoFromSerializer[]
+  ) => {
+    // Filter reviews where instoremode is true
+    const filteredReviews = data.filter(
+      (review) => !review.posted_with_in_store_mode
+    );
+
+    if (filteredReviews.length === 0) return 0; // Return 0 if there are no matching reviews
+
+    const totalReviewTime = filteredReviews.reduce((total, review) => {
+      return total + review.time_taken_to_write_review_in_seconds;
+    }, 0);
+
+    const averagePersonalDeviceReviewTime = Math.round(
+      totalReviewTime / filteredReviews.length
+    ); // Calculate average
+    setAveragePersonalDeviceReviewTime(averagePersonalDeviceReviewTime);
+  };
   const organizeBadgesByRating = (data: CustomerReviewInfoFromSerializer[]) => {
     const organized: Record<number, Record<string, number>> = {};
 
@@ -179,6 +221,8 @@ export default function SummaryTab({
         organizeBadgesByRating(data);
         calculateAverageReviewTime(data);
         calculateAverageReviewRating(data);
+        calculateAverageInStoreReviewTime(data);
+        calculateAveragePersonalDeviceReviewTime(data);
         setTotalReviewsWithVero(data.length);
         setTotalNegativeReviewsPrevented(
           data.filter(
@@ -309,13 +353,39 @@ export default function SummaryTab({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {"Average Review Time with Vero"}
+                {"Average Review Time (In Store + Personal Devices)"}
               </CardTitle>
               <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
                 {averageReviewTime} {"s"}
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {"Average In Store Review Time"}
+              </CardTitle>
+              <Clock className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {averageInStoreReviewTime} {"s"}
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {"Average Personal Device Review Time"}
+              </CardTitle>
+              <Clock className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {averagePersonalDeviceReviewTime} {"s"}
               </div>
             </CardContent>
           </Card>
