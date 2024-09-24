@@ -24,6 +24,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -38,7 +39,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { PlusCircle, Trash2, MapPin, Mail } from "lucide-react";
+import { PlusCircle, Trash2, MapPin, Mail, NfcIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 import { MdOutlineFormatListNumbered, MdLockOutline } from "react-icons/md";
@@ -867,15 +868,27 @@ export default function ClientSettings() {
                           open={openQrLinkDialog}
                           onOpenChange={setOpenQrLinkDialog}
                         >
-                          <DialogContent className="sm:max-w-md">
-                            <DialogHeader>
-                              <DialogTitle>{qrName} QR Code</DialogTitle>
+                          <DialogContent className="w-half max-w-2xl">
+                            <DialogHeader className="justify-center items-center">
+                              <DialogTitle>QR Code/NFC Link</DialogTitle>
                               <DialogDescription>
-                                Scan this QR code to open the link for {qrName}
+                                Scan this QR code to open the link for{" "}
+                                <a
+                                  href={qrLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <strong>{qrName}</strong>
+                                </a>
                               </DialogDescription>
                             </DialogHeader>
                             <div className="flex justify-center p-6 bg-background rounded-lg">
                               <QRCodeSVG value={qrLink} size={200} />
+                            </div>
+                            <div className=" p-6 bg-background">
+                              <p className="text-sm text-muted-foreground">
+                                NFC Link: <strong>{qrLink}</strong>
+                              </p>
                             </div>
                           </DialogContent>
                         </Dialog>
