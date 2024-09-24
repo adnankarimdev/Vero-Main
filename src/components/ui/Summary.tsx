@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Place } from "../Types/types";
 import { Separator } from "@/components/ui/separator";
 import { CustomerReviewInfoFromSerializer } from "../Types/types";
+import { FaGoogle } from "react-icons/fa";
 import {
   Table,
   TableBody,
@@ -26,6 +27,7 @@ import {
   Ban,
   Clock,
   Sigma,
+  Eye,
 } from "lucide-react";
 import { ScrollArea } from "./scroll-area";
 import { Badge } from "./badge";
@@ -212,8 +214,11 @@ export default function SummaryTab({
       <CardContent>
         <div className="grid gap-4 md:grid-cols-1 mb-10 place-items-center">
           <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>Badge Distribution by Rating</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {"Badge Distrubtion by Rating"}
+              </CardTitle>
+              <Eye className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-[400px] pr-4">
@@ -293,7 +298,7 @@ export default function SummaryTab({
               <CardTitle className="text-sm font-medium">
                 {"5 Star Reviews Posted to Google"}
               </CardTitle>
-              <MessageSquare className="h-4 w-4 text-muted-foreground" />
+              <FaGoogle className="h-4 w-4 text-muted-foreground" size={16} />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
