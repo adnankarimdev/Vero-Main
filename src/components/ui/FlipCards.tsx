@@ -107,21 +107,21 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
                       : "Posted to Google: 🚫"}
                   </Badge>
                 )}
-                <Badge variant="outline">
-                  {review.posted_with_in_store_mode
-                    ? "In Store Review: ✅"
-                    : "In Store Review: 🚫"}
-                </Badge>
                 {review.generated_review_body !== "" && (
                   <Badge variant="outline">{"AI-assisted review: ✅"}</Badge>
                 )}
-                <Badge variant="outline">
+                {review.email_sent_to_company && (
+                  <Badge variant="outline">
+                    {"Email Sent to Address Concerns: ✅"}
+                  </Badge>
+                )}
+                {/* <Badge variant="outline">
                   {review.email_sent_to_company
                     ? review.posted_with_in_store_mode
                       ? "Email Sent with Generated Review: ✅"
                       : "Email Sent: ✅ (No Follow-up)"
                     : "Email Sent: ❌"}
-                </Badge>
+                </Badge> */}
                 {/* <Badge variant="outline">
                   {"Review Writing Time: "}
                   {review.time_taken_to_write_review_in_seconds.toFixed(2)}s

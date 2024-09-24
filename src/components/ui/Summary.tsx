@@ -214,7 +214,7 @@ export default function SummaryTab({
       <CardContent>
         <div className="grid gap-4 md:grid-cols-1 mb-10 place-items-center">
           <Card className="w-full max-w-md">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 {"Badge Distrubtion by Rating"}
               </CardTitle>

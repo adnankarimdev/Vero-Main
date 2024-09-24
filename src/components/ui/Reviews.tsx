@@ -121,7 +121,7 @@ export default function ReviewsTab({}: any) {
   return (
     <div className="space-y-8">
       <div className="relative flex justify-end">
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <Switch
             id="airplane-mode"
             checked={streamlinedView}
@@ -130,7 +130,7 @@ export default function ReviewsTab({}: any) {
           <Label htmlFor="airplane-mode" className="ml-2">
             Streamlined View
           </Label>
-        </div>
+        </div> */}
       </div>
       {isLoading && <ReviewsSkeletonLoader />}
 
