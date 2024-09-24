@@ -19,7 +19,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Star, MessageSquare, ChartSpline, Ban } from "lucide-react";
+import {
+  Star,
+  MessageSquare,
+  ChartSpline,
+  Ban,
+  Clock,
+  Sigma,
+} from "lucide-react";
+import { ScrollArea } from "./scroll-area";
+import { Badge } from "./badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/ui/Loader";
@@ -50,11 +59,20 @@ export default function SummaryTab({
 }: any) {
   const [placesInfo, setPlacesInfo] = useState<Place[]>([]);
   const [isTableLoading, setIsTableLoading] = useState(true);
+  const [
+    totalNumberOfFiveStarReviewsPostedToGoogle,
+    setTotalNumberOfFiveStarReviewsPostedToGoogle,
+  ] = useState(0);
   const [totalNumberOfFiveStarReviews, setTotalNumberOfFiveStarReviews] =
     useState(0);
   const [totalNegativeReviewsPrevented, setTotalNegativeReviewsPrevented] =
     useState(0);
   const [totalReviewsWithVero, setTotalReviewsWithVero] = useState(0);
+  const [averageReviewTime, setAverageReviewTime] = useState(0);
+  const [averageReviewRating, setAverageReviewRating] = useState(0);
+  const [organizedBadges, setOrganizedBadges] = useState<
+    Record<number, Record<string, number>>
+  >({});
 
   const calculateAdditionalReviews = (
     currentRating: number,
@@ -81,6 +99,52 @@ export default function SummaryTab({
     return Math.ceil(additionalReviews);
   };
 
+  const calculateAverageReviewRating = (
+    data: CustomerReviewInfoFromSerializer[]
+  ) => {
+    if (data.length === 0) return 0; // Return 0 if there's no data
+
+    const totalReviewRatings = data.reduce((total, review) => {
+      return total + review.rating;
+    }, 0);
+
+    const averageReviewRating =
+      Math.round((totalReviewRatings / data.length) * 10) / 10; // Calculate average
+    setAverageReviewRating(averageReviewRating);
+  };
+
+  const calculateAverageReviewTime = (
+    data: CustomerReviewInfoFromSerializer[]
+  ) => {
+    if (data.length === 0) return 0; // Return 0 if there's no data
+
+    const totalReviewTime = data.reduce((total, review) => {
+      return total + review.time_taken_to_write_review_in_seconds;
+    }, 0);
+
+    const averageReviewTime = Math.round(totalReviewTime / data.length); // Calculate average
+    setAverageReviewTime(averageReviewTime);
+  };
+
+  const organizeBadgesByRating = (data: CustomerReviewInfoFromSerializer[]) => {
+    const organized: Record<number, Record<string, number>> = {};
+
+    data.forEach((review) => {
+      const rating = review.rating;
+      const badges = JSON.parse(review.badges) as string[]; // Parse the badges from string to array
+
+      if (!organized[rating]) {
+        organized[rating] = {}; // Initialize the object if it doesn't exist
+      }
+
+      badges.forEach((badge) => {
+        // Increment the badge count for this rating
+        organized[rating][badge] = (organized[rating][badge] || 0) + 1;
+      });
+    });
+
+    setOrganizedBadges(organized);
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -110,19 +174,25 @@ export default function SummaryTab({
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-review-settings/${placeIdsQuery}/`
         );
         const data = response.data as CustomerReviewInfoFromSerializer[];
+        organizeBadgesByRating(data);
+        calculateAverageReviewTime(data);
+        calculateAverageReviewRating(data);
         setTotalReviewsWithVero(data.length);
         setTotalNegativeReviewsPrevented(
           data.filter(
             (item) => item.rating <= reviewSettingsResponse.data.worryRating
           ).length
         );
-        setTotalNumberOfFiveStarReviews(
+        setTotalNumberOfFiveStarReviewsPostedToGoogle(
           data.filter(
             (item) =>
               item.rating === 5 &&
               (item.posted_to_google_review ||
                 item.posted_to_google_after_email_sent)
           ).length
+        );
+        setTotalNumberOfFiveStarReviews(
+          data.filter((item) => item.rating === 5).length
         );
         setIsTableLoading(false);
       } catch (err) {
@@ -140,6 +210,35 @@ export default function SummaryTab({
         <CardDescription>Overview</CardDescription>
       </CardHeader>
       <CardContent>
+        <div className="grid gap-4 md:grid-cols-1 mb-10 place-items-center">
+          <Card className="w-full max-w-md">
+            <CardHeader>
+              <CardTitle>Badge Distribution by Rating</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[400px] pr-4">
+                <div className="space-y-4">
+                  {Object.entries(organizedBadges).map(
+                    ([recordNumber, badgeCounts]) => (
+                      <div key={recordNumber} className="border rounded-lg p-4">
+                        <h3 className="text-lg font-semibold mb-2">
+                          {recordNumber}
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                          {Object.entries(badgeCounts).map(([badge, count]) => (
+                            <Badge key={badge} variant="outline">
+                              {badge}: {count}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        </div>
         <div className="grid gap-4 md:grid-cols-2 mb-10">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -149,7 +248,7 @@ export default function SummaryTab({
               <Star className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{5}</div>
+              <div className="text-2xl font-bold">{averageReviewRating}</div>
             </CardContent>
           </Card>
           <Card>
@@ -157,7 +256,7 @@ export default function SummaryTab({
               <CardTitle className="text-sm font-medium">
                 {"Total Reviews with Vero"}
               </CardTitle>
-              <Star className="h-4 w-4 text-muted-foreground" />
+              <Sigma className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{totalReviewsWithVero}</div>
@@ -179,7 +278,7 @@ export default function SummaryTab({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {"5 Star Reviews Posted with Vero"}
+                {"5 Star Reviews with Vero"}
               </CardTitle>
               <MessageSquare className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -189,68 +288,36 @@ export default function SummaryTab({
               </div>
             </CardContent>
           </Card>
-          {/* <Card>
-            <CardHeader>
-              <CardTitle>Text to Graph</CardTitle>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {"5 Star Reviews Posted to Google"}
+              </CardTitle>
+              <MessageSquare className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="flex items-center space-x-2">
-                <Textarea
-                  className="w-full h-100px px-4 py-3 text-lg overflow-x-auto"
-                  placeholder=""
-                  value={searchQueryGpt}
-                  onChange={(e) => setSearchQueryGpt(e.target.value)}
-                />
-                <Button
-                  variant="outline"
-                  onClick={handleSubmit}
-                  className="bg-transparent hover:bg-transparent border-none shadow-none"
-                >
-                  <ChartSpline />
-                </Button>
-              </div>
-              <div className="mt-4 space-y-2">
-                {preMadeQueries.map((query: string, index: number) => (
-                  <Button
-                    key={index}
-                    variant="link"
-                    className="text-blue-600 hover:underline"
-                    onClick={() => handlePreMadeQueryClick(query)}
-                  >
-                    {query}
-                  </Button>
-                ))}
+              <div className="text-2xl font-bold">
+                {totalNumberOfFiveStarReviewsPostedToGoogle}
               </div>
             </CardContent>
-          </Card> */}
-          {loading && (
-            <div className="flex justify-center items-center h-40">
-              <Loader />
-            </div>
-          )}
-          {returnedGraph && (
-            <JsxParser
-              components={{
-                BarChart,
-                PieChart,
-                LineChart,
-                DoughnutChart,
-                RadarChart,
-                PolarAreaChart,
-                BubbleChart,
-                ScatterChart,
-                Card,
-                CardHeader,
-                CardTitle,
-                CardDescription,
-                CardContent,
-              }}
-              jsx={returnedGraph}
-            />
-          )}
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {"Average Review Time with Vero"}
+              </CardTitle>
+              <Clock className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {averageReviewTime} {"s"}
+              </div>
+            </CardContent>
+          </Card>
         </div>
-        <Separator className="my-4" />
-        <CardHeader>
+        {/* Table will be here eventually. should probs create own component.*/}
+        {/* <Separator className="my-4" /> */}
+        {/* <CardHeader>
           <CardTitle>Per Location</CardTitle>
           <CardDescription>Overview</CardDescription>
         </CardHeader>
@@ -287,29 +354,8 @@ export default function SummaryTab({
                 </TableRow>
               ))}
             </TableBody>
-            {/* <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell>
-          </TableRow>
-        </TableFooter> */}
           </Table>
-        )}
-
-        {/* <iframe
-src="https://www.chatbase.co/chatbot-iframe/hMDhaNLvdyjoukQKDtZJ2"
-width="100%"
-style="height: 100%; min-height: 700px"
-frameborder="0"
-></iframe> */}
-
-        {/* <Iframe url="https://www.chatbase.co/chatbot-iframe/hMDhaNLvdyjoukQKDtZJ2"
-        width="640px"
-        height="320px"
-        id=""
-        className=""
-        display="block"
-        position="relative"/> */}
+        )} */}
       </CardContent>
     </Card>
   );
