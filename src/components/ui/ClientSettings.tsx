@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RiAiGenerate } from "react-icons/ri";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Place } from "../Types/types";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { QRCodeSVG } from "qrcode.react";
+'use client'
+
+import { useState, useEffect } from "react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { RiAiGenerate } from "react-icons/ri"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Place } from "../Types/types"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
+import { QRCodeSVG } from "qrcode.react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,7 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog"
 import {
   Dialog,
   DialogContent,
@@ -28,7 +30,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Card,
   CardContent,
@@ -36,182 +38,30 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { PlusCircle, Trash2, MapPin, Mail, NfcIcon } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
-import axios from "axios";
-import { MdOutlineFormatListNumbered, MdLockOutline } from "react-icons/md";
-import { PlaceType } from "../Types/types";
-import TabsSkeletonLoader from "./Skeletons/TabsSkeletonLoader";
-import Logo from "../../app/favicon.ico";
-import RatingBubbleCardClient from "./RatingBubbleCardClient";
-import LocationLinkQR from "./LocationQRCodes";
+} from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import { PlusCircle, Trash2, MapPin, Mail, NfcIcon, PlusIcon, XIcon } from "lucide-react"
+import { useToast } from "@/components/ui/use-toast"
+import axios from "axios"
+import { MdOutlineFormatListNumbered, MdLockOutline } from "react-icons/md"
+import { PlaceType } from "../Types/types"
+import TabsSkeletonLoader from "./Skeletons/TabsSkeletonLoader"
+import Logo from "../../app/favicon.ico"
+import RatingBubbleCardClient from "./RatingBubbleCardClient"
+import LocationLinkQR from "./LocationQRCodes"
 
 interface Category {
-  name: string;
-  badges: { rating: number; badges: string[] }[];
+  name: string
+  badges: { rating: number; badges: string[] }[]
 }
 
 export default function ClientSettings() {
-  const initialCategories = [
-    {
-      name: "Course Quality",
-      badges: [
-        {
-          rating: 1,
-          badges: [
-            "greens were unplayable 😡",
-            "fairways were in terrible condition 😠",
-            "bunkers were full of water 😡",
-            "course layout was confusing 😠",
-          ],
-        },
-        {
-          rating: 2,
-          badges: [
-            "greens were patchy 😕",
-            "fairways had many divots 😞",
-            "bunkers were poorly maintained 😕",
-            "course signage was lacking 😞",
-          ],
-        },
-        {
-          rating: 3,
-          badges: [
-            "greens could be smoother 😐",
-            "fairways need more care ⏳",
-            "bunkers need better sand ⏳",
-            "course layout needs improvement 😐",
-          ],
-        },
-        {
-          rating: 4,
-          badges: [
-            "greens were decent 🧐",
-            "fairways were mostly good 🧐",
-            "bunkers were okay 🧹",
-            "course layout was fine 🧐",
-          ],
-        },
-        {
-          rating: 5,
-          badges: [
-            "greens were perfect 😊",
-            "fairways were pristine 🌟",
-            "bunkers were excellent 😊",
-            "course layout was fantastic 🌟",
-          ],
-        },
-      ],
-    },
-    {
-      name: "Customer Service",
-      badges: [
-        {
-          rating: 1,
-          badges: [
-            "staff were rude 😡",
-            "service was terrible 😠",
-            "no assistance available 😡",
-            "staff ignored us 😠",
-          ],
-        },
-        {
-          rating: 2,
-          badges: [
-            "staff were unhelpful 😕",
-            "service was slow 😞",
-            "staff seemed disinterested 😕",
-            "assistance was hard to find 😞",
-          ],
-        },
-        {
-          rating: 3,
-          badges: [
-            "staff could be friendlier 😐",
-            "service was okay ⏳",
-            "staff were somewhat helpful ⏳",
-            "assistance was average 😐",
-          ],
-        },
-        {
-          rating: 4,
-          badges: [
-            "staff were polite 🧐",
-            "service was good 🧹",
-            "staff were helpful 🧐",
-            "assistance was timely 🧹",
-          ],
-        },
-        {
-          rating: 5,
-          badges: [
-            "staff were excellent 😊",
-            "service was outstanding 🌟",
-            "staff were very helpful 😊",
-            "assistance was superb 🌟",
-          ],
-        },
-      ],
-    },
-    {
-      name: "Facilities",
-      badges: [
-        {
-          rating: 1,
-          badges: [
-            "restrooms were filthy 😡",
-            "clubhouse was in disrepair 😠",
-            "practice areas were unusable 😡",
-            "parking was a nightmare 😠",
-          ],
-        },
-        {
-          rating: 2,
-          badges: [
-            "restrooms need cleaning 😕",
-            "clubhouse was outdated 😞",
-            "practice areas need work 😕",
-            "parking was difficult 😞",
-          ],
-        },
-        {
-          rating: 3,
-          badges: [
-            "restrooms could be cleaner 😐",
-            "clubhouse was okay ⏳",
-            "practice areas were average ⏳",
-            "parking was manageable 😐",
-          ],
-        },
-        {
-          rating: 4,
-          badges: [
-            "restrooms were clean 🧹",
-            "clubhouse was nice 🧐",
-            "practice areas were good 🧹",
-            "parking was fine 🧐",
-          ],
-        },
-        {
-          rating: 5,
-          badges: [
-            "restrooms were spotless 😊",
-            "clubhouse was excellent 🌟",
-            "practice areas were top-notch 😊",
-            "parking was easy 🌟",
-          ],
-        },
-      ],
-    },
-  ];
-  const { toast } = useToast();
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [openQrLinkDialog, setOpenQrLinkDialog] = useState(false);
-  const [qrLink, setQrLink] = useState("");
-  const [qrName, setQrName] = useState("");
+  const { toast } = useToast()
+  const [categories, setCategories] = useState<Category[]>([])
+  const [openQrLinkDialog, setOpenQrLinkDialog] = useState(false)
+  const [qrLink, setQrLink] = useState("")
+  const [qrName, setQrName] = useState("")
   const [settings, setSettings] = useState({
     questions: Array(4)
       .fill(null)
@@ -238,16 +88,19 @@ export default function ClientSettings() {
     places: [],
     useBubblePlatform: false,
     emailDelay: 60,
-  });
-  const [placeIds, setPlaceIds] = useState([]);
-  const [placesInfo, setPlacesInfo] = useState<Place[]>([]);
-  const [websiteURLS, setWebsiteURLS] = useState([]);
-  const [locationURLS, setLocationURLS] = useState([]);
-  const [areasToFocusOn, setAreasToFocusOn] = useState("");
-  const [websiteAndLocation, setWebsiteAndLocation] = useState([]);
-  const [keywords, setKeyWords] = useState([]);
-  const [isTabsLoading, setIsTabsLoading] = useState(true);
-  const [companyWebsites, setCompanyWebsites] = useState([]);
+    keywords: [],
+  })
+  const [placeIds, setPlaceIds] = useState([])
+  const [placesInfo, setPlacesInfo] = useState<Place[]>([])
+  const [websiteURLS, setWebsiteURLS] = useState([])
+  const [locationURLS, setLocationURLS] = useState([])
+  const [areasToFocusOn, setAreasToFocusOn] = useState("")
+  const [websiteAndLocation, setWebsiteAndLocation] = useState([])
+  const [keywords, setKeywords] = useState<string[]>([])
+  const [isTabsLoading, setIsTabsLoading] = useState(true)
+  const [companyWebsites, setCompanyWebsites] = useState([])
+  const [newKeyword, setNewKeyword] = useState("")
+  const [isAddingKeyword, setIsAddingKeyword] = useState(false)
 
   const handleQuestionChange = (
     ratingId: number,
@@ -266,8 +119,8 @@ export default function ClientSettings() {
             }
           : q
       ),
-    }));
-  };
+    }))
+  }
 
   const addQuestion = (ratingId: number) => {
     setSettings((prev) => ({
@@ -275,8 +128,8 @@ export default function ClientSettings() {
       questions: prev.questions.map((q) =>
         q.id === ratingId ? { ...q, questions: [...q.questions, ""] } : q
       ),
-    }));
-  };
+    }))
+  }
 
   const removeQuestion = (ratingId: number, questionIndex: number) => {
     setSettings((prev) => ({
@@ -289,8 +142,8 @@ export default function ClientSettings() {
             }
           : q
       ),
-    }));
-  };
+    }))
+  }
 
   const handleSettingChange = (
     key: string,
@@ -301,64 +154,59 @@ export default function ClientSettings() {
       | { id: number; questions: string[] }[]
       | any
   ) => {
-    setSettings((prev) => ({ ...prev, [key]: value }));
-  };
+    setSettings((prev) => ({ ...prev, [key]: value }))
+  }
 
   const validateSettings = () => {
-    const errors = [];
+    const errors = []
 
-    // Validate categories
     if (!settings.categories || settings.categories.length === 0) {
-      errors.push("There must be at least one category.");
+      errors.push("There must be at least one category.")
     } else {
       settings.categories.forEach((category: Category) => {
-        // Check if the category has badges with ratings from 1 to 5
-        const expectedRatings = [1, 2, 3, 4, 5]; // Expected ratings
-        const actualRatings = category.badges.map((badge) => badge.rating);
+        const expectedRatings = [1, 2, 3, 4, 5]
+        const actualRatings = category.badges.map((badge) => badge.rating)
 
         expectedRatings.forEach((rating) => {
           if (!actualRatings.includes(rating)) {
             errors.push(
               `Category "${category.name}" is missing badges for rating ${rating}.`
-            );
+            )
           } else {
             const badgeForRating = category.badges.find(
               (badge) => badge.rating === rating
-            );
+            )
             if (badgeForRating && badgeForRating.badges.length === 0) {
               errors.push(
                 `Category "${category.name}" must have at least one badge for rating ${rating}.`
-              );
+              )
             }
           }
-        });
-      });
+        })
+      })
     }
 
-    // Validate email fields
     if (
       settings.worryRating < 1 ||
       isNaN(settings.worryRating) ||
       settings.worryRating > 4
     ) {
-      errors.push("Worry rating must be a value between 1 and 4");
+      errors.push("Worry rating must be a value between 1 and 4")
     }
 
     if (isNaN(settings.emailDelay) || settings.emailDelay < 1) {
-      errors.push("Email Delay must be a postive whole number greater than 0.");
-    }
-    // if (!settings.emailAppPassword) {
-    //   errors.push("Email app password is required");
-    // }
-    if (!settings.clientEmail) {
-      errors.push("Client email is required");
+      errors.push("Email Delay must be a positive whole number greater than 0.")
     }
 
-    return errors;
-  };
+    if (!settings.clientEmail) {
+      errors.push("Client email is required")
+    }
+
+    return errors
+  }
 
   const handleSave = () => {
-    const errors = validateSettings();
+    const errors = validateSettings()
 
     if (errors.length > 0) {
       errors.forEach((error) => {
@@ -367,10 +215,9 @@ export default function ClientSettings() {
           title: "Could not Save Settings",
           description: error,
           duration: 3000,
-        });
-      });
+        })
+      })
     } else {
-      // Here you would typically send the settings to your backend
       axios
         .post(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/save-review-settings/`,
@@ -381,27 +228,27 @@ export default function ClientSettings() {
             title: "Success",
             description: "Settings Updated.",
             duration: 1000,
-          });
+          })
         })
         .catch((error) => {
           toast({
             title: "Failed to update",
             description: error.response.data.error,
             duration: 1000,
-          });
-        });
+          })
+        })
     }
-  };
+  }
 
   const handleGenerateReviewQuestions = () => {
-    setIsTabsLoading(true);
+    setIsTabsLoading(true)
 
     var fullContext =
       "Badge Categories should focus on these topics: " +
       areasToFocusOn +
       "\n" +
       "Business name \n" +
-      placesInfo[0].name;
+      placesInfo[0].name
 
     axios
       .post(
@@ -411,74 +258,87 @@ export default function ClientSettings() {
         }
       )
       .then((response) => {
-        //this will be a string rep of json
         const generatedQuestions = response.data["content"]
           .replace(/```json/g, "")
-          .replace(/```/g, "");
-        const generatedQuestionsAsJson = JSON.parse(generatedQuestions);
-        setCategories(generatedQuestionsAsJson["categories"]);
+          .replace(/```/g, "")
+        const generatedQuestionsAsJson = JSON.parse(generatedQuestions)
+        setCategories(generatedQuestionsAsJson["categories"])
         handleSettingChange(
           "categories",
           generatedQuestionsAsJson["categories"]
-        );
-        setIsTabsLoading(false);
+        )
+        setIsTabsLoading(false)
         toast({
           title: "Success",
           description: "Badges generated.",
           duration: 1000,
-        });
+        })
       })
       .catch((error) => {
-        setIsTabsLoading(false);
+        setIsTabsLoading(false)
         toast({
           title: "Failed to generate",
           description: "try again",
           duration: 1000,
-        });
-      });
-  };
+        })
+      })
+  }
 
   const openQrCode = (placeName: string, locationUrl: string) => {
-    setOpenQrLinkDialog(true);
-    setQrLink(locationUrl);
-    setQrName(placeName);
-  };
+    setOpenQrLinkDialog(true)
+    setQrLink(locationUrl)
+    setQrName(placeName)
+  }
+
+  const handleAddKeyword = () => {
+    if (newKeyword.trim() !== "") {
+      const updatedKeywords = [...keywords, newKeyword.trim()]
+      setKeywords(updatedKeywords)
+      setNewKeyword("")
+      setIsAddingKeyword(false)
+      handleSettingChange("keywords", updatedKeywords)
+    }
+  }
+
+  const handleRemoveKeyword = (keywordToRemove: string) => {
+    const updatedKeywords = keywords.filter(keyword => keyword !== keywordToRemove)
+    setKeywords(updatedKeywords)
+    handleSettingChange("keywords", updatedKeywords)
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const email = localStorage.getItem("userEmail");
+        const email = localStorage.getItem("userEmail")
         if (!email) {
-          console.error("Email not found in localStorage");
-          return;
+          console.error("Email not found in localStorage")
+          return
         }
 
-        // First, fetch the placeId
         const placeIdResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
-        );
-        handleSettingChange("placeIds", placeIdResponse.data.placeIds);
-        handleSettingChange("userEmail", email as string);
-        setPlaceIds(placeIdResponse.data.placeIds);
-        setPlacesInfo(placeIdResponse.data.places);
-        setWebsiteURLS(placeIdResponse.data.websiteUrls);
-        setLocationURLS(placeIdResponse.data.locationUrls);
+        )
+        handleSettingChange("placeIds", placeIdResponse.data.placeIds)
+        handleSettingChange("userEmail", email as string)
+        setPlaceIds(placeIdResponse.data.placeIds)
+        setPlacesInfo(placeIdResponse.data.places)
+        setWebsiteURLS(placeIdResponse.data.websiteUrls)
+        setLocationURLS(placeIdResponse.data.locationUrls)
 
         const placeIdsAsArray = placeIdResponse.data.places.map(
           (place: any) => place.place_id
-        );
-        const placeIdsQuery = placeIdsAsArray.join(",");
+        )
+        const placeIdsQuery = placeIdsAsArray.join(",")
 
-        // Then, use the fetched placeId to get the review settings
         const reviewSettingsResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-review-settings/${placeIdsQuery}/`
-        );
+        )
 
-        // Update the settings state
-        setSettings(reviewSettingsResponse.data);
-        setKeyWords(reviewSettingsResponse.data.keywords);
-        setCategories(reviewSettingsResponse.data.categories);
-        setCompanyWebsites(reviewSettingsResponse.data.companyUrls);
-        setIsTabsLoading(false);
+        setSettings(reviewSettingsResponse.data)
+        setKeywords(reviewSettingsResponse.data.keywords || [])
+        setCategories(reviewSettingsResponse.data.categories)
+        setCompanyWebsites(reviewSettingsResponse.data.companyUrls)
+        setIsTabsLoading(false)
         if (reviewSettingsResponse.data.questions.length == 0) {
           handleSettingChange(
             "questions",
@@ -488,27 +348,23 @@ export default function ClientSettings() {
                 id: i + 1,
                 questions: [""],
               }))
-          );
+          )
         }
       } catch (err) {
-        console.error(err);
-        setIsTabsLoading(false);
+        console.error(err)
+        setIsTabsLoading(false)
       }
-    };
+    }
 
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle className="text-center">
-          {" "}
           Configure Vero Review Settings
         </CardTitle>
-        {/* <CardDescription className="text-center">
-          Configure your customer feedback system
-        </CardDescription> */}
       </CardHeader>
       <CardContent>
         {isTabsLoading && <TabsSkeletonLoader />}
@@ -536,11 +392,10 @@ export default function ClientSettings() {
                         {
                           "This will generate badges for the customers. You can input which areas you'd like the Badges to be focused on. Otherwise, the Badges will be generated more generically."
                         }{" "}
-                        {/* <Label htmlFor="areaFocus">Areas of focus</Label> */}
                         <Input
                           id="areaFocus"
                           type="text"
-                          className="mt-4" // Add margin-top here
+                          className="mt-4"
                           value={areasToFocusOn}
                           onChange={(e) => setAreasToFocusOn(e.target.value)}
                         />
@@ -557,21 +412,11 @@ export default function ClientSettings() {
                   </AlertDialogContent>
                 </div>
               </AlertDialog>
-              {/* <div className="flex items-center space-x-2 mb-5">
-                <Switch
-                  id="useBubblePlatform"
-                  checked={settings.useBubblePlatform}
-                  onCheckedChange={(checked) =>
-                    handleSettingChange("useBubblePlatform", checked)
-                  }
-                />
-                <Label htmlFor="showWorryDialog">Bubble Review Platform</Label>
-              </div> */}
               <div className="flex items-center justify-center space-x-2 mb-5">
                 <RatingBubbleCardClient
                   categories={categories}
                   setCategories={setCategories}
-                  businessName={placesInfo[0].name}
+                  businessName={placesInfo[0]?.name || ""}
                   handleSettingChange={handleSettingChange}
                 />
               </div>
@@ -645,7 +490,7 @@ export default function ClientSettings() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="clientEmail">
+                  <Label htmlFor="emailDelay">
                     Email Delay <span className="text-red-500">*</span>
                   </Label>
                   <p className="text-gray-500 text-xs">
@@ -657,53 +502,11 @@ export default function ClientSettings() {
                     type="number"
                     value={settings.emailDelay}
                     onChange={(e) =>
-                      handleSettingChange("emailDelay", e.target.value)
+                      handleSettingChange("emailDelay", parseInt(e.target.value))
                     }
                     required
                   />
                 </div>
-                {/* <div>
-                  <Label htmlFor="emailAppPassword">App Password</Label>
-                  <Input
-                    id="emailAppPassword"
-                    type="password"
-                    value={settings.emailAppPassword}
-                    onChange={(e) =>
-                      handleSettingChange("emailAppPassword", e.target.value)
-                    }
-                    required
-                  />
-                </div> */}
-                {/* <div>
-                  <Label htmlFor="emailIntro">Email Introduction</Label>
-                  <Textarea
-                    id="emailIntro"
-                    value={settings.emailIntro}
-                    onChange={(e) =>
-                      handleSettingChange("emailIntro", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="emailBody">Email Body</Label>
-                  <Textarea
-                    id="emailBody"
-                    value={settings.emailBody}
-                    onChange={(e) =>
-                      handleSettingChange("emailBody", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="emailSignature">Email Signature</Label>
-                  <Textarea
-                    id="emailSignature"
-                    value={settings.emailSignature}
-                    onChange={(e) =>
-                      handleSettingChange("emailSignature", e.target.value)
-                    }
-                  />
-                </div> */}
                 <div>
                   <Label htmlFor="worryRating">
                     Worry Rating Threshold{" "}
@@ -727,7 +530,6 @@ export default function ClientSettings() {
                     }
                   />
                 </div>
-
                 <div>
                   <div className="flex items-center space-x-2 mt-4">
                     <Switch
@@ -739,7 +541,6 @@ export default function ClientSettings() {
                     />
                     <Label htmlFor="showWorryDialog">Show Worry Dialog</Label>
                   </div>
-
                   {settings.showWorryDialog && (
                     <div>
                       <div className="mt-2">
@@ -759,7 +560,6 @@ export default function ClientSettings() {
                           required
                         />
                       </div>
-
                       <div className="mt-2">
                         <Label htmlFor="dialogBody">Dialog Body</Label>
                         <p className="text-gray-500 text-xs">
@@ -792,7 +592,6 @@ export default function ClientSettings() {
                       Offer Complimentary Item
                     </Label>
                   </div>
-
                   {settings.showComplimentaryItem && (
                     <div className="mt-2">
                       <Label htmlFor="complimentaryItem">
@@ -823,23 +622,6 @@ export default function ClientSettings() {
               <div className="space-y-4">
                 <div>
                   <div className="mb-4">
-                    {" "}
-                    {/* Add margin-bottom to create space */}
-                    {/* <Label htmlFor="placeIds">Registered Places</Label>
-                    {websiteURLS.map((website, index) => (
-                      <a
-                        href={website}
-                        key={index}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <div className="text-lg font-medium">
-                          <Badge className="text-white">
-                            {" " + placesInfo[index].name}
-                          </Badge>
-                        </div>
-                      </a>
-                    ))} */}
                     <Separator className="mt-5 mb-5" />
                     <Label htmlFor="placeIds">In Store QR Codes</Label>
                     {locationURLS.map((website, index) => (
@@ -894,17 +676,39 @@ export default function ClientSettings() {
                     )}
                     <Separator className="mt-5 mb-5" />
                     <Label htmlFor="keywords">Google Keywords</Label>
-                    <div className="flex flex-wrap gap-2">
+                    <p className="text-gray-500 text-xs mb-2">
+                    Keywords that will be naturally integrated into customer-generated reviews for posting on Google Reviews.
+                  </p>
+                    <div className="flex flex-wrap gap-2 mb-2">
                       {keywords.map((keyword) => (
                         <Badge
                           key={keyword}
-                          variant="destructive"
-                          className="bg-green-500 text-white hover:bg-green-500 hover:text-white cursor-pointer"
+                          variant="secondary"
+                          className="bg-green-500 text-white hover:bg-red-500 cursor-pointer"
+                          onClick={() => handleRemoveKeyword(keyword)}
                         >
                           {keyword}
+                          <XIcon className="ml-2 h-4 w-4" />
                         </Badge>
                       ))}
                     </div>
+                    {isAddingKeyword ? (
+                      <div className="flex items-center gap-2">
+                        <Input
+                          value={newKeyword}
+                          onChange={(e) => setNewKeyword(e.target.value)}
+                          placeholder="Enter new keyword"
+                          className="flex-grow"
+                        />
+                        <Button onClick={handleAddKeyword}>Save</Button>
+                        <Button variant="outline" onClick={() => setIsAddingKeyword(false)}>Cancel</Button>
+                      </div>
+                    ) : (
+                      <Button onClick={() => setIsAddingKeyword(true)} variant="ghost">
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Add Keyword
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -918,5 +722,5 @@ export default function ClientSettings() {
         </Button>
       </CardFooter>
     </Card>
-  );
+  )
 }
