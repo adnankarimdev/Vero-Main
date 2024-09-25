@@ -28,6 +28,8 @@ import {
   Clock,
   Sigma,
   Eye,
+  Tablet,
+  Smartphone
 } from "lucide-react";
 import { ScrollArea } from "./scroll-area";
 import { Badge } from "./badge";
@@ -70,6 +72,8 @@ export default function SummaryTab({
   const [totalNegativeReviewsPrevented, setTotalNegativeReviewsPrevented] =
     useState(0);
   const [totalReviewsWithVero, setTotalReviewsWithVero] = useState(0);
+  const [totalReviewsWithPersonalDevice, setTotalReviewsWithPersonalDevice] = useState(0);
+  const [totalReviewsWithKiosk, setTotalReviewsWithKiosk] = useState(0);
   const [averageReviewTime, setAverageReviewTime] = useState(0);
   const [averageInStoreReviewTime, setAverageInStoreReviewTime] = useState(0);
   const [averagePersonalDeviceReviewTime, setAveragePersonalDeviceReviewTime] =
@@ -224,6 +228,8 @@ export default function SummaryTab({
         calculateAverageInStoreReviewTime(data);
         calculateAveragePersonalDeviceReviewTime(data);
         setTotalReviewsWithVero(data.length);
+        setTotalReviewsWithKiosk(data.filter(review => review.posted_with_in_store_mode).length)
+        setTotalReviewsWithPersonalDevice(data.filter(review => !review.posted_with_in_store_mode).length)
         setTotalNegativeReviewsPrevented(
           data.filter(
             (item) => item.rating <= reviewSettingsResponse.data.worryRating
@@ -309,6 +315,28 @@ export default function SummaryTab({
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{totalReviewsWithVero}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {"Total Kiosk Reviews"}
+              </CardTitle>
+              <Tablet className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{totalReviewsWithKiosk}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {"Total Personal Device Reviews"}
+              </CardTitle>
+              <Smartphone className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{totalReviewsWithPersonalDevice}</div>
             </CardContent>
           </Card>
           <Card>
