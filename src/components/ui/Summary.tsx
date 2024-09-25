@@ -29,7 +29,7 @@ import {
   Sigma,
   Eye,
   Tablet,
-  Smartphone
+  Smartphone,
 } from "lucide-react";
 import { ScrollArea } from "./scroll-area";
 import { Badge } from "./badge";
@@ -72,7 +72,8 @@ export default function SummaryTab({
   const [totalNegativeReviewsPrevented, setTotalNegativeReviewsPrevented] =
     useState(0);
   const [totalReviewsWithVero, setTotalReviewsWithVero] = useState(0);
-  const [totalReviewsWithPersonalDevice, setTotalReviewsWithPersonalDevice] = useState(0);
+  const [totalReviewsWithPersonalDevice, setTotalReviewsWithPersonalDevice] =
+    useState(0);
   const [totalReviewsWithKiosk, setTotalReviewsWithKiosk] = useState(0);
   const [averageReviewTime, setAverageReviewTime] = useState(0);
   const [averageInStoreReviewTime, setAverageInStoreReviewTime] = useState(0);
@@ -228,8 +229,12 @@ export default function SummaryTab({
         calculateAverageInStoreReviewTime(data);
         calculateAveragePersonalDeviceReviewTime(data);
         setTotalReviewsWithVero(data.length);
-        setTotalReviewsWithKiosk(data.filter(review => review.posted_with_in_store_mode).length)
-        setTotalReviewsWithPersonalDevice(data.filter(review => !review.posted_with_in_store_mode).length)
+        setTotalReviewsWithKiosk(
+          data.filter((review) => review.posted_with_in_store_mode).length
+        );
+        setTotalReviewsWithPersonalDevice(
+          data.filter((review) => !review.posted_with_in_store_mode).length
+        );
         setTotalNegativeReviewsPrevented(
           data.filter(
             (item) => item.rating <= reviewSettingsResponse.data.worryRating
@@ -336,7 +341,9 @@ export default function SummaryTab({
               <Smartphone className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{totalReviewsWithPersonalDevice}</div>
+              <div className="text-2xl font-bold">
+                {totalReviewsWithPersonalDevice}
+              </div>
             </CardContent>
           </Card>
           <Card>

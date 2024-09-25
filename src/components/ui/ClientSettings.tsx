@@ -423,11 +423,15 @@ export default function ClientSettings() {
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Generate Badges</AlertDialogTitle>
+                      <AlertDialogTitle>
+                        {selectedRadioValue === "overall"
+                          ? "Generate Badges"
+                          : "Generate Badges & Categories"}
+                      </AlertDialogTitle>
                       <AlertDialogDescription>
-                        {
-                          "This will generate badges for the customers. You can input which areas you'd like the Badges to be focused on. Otherwise, the Badges will be generated more generically."
-                        }{" "}
+                        {selectedRadioValue === "overall"
+                          ? "This will generate badges for the customers. You can input which areas you'd like the Badges to be focused on. Otherwise, the Badges will be generated more generically."
+                          : "This will generate badges for each category. You can input which areas you'd like the Categories to be focused on. Otherwise, the Categories will be generated more generically."}
                         <Separator className="mb-4 mt-4" />
                         <RadioGroup
                           defaultValue="overall"
