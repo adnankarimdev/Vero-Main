@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Place } from "../Types/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { QRCodeSVG } from "qrcode.react";
 import {
@@ -67,6 +68,7 @@ interface Category {
 export default function ClientSettings() {
   const { toast } = useToast();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedRadioValue, setSelectedRadioValue] = useState("overall");
   const [openQrLinkDialog, setOpenQrLinkDialog] = useState(false);
   const [qrLink, setQrLink] = useState("");
   const [qrName, setQrName] = useState("");
@@ -286,6 +288,7 @@ export default function ClientSettings() {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/generate-categories/`,
         {
           context: fullContext,
+          type: selectedRadioValue,
         }
       )
       .then((response) => {
@@ -425,6 +428,23 @@ export default function ClientSettings() {
                         {
                           "This will generate badges for the customers. You can input which areas you'd like the Badges to be focused on. Otherwise, the Badges will be generated more generically."
                         }{" "}
+                        <Separator className="mb-4 mt-4" />
+                        <RadioGroup
+                          defaultValue="overall"
+                          value={selectedRadioValue}
+                          onValueChange={(value) =>
+                            setSelectedRadioValue(value)
+                          }
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="overall" id="r1" />
+                            <Label htmlFor="r1">Overall Rating</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="separate" id="r2" />
+                            <Label htmlFor="r2">Separate Categories</Label>
+                          </div>
+                        </RadioGroup>
                         <Input
                           id="areaFocus"
                           type="text"

@@ -183,10 +183,25 @@ export default function RatingBubbleCardClient({
       <CardContent>
         {categories.map((category: Category) => (
           <div key={category.name} className="mb-6">
-            <div className="flex items-center mb-2 justify-center">
-              {" "}
+            <div
+              className={
+                categories.length > 1
+                  ? "flex items-center mb-2 justify-between"
+                  : "flex items-center mb-2 justify-center"
+              }
+            >
+              {categories.length > 1 && (
+                <h3 className="text-lg font-semibold">{category.name}</h3>
+              )}
               {/* Centered the stars horizontally */}
-              <div className="flex flex-col items-center mb-2">
+
+              <div
+                className={
+                  categories.length > 1
+                    ? "flex items-center space-x-2"
+                    : "flex flex-col items-center mb-2"
+                }
+              >
                 <div className="flex items-center space-x-1 justify-center">
                   {[...Array(5)].map((_, i) => (
                     <Star
@@ -200,6 +215,16 @@ export default function RatingBubbleCardClient({
                     />
                   ))}
                 </div>
+                {categories.length > 1 && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    hidden={categories.length <= 1}
+                    onClick={() => removeCategory(category.name)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
             </div>
             <div className="flex flex-wrap gap-2 mb-2">
@@ -283,6 +308,20 @@ export default function RatingBubbleCardClient({
             </Button>
           </div>
         ))}
+
+        {categories.length > 1 && (
+          <div className="flex items-center space-x-2 mt-4">
+            <Input
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              placeholder="New category"
+              className="flex-grow"
+            />
+            <Button onClick={addCategory} variant="outline">
+              Add Category
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
