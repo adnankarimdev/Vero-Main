@@ -176,6 +176,12 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
                     }
                   </span>
                 )}
+                {review.posted_to_google_review &&
+                  review.internal_google_key_words?.length == 0 && (
+                    <span className="text-sm text-muted-foreground">
+                      {"No keywords fit naturally into the generated review."}
+                    </span>
+                  )}
               </div>
             </div>
             <div>
@@ -186,25 +192,6 @@ function ReviewCard({ review }: { review: CustomerReviewInfoFromSerializer }) {
                   review.generated_review_body ||
                   "The customer did not provide any review content."}
               </p>
-            </div>
-            <div>
-              <Separator className="mb-4" />
-              <h3 className="text-lg font-semibold mb-2">
-                Suggested Improvements
-              </h3>
-              {(review.analyzed_review_details as any).reasoning !== "" && (
-                <p className="text-sm text-muted-foreground">
-                  {(review.analyzed_review_details as any).reasoning}
-                </p>
-              )}
-
-              {review.posted_with_bubble_rating_platform && (
-                <p className="text-sm text-muted-foreground">
-                  {
-                    "Posted with Bubble Platform. Analysis is given by the badges."
-                  }
-                </p>
-              )}
             </div>
           </CardContent>
         </Card>
