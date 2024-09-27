@@ -385,7 +385,8 @@ export default function SummaryTab({
               </div>
             </CardContent>
           </Card>
-          <Card>
+          {/* Hiding review times. For kiosk, it won't make sense. since the timer starts on the review page. */}
+          <Card hidden={true}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 {"Average Review Time (In Store + Personal Devices)"}
@@ -398,7 +399,7 @@ export default function SummaryTab({
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card hidden={true}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 {"Average In Store Review Time"}
@@ -411,7 +412,7 @@ export default function SummaryTab({
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card hidden={true}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 {"Average Personal Device Review Time"}
