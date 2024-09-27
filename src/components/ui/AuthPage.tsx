@@ -132,7 +132,11 @@ export default function AuthPage() {
                     disabled={isLoading}
                   />
                 </div>
-                <Button disabled={isLoading} onClick={handleLogin}>
+                <Button
+                  disabled={isLoading}
+                  onClick={handleLogin}
+                  className="mt-2"
+                >
                   {isLoading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
@@ -186,7 +190,11 @@ export default function AuthPage() {
                     disabled={isLoading}
                   />
                 </div>
-                <Button disabled={isLoading} onClick={handleSignUp}>
+                <Button
+                  disabled={isLoading}
+                  onClick={handleSignUp}
+                  className="mt-2"
+                >
                   {isLoading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
@@ -196,7 +204,8 @@ export default function AuthPage() {
             </form>
           </TabsContent>
         </Tabs>
-        <div className="relative my-4">
+        {/* Hiding login/signup with google since its not implemented lol */}
+        {/* <div className="relative my-4">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t" />
           </div>
@@ -209,6 +218,7 @@ export default function AuthPage() {
         <Button
           variant="outline"
           type="button"
+          hidden={true}
           disabled={isLoading}
           className="w-full"
         >
@@ -218,7 +228,7 @@ export default function AuthPage() {
             <FaGoogle className="mr-2 h-4 w-4" />
           )}{" "}
           Google
-        </Button>
+        </Button> */}
       </CardContent>
     </Card>
   );
