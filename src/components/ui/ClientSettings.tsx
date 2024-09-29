@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RiAiGenerate } from "react-icons/ri";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { toPng } from "html-to-image";
 import { Place } from "../Types/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -50,6 +51,8 @@ import {
   NfcIcon,
   PlusIcon,
   XIcon,
+  ArrowDownToLine,
+  ImageUp,
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
@@ -70,8 +73,12 @@ export default function ClientSettings() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedRadioValue, setSelectedRadioValue] = useState("overall");
   const [openQrLinkDialog, setOpenQrLinkDialog] = useState(false);
+  const [openQrLinkInStoreDialog, setOpenQrLinkInStoreDialog] = useState(false);
   const [qrLink, setQrLink] = useState("");
   const [qrName, setQrName] = useState("");
+  const [qrLinkInStore, setQrLinkInStore] = useState("");
+  const [qrNameInStore, setQrNameInStore] = useState("");
+  const qrCodeInStoreRef = useRef<HTMLDivElement>(null);
   const [settings, setSettings] = useState({
     questions: Array(4)
       .fill(null)
@@ -324,6 +331,12 @@ export default function ClientSettings() {
     setQrName(placeName);
   };
 
+  const openQrCodeInStore = (placeName: string, inStoreLocationUrl: string) => {
+    setOpenQrLinkInStoreDialog(true);
+    setQrLinkInStore(inStoreLocationUrl);
+    setQrNameInStore(placeName);
+  };
+
   const handleAddKeyword = () => {
     if (newKeyword.trim() !== "") {
       const updatedKeywords = [...keywords, newKeyword.trim()];
@@ -340,6 +353,22 @@ export default function ClientSettings() {
     );
     setKeywords(updatedKeywords);
     handleSettingChange("keywords", updatedKeywords);
+  };
+
+  const handleDownload = async () => {
+    if (qrCodeInStoreRef.current) {
+      try {
+        const dataUrl = await toPng(qrCodeInStoreRef.current, {
+          quality: 0.95,
+        });
+        const link = document.createElement("a");
+        link.download = "qrcode.png";
+        link.href = dataUrl;
+        link.click();
+      } catch (err) {
+        console.error("Error generating image:", err);
+      }
+    }
   };
 
   useEffect(() => {
@@ -683,7 +712,11 @@ export default function ClientSettings() {
                 <div>
                   <div className="mb-4">
                     <Separator className="mt-5 mb-5" />
-                    <Label htmlFor="placeIds">Kiosk QR Codes</Label>
+                    <Label htmlFor="placeIds">In Store Kiosk Links</Label>
+                    <p className="text-gray-500 text-xs">
+                      The links that is used for in store reviews, for example,
+                      in an in store iPad, to leave feedback.
+                    </p>
                     {locationURLS.map((website, index) => (
                       <div key={index}>
                         <Button
@@ -710,9 +743,10 @@ export default function ClientSettings() {
                         >
                           <DialogContent className="w-half max-w-2xl">
                             <DialogHeader className="justify-center items-center">
-                              <DialogTitle>QR Code</DialogTitle>
+                              <DialogTitle>Kiosk QR Code</DialogTitle>
                               <DialogDescription>
-                                Scan this QR code to open the link for{" "}
+                                Scan this QR code with your iPad or any device
+                                to open the link for{" "}
                                 <a
                                   href={qrLink}
                                   target="_blank"
@@ -730,25 +764,96 @@ export default function ClientSettings() {
                       </div>
                     )}
                     <Separator className="mt-5 mb-5" />
-                    <Label htmlFor="placeIds">NFC Links</Label>
+                    <Label htmlFor="placeIds">Customer Device Links</Label>
+                    <p className="text-gray-500 text-xs">
+                      The links that customers will tap/scan with their own
+                      personal devices to leave feedback.
+                    </p>
                     {websiteURLS.map((website, index) => (
                       <div key={index}>
                         <Button
                           variant="ghost"
-                          disabled={categories.length === 0}
+                          disabled={categories.length == 0}
                           className="p-0 inline-flex items-center justify-center hover:bg-transparent hover:text-current focus:ring-0 active:bg-transparent"
-                          onClick={() => handleBadgeClick(index, website)}
+                          onClick={() =>
+                            openQrCodeInStore(placesInfo[index].name, website)
+                          }
                         >
                           <div className="text-lg font-medium">
                             <Badge className="text-white">
-                              {clickedIndex === index
-                                ? website
-                                : " " + placesInfo[index].name}
+                              {" " + placesInfo[index].name}
                             </Badge>
                           </div>
                         </Button>
                       </div>
                     ))}
+                    {openQrLinkInStoreDialog && (
+                      <div className="flex justify-center p-4">
+                        <Dialog
+                          open={openQrLinkInStoreDialog}
+                          onOpenChange={setOpenQrLinkInStoreDialog}
+                        >
+                          <DialogContent className="w-half max-w-2xl">
+                            <DialogHeader className="justify-center items-center">
+                              <DialogTitle>Personal Device QR Code</DialogTitle>
+                              <DialogDescription>
+                                Print this QR code for customers to scan with
+                                ease to leave feedback for{" "}
+                                <a
+                                  href={qrLinkInStore}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <strong>{qrNameInStore}</strong>
+                                </a>
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div
+                              ref={qrCodeInStoreRef}
+                              className="flex justify-center p-6 bg-background rounded-lg"
+                            >
+                              <QRCodeSVG value={qrLinkInStore} size={200} />
+                            </div>
+                            <Button onClick={handleDownload} variant="ghost">
+                              <ImageUp />
+                            </Button>
+                            <Separator />
+                            <DialogTitle className="text-center">
+                              Personal Device NFC Link
+                            </DialogTitle>
+                            <DialogDescription>
+                              Copy the link and program it into your NFC tag so
+                              customers can easily tap to access it to leave
+                              feedback for{" "}
+                              <a
+                                href={qrLinkInStore}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <strong>{qrNameInStore}</strong>
+                              </a>
+                            </DialogDescription>
+                            <div className="flex justify-center p-6 bg-background rounded-lg">
+                              <Button
+                                variant="ghost"
+                                disabled={categories.length === 0}
+                                className="p-0 inline-flex items-center justify-center hover:bg-transparent hover:text-current focus:ring-0 active:bg-transparent"
+                                onClick={() =>
+                                  handleBadgeClick(0, qrLinkInStore)
+                                }
+                              >
+                                <div className="text-lg font-medium">
+                                  <Badge className="" variant="outline">
+                                    {qrLinkInStore}
+                                  </Badge>
+                                </div>
+                              </Button>
+                            </div>
+                          </DialogContent>
+                          <DialogFooter></DialogFooter>
+                        </Dialog>
+                      </div>
+                    )}
                     <Separator className="mt-5 mb-5" />
                     <Label htmlFor="keywords">Google Keywords</Label>
                     <p className="text-gray-500 text-xs mb-2">
