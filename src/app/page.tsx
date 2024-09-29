@@ -49,25 +49,26 @@ export default function LandingPage() {
           </Link>
           <nav className="hidden md:flex space-x-8">
             <Link
-              className="text-sm font-medium hover:text-blue-600 transition-colors"
+              className="text-sm font-medium hover:text-black-600 transition-colors"
               href="#"
             >
               Features
             </Link>
             <Link
-              className="text-sm font-medium hover:text-blue-600 transition-colors"
+              className="text-sm font-medium hover:text-black-600 transition-colors"
               href="#"
+              // href="/pricing"
             >
               Pricing
             </Link>
             <Link
-              className="text-sm font-medium hover:text-blue-600 transition-colors"
+              className="text-sm font-medium hover:text-black-600 transition-colors"
               href="#"
             >
               About
             </Link>
             <Link
-              className="text-sm font-medium hover:text-blue-600 transition-colors"
+              className="text-sm font-medium hover:text-black-600 transition-colors"
               href="#"
             >
               Contact
@@ -92,25 +93,25 @@ export default function LandingPage() {
         {isMenuOpen && (
           <nav className="md:hidden bg-white p-4 shadow-md">
             <Link
-              className="block py-2 text-sm font-medium hover:text-blue-600 transition-colors"
+              className="block py-2 text-sm font-medium hover:text-black-600 transition-colors"
               href="#"
             >
               Features
             </Link>
             <Link
-              className="block py-2 text-sm font-medium hover:text-blue-600 transition-colors"
+              className="block py-2 text-sm font-medium hover:text-black-600 transition-colors"
               href="#"
             >
               Pricing
             </Link>
             <Link
-              className="block py-2 text-sm font-medium hover:text-blue-600 transition-colors"
+              className="block py-2 text-sm font-medium hover:text-black-600 transition-colors"
               href="#"
             >
               About
             </Link>
             <Link
-              className="block py-2 text-sm font-medium hover:text-blue-600 transition-colors"
+              className="block py-2 text-sm font-medium hover:text-black-600 transition-colors"
               href="#"
             >
               Contact
@@ -162,7 +163,7 @@ export default function LandingPage() {
             </form>
             <p className="text-sm text-gray-500">
               By signing up, you agree to our{" "}
-              <Link className="underline hover:text-blue-600" href="#">
+              <Link className="underline hover:text-black-600" href="#">
                 Terms & Conditions
               </Link>
             </p>
@@ -177,19 +178,19 @@ export default function LandingPage() {
             </div>
             <nav className="flex flex-wrap justify-center md:justify-end gap-6">
               <Link
-                className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                className="text-sm text-gray-600 hover:text-black-600 transition-colors"
                 href="#"
               >
                 Terms of Service
               </Link>
               <Link
-                className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                className="text-sm text-gray-600 hover:text-black-600 transition-colors"
                 href="#"
               >
                 Privacy Policy
               </Link>
               <Link
-                className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                className="text-sm text-gray-600 hover:text-black-600 transition-colors"
                 href="#"
               >
                 Contact Us
