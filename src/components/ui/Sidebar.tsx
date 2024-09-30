@@ -21,7 +21,7 @@ const navItems = [
   // { icon: ListStart, label: "Onboarding", href: "/onboarding" },
   { icon: Star, label: "Reviews", href: "/reviews" },
   { icon: FilePenLine, label: "Settings", href: "/settings" },
-  { icon: Infinity, label: "Auto Respond", href: "/autorespond" },
+  // { icon: Infinity, label: "Auto Respond", href: "/autorespond" },
   { icon: LogOut, label: "Logout", href: "/" }, // 'href' can remain for consistency, but will be overridden
 ];
 
