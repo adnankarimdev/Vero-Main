@@ -132,10 +132,10 @@ export default function LandingPage() {
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               Vero
             </h1>
-            {/* <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            At Vero, we’re committed to helping you connect with customers authentically. We simplify gathering genuine reviews, managing feedback, and boosting your online reputation, all with a personal touch.
-            </p> */}
-            <MindMap />
+            <p className="text-l text-gray-600 max-w-2xl mx-auto">
+            Lightning fast Customer Feedback, Data-Driven Business Transformations
+            </p>
+            {/* <MindMap /> */}
             <div className="flex justify-center space-x-4">
               <Button variant="default" size="lg" onClick={onGetStarted}>
                 Get Started
@@ -146,31 +146,8 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-        <section className="container mx-auto px-4 py-24 md:py-32">
-          <div className="max-w-3xl mx-auto text-center space-y-8">
-            <h2 className="text-3xl md:text-4xl font-bold">
-              Ready to Improve Your Online Reputation?
-            </h2>
-            <p className="text-xl text-gray-600">
-              Join Vero today and start collecting better, more meaningful
-              reviews for your business.
-            </p>
-            <form className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-              <Button variant="default" type="submit">
-                Get Started
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </form>
-            <p className="text-sm text-gray-500">
-              By signing up, you agree to our{" "}
-              <Link className="underline hover:text-black-600" href="#">
-                Terms & Conditions
-              </Link>
-            </p>
-          </div>
-        </section>
       </main>
-      <footer className="bg-gray-50 py-12">
+      <footer className="py-12">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
