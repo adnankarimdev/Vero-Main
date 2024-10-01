@@ -1,5 +1,19 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default function PricingCard() {
   return (
@@ -10,13 +24,17 @@ export default function PricingCard() {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="text-center">
-          <h3 className="text-xl font-semibold">Monthly Flat Fee per Location</h3>
+          <h3 className="text-xl font-semibold">
+            Monthly Flat Fee per Location
+          </h3>
           <p className="text-3xl font-bold">$20</p>
         </div>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[70%]">Variable Charges per Location</TableHead>
+              <TableHead className="w-[70%]">
+                Variable Charges per Location
+              </TableHead>
               <TableHead className="text-right">Fee</TableHead>
             </TableRow>
           </TableHeader>
@@ -42,5 +60,5 @@ export default function PricingCard() {
         </p>
       </CardFooter>
     </Card>
-  )
+  );
 }

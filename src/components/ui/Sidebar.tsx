@@ -8,6 +8,7 @@ import {
   LogOut,
   MonitorCheck,
   Star,
+  MessageCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -21,6 +22,7 @@ const navItems = [
   // { icon: ListStart, label: "Onboarding", href: "/onboarding" },
   { icon: Star, label: "Reviews", href: "/reviews" },
   { icon: FilePenLine, label: "Settings", href: "/settings" },
+  // { icon: MessageCircle, label: "Messenger", href: "/messenger" },
   // { icon: Infinity, label: "Auto Respond", href: "/autorespond" },
   { icon: LogOut, label: "Logout", href: "/" }, // 'href' can remain for consistency, but will be overridden
 ];
