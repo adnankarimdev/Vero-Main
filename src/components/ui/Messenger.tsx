@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -23,6 +23,23 @@ type MessagesState = {
 type RatingToBadges = {
   [key: number]: string[]; // Adjust the value type as needed
 };
+
+const TypingIndicator = () => (
+  <div className="flex items-center space-x-2 text-left mb-4">
+    <div
+      className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
+      style={{ animationDelay: "0ms" }}
+    ></div>
+    <div
+      className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
+      style={{ animationDelay: "150ms" }}
+    ></div>
+    <div
+      className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
+      style={{ animationDelay: "300ms" }}
+    ></div>
+  </div>
+);
 
 export default function Messenger() {
   const [messages, setMessages] = useState<MessagesState>({
@@ -83,12 +100,14 @@ export default function Messenger() {
     ],
   });
   const { toast } = useToast();
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   const [inputMessage, setInputMessage] = useState<string>("");
   const [selectedRating, setSelectedRating] = useState<number>(5); // Default to rating 5
   const [reviews, setReviews] = useState<CustomerReviewInfoFromSerializer[]>(
     []
   );
   const [isLoading, setIsLoading] = useState(true);
+  const [isTyping, setIsTyping] = useState(false);
   const [placeIds, setPlaceIds] = useState([]);
   const [ratingToBadgesData, setRatingsToBadgesData] = useState<RatingToBadges>(
     {}
@@ -163,6 +182,12 @@ export default function Messenger() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages[selectedRating]]);
+
   function ratingToBadges(reviews: any): Record<number, string[]> {
     return reviews.reduce(
       (acc: any, review: any) => {
@@ -189,6 +214,7 @@ export default function Messenger() {
 
     if (inputMessage.trim() !== "") {
       const userId = messages[selectedRating].length + 1;
+      const userInput = inputMessage;
       const newMessage = {
         id: userId,
         sender: "You",
@@ -205,13 +231,14 @@ export default function Messenger() {
       }));
 
       setInputMessage("");
-
+      setIsTyping(true);
       // Axios call here
       axios
         .post(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/chat-with-badges/`,
           {
             context: ratingToBadgesData[selectedRating],
+            inputMessage: userInput,
           }
         )
         .then((response) => {
@@ -229,11 +256,12 @@ export default function Messenger() {
             ...prev,
             [selectedRating]: [...prev[selectedRating], responseMessage], // Append response message
           }));
+          setIsTyping(false);
         })
         .catch((error) => {
           toast({
-            title: "Failed to login",
-            description: error.response.data.error,
+            title: "Failed to generate response",
+            description: "Please try again.",
             duration: 1000,
           });
         });
@@ -249,7 +277,10 @@ export default function Messenger() {
       {/* Sidebar */}
       <div className="w-1/4 border-r border-gray-200">
         <div className="p-4 border-b border-gray-200">
-          <h2 className="text-xl font-bold">Chats</h2>
+          <h2 className="text-xl font-bold">Chat</h2>
+          <p className="text-gray-500 text-xs">
+            <strong>Note:</strong> Chat histories are not saved!
+          </p>
         </div>
         <ScrollArea className="h-[calc(100vh-5rem)]">
           {[...Array(5)].map((_, i) => (
@@ -276,13 +307,12 @@ export default function Messenger() {
         <div className="p-4 border-b border-gray-200 flex items-center">
           <Avatar className="h-10 w-10 rounded-full">
             <AvatarImage src={avatarImage(selectedRating)} />
-            <AvatarFallback>JD</AvatarFallback>
           </Avatar>
           <h2 className="ml-4 text-xl font-bold">Rating {selectedRating}</h2>
         </div>
 
         {/* Messages */}
-        <ScrollArea className="flex-1 p-4">
+        <ScrollArea ref={scrollRef} className="flex-1 p-4">
           {messages[selectedRating]?.map((message) => (
             <div
               key={message.id}
@@ -294,7 +324,7 @@ export default function Messenger() {
                 className={`inline-block p-3 rounded-2xl ${
                   message.sender === "You"
                     ? "bg-black text-white"
-                    : "bg-gray-100 text-black"
+                    : "bg-white-100 text-black border border-black"
                 }`}
               >
                 <p>{message.content}</p>
@@ -302,6 +332,7 @@ export default function Messenger() {
               </div>
             </div>
           ))}
+          {isTyping && <TypingIndicator />}
         </ScrollArea>
 
         {/* Input Area */}
@@ -322,6 +353,7 @@ export default function Messenger() {
             size="icon"
             className="ml-2 rounded-full"
             onClick={handleSendMessage}
+            disabled={isTyping}
           >
             <SendIcon className="h-6 w-6" />
           </Button>
