@@ -8,8 +8,21 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Slider } from "@/components/ui/slider"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
-export default function QRCodeBannerDesigner() {
+const fontOptions = [
+  { value: "font-sans", label: "Sans-serif" },
+  { value: "font-serif", label: "Serif" },
+  { value: "font-mono", label: "Monospace" },
+]
+
+export default function QRCodeDesigner() {
   const [qrContent, setQrContent] = useState("https://example.com")
   const [logoType, setLogoType] = useState<"image" | "text">("text")
   const [logoText, setLogoText] = useState("My Logo")
@@ -17,6 +30,7 @@ export default function QRCodeBannerDesigner() {
   const [description, setDescription] = useState("Scan to visit our website")
   const [qrSize, setQrSize] = useState(200)
   const [logoSize, setLogoSize] = useState(64)
+  const [selectedFont, setSelectedFont] = useState("font-sans")
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleLogoUpload = (event: ChangeEvent<HTMLInputElement>) => {
@@ -109,11 +123,29 @@ export default function QRCodeBannerDesigner() {
               onValueChange={(value) => setLogoSize(value[0])}
             />
           </div>
+          <div>
+            <Label htmlFor="font-select">Font</Label>
+            <Select onValueChange={setSelectedFont} defaultValue={selectedFont}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a font" />
+              </SelectTrigger>
+              <SelectContent>
+                {fontOptions.map((font) => (
+                  <SelectItem key={font.value} value={font.value}>
+                    {font.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <div className="flex flex-col items-center space-y-4">
+          <div className={`flex flex-col items-center space-y-4 ${selectedFont}`}>
             {logoType === "text" ? (
-              <div className="text-2xl font-bold" style={{ fontSize: `${logoSize / 2}px` }}>
+              <div
+                className="text-2xl font-bold"
+                style={{ fontSize: `${logoSize / 2}px` }}
+              >
                 {logoText}
               </div>
             ) : logoImage ? (
