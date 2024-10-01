@@ -34,6 +34,7 @@ const navItems = [
 
 export default function Sidebar() {
   const router = useRouter();
+  const initials = localStorage.getItem("userEmail")
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -45,7 +46,7 @@ export default function Sidebar() {
     <TooltipProvider>
       <aside className="flex h-screen w-16 flex-col items-center space-y-8 bg-background py-8 transition-all">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
-          <span className="text-2xl font-bold text-primary-foreground">A</span>
+          <span className="text-2xl font-bold text-primary-foreground">{initials ? initials[0].toUpperCase() : "A"}</span>
         </div>
         <nav className="flex flex-col items-center space-y-2">
           {navItems.map((item) => (
