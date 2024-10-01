@@ -337,7 +337,7 @@ export default function SummaryTab({
             chartTitle={"Reviews per month"}
             chartDescription={""}
             chartFact={""}
-            chartFooter={"The number of reviews per month across all locations"}
+            chartFooter={""}
           />
         </div>
         <div className="grid gap-4 md:grid-cols-2 mb-10">
