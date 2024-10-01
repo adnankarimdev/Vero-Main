@@ -31,6 +31,8 @@ export default function QRCodeDesigner() {
   const [qrSize, setQrSize] = useState(200)
   const [logoSize, setLogoSize] = useState(64)
   const [selectedFont, setSelectedFont] = useState("font-sans")
+  const [logoFontSize, setLogoFontSize] = useState(32)
+  const [descriptionFontSize, setDescriptionFontSize] = useState(16)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleLogoUpload = (event: ChangeEvent<HTMLInputElement>) => {
@@ -138,13 +140,35 @@ export default function QRCodeDesigner() {
               </SelectContent>
             </Select>
           </div>
+          <div>
+            <Label htmlFor="logo-font-size">Logo Font Size</Label>
+            <Slider
+              id="logo-font-size"
+              min={16}
+              max={64}
+              step={2}
+              value={[logoFontSize]}
+              onValueChange={(value) => setLogoFontSize(value[0])}
+            />
+          </div>
+          <div>
+            <Label htmlFor="description-font-size">Description Font Size</Label>
+            <Slider
+              id="description-font-size"
+              min={8}
+              max={32}
+              step={1}
+              value={[descriptionFontSize]}
+              onValueChange={(value) => setDescriptionFontSize(value[0])}
+            />
+          </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow-md">
           <div className={`flex flex-col items-center space-y-4 ${selectedFont}`}>
             {logoType === "text" ? (
               <div
-                className="text-2xl font-bold"
-                style={{ fontSize: `${logoSize / 2}px` }}
+                className="font-bold"
+                style={{ fontSize: `${logoFontSize}px` }}
               >
                 {logoText}
               </div>
@@ -157,7 +181,9 @@ export default function QRCodeDesigner() {
               />
             ) : null}
             <QRCodeSVG value={qrContent} size={qrSize} />
-            <p className="text-center text-sm">{description}</p>
+            <p className="text-center" style={{ fontSize: `${descriptionFontSize}px` }}>
+              {description}
+            </p>
           </div>
         </div>
       </div>
