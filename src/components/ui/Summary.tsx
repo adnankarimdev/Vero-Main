@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { Place } from "../Types/types";
 import { Separator } from "@/components/ui/separator";
-import { CustomerReviewInfoFromSerializer } from "../Types/types";
+import {
+  CustomerReviewInfoFromSerializer,
+  ChartReviewFormat,
+} from "../Types/types";
 import { FaGoogle } from "react-icons/fa";
 import {
   Table,
@@ -40,6 +43,7 @@ import JsxParser from "react-jsx-parser";
 import Iframe from "react-iframe";
 import axios from "axios";
 import TableSkeletonLoader from "./Skeletons/TableSkeletonLoader";
+import { AreaChartComponent } from "./AreaChartComponent";
 
 export default function SummaryTab({
   averageRating,
@@ -83,6 +87,7 @@ export default function SummaryTab({
   const [organizedBadges, setOrganizedBadges] = useState<
     Record<number, Record<string, number>>
   >({});
+  const [chartData, setChartData] = useState<ChartReviewFormat[]>([]);
 
   const calculateAdditionalReviews = (
     currentRating: number,
@@ -194,6 +199,31 @@ export default function SummaryTab({
 
     setOrganizedBadges(organized);
   };
+
+  const convertReviewDataToChartForReviewsPerMonth = (
+    reviews: CustomerReviewInfoFromSerializer[]
+  ) => {
+    return reviews.reduce(
+      (acc, review) => {
+        const month = review.review_date
+          ? review.review_date.split(" ")[0]
+          : ""; // Extract month
+        const rating = review.rating;
+
+        const existingMonth = acc.find((item) => item.month === month);
+
+        if (existingMonth) {
+          existingMonth.total += 1; // Add to total rating if month exists
+        } else {
+          acc.push({ month: month, total: 1 }); // Add new month if not exists
+        }
+
+        return acc;
+      },
+      [] as { month: string; total: number }[]
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -223,6 +253,10 @@ export default function SummaryTab({
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-review-settings/${placeIdsQuery}/`
         );
         const data = response.data as CustomerReviewInfoFromSerializer[];
+        console.log(data);
+        const chartDataToStore =
+          convertReviewDataToChartForReviewsPerMonth(data);
+        setChartData(chartDataToStore);
         organizeBadgesByRating(data);
         calculateAverageReviewTime(data);
         calculateAverageReviewRating(data);
@@ -267,7 +301,7 @@ export default function SummaryTab({
         <CardDescription>Overview</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-4 md:grid-cols-1 mb-10 place-items-center">
+        <div className="grid gap-4 md:grid-cols-2 mb-10 place-items-center">
           <Card className="w-full max-w-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -298,6 +332,13 @@ export default function SummaryTab({
               </ScrollArea>
             </CardContent>
           </Card>
+          <AreaChartComponent
+            chartData={chartData}
+            chartTitle={"Reviews per month"}
+            chartDescription={""}
+            chartFact={""}
+            chartFooter={"The number of reviews per month across all locations"}
+          />
         </div>
         <div className="grid gap-4 md:grid-cols-2 mb-10">
           <Card>

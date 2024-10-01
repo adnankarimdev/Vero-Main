@@ -78,3 +78,8 @@ export interface AnalyzedReviewInfo {
   emotion?: string;
   tone?: string;
 }
+
+export interface ChartReviewFormat {
+  month: string;
+  total: number;
+}
