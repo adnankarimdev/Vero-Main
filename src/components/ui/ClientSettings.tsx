@@ -563,7 +563,7 @@ export default function ClientSettings() {
                     Client Email <span className="text-red-500">*</span>
                   </Label>
                   <p className="text-gray-500 text-xs">
-                    The email address to receive all customer concerns.
+                    {settings.worryRating? `The email address to receive all customer concerns when their rating is between 1 to ${settings.worryRating}.` : "The email address to receive all customer concerns."}
                   </p>
                   <Input
                     id="clientEmail"
@@ -602,8 +602,7 @@ export default function ClientSettings() {
                     <span className="text-red-500">*</span>
                   </Label>
                   <p className="text-gray-500 text-xs">
-                    Sets the rating limit to not allow customers from being
-                    prompted to post reviews on Google, best kept at 4.
+                    {settings.worryRating ? `Sets the rating limit to not allow customers from being prompted to post reviews on Google. (Ratings 1 to ${settings.worryRating} are considered negative.)` : "Sets the rating limit to not allow customers from being prompted to post reviews on Google."}
                   </p>
                   <Input
                     id="worryRating"
