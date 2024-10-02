@@ -61,7 +61,7 @@ export function AreaChartComponent({
             accessibilityLayer
             data={chartData}
             margin={{
-              left: 12,
+              left: 20,
               right: 12,
             }}
           >
