@@ -1,50 +1,50 @@
-"use client"
+"use client";
 
-import { useState, useRef, ChangeEvent } from "react"
-import { QRCodeSVG } from "qrcode.react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
-import { Slider } from "@/components/ui/slider"
+import { useState, useRef, ChangeEvent } from "react";
+import { QRCodeSVG } from "qrcode.react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
 const fontOptions = [
   { value: "font-sans", label: "Sans-serif" },
   { value: "font-serif", label: "Serif" },
   { value: "font-mono", label: "Monospace" },
-]
+];
 
 export default function QRCodeDesigner() {
-  const [qrContent, setQrContent] = useState("https://example.com")
-  const [logoType, setLogoType] = useState<"image" | "text">("text")
-  const [logoText, setLogoText] = useState("My Logo")
-  const [logoImage, setLogoImage] = useState<string | null>(null)
-  const [description, setDescription] = useState("Scan to visit our website")
-  const [qrSize, setQrSize] = useState(200)
-  const [logoSize, setLogoSize] = useState(64)
-  const [selectedFont, setSelectedFont] = useState("font-sans")
-  const [logoFontSize, setLogoFontSize] = useState(32)
-  const [descriptionFontSize, setDescriptionFontSize] = useState(16)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [qrContent, setQrContent] = useState("https://example.com");
+  const [logoType, setLogoType] = useState<"image" | "text">("text");
+  const [logoText, setLogoText] = useState("My Logo");
+  const [logoImage, setLogoImage] = useState<string | null>(null);
+  const [description, setDescription] = useState("Scan to visit our website");
+  const [qrSize, setQrSize] = useState(200);
+  const [logoSize, setLogoSize] = useState(64);
+  const [selectedFont, setSelectedFont] = useState("font-sans");
+  const [logoFontSize, setLogoFontSize] = useState(32);
+  const [descriptionFontSize, setDescriptionFontSize] = useState(16);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleLogoUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onload = (e) => {
-        setLogoImage(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
+        setLogoImage(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -64,7 +64,9 @@ export default function QRCodeDesigner() {
             <Switch
               id="logo-type"
               checked={logoType === "image"}
-              onCheckedChange={(checked) => setLogoType(checked ? "image" : "text")}
+              onCheckedChange={(checked) =>
+                setLogoType(checked ? "image" : "text")
+              }
             />
             <Label htmlFor="logo-type">Use Image Logo</Label>
           </div>
@@ -164,7 +166,9 @@ export default function QRCodeDesigner() {
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <div className={`flex flex-col items-center space-y-4 ${selectedFont}`}>
+          <div
+            className={`flex flex-col items-center space-y-4 ${selectedFont}`}
+          >
             {logoType === "text" ? (
               <div
                 className="font-bold"
@@ -181,12 +185,15 @@ export default function QRCodeDesigner() {
               />
             ) : null}
             <QRCodeSVG value={qrContent} size={qrSize} />
-            <p className="text-center" style={{ fontSize: `${descriptionFontSize}px` }}>
+            <p
+              className="text-center"
+              style={{ fontSize: `${descriptionFontSize}px` }}
+            >
               {description}
             </p>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

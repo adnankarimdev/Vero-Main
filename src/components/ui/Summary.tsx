@@ -253,7 +253,6 @@ export default function SummaryTab({
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-review-settings/${placeIdsQuery}/`
         );
         const data = response.data as CustomerReviewInfoFromSerializer[];
-        console.log(data);
         const chartDataToStore =
           convertReviewDataToChartForReviewsPerMonth(data);
         setChartData(chartDataToStore);

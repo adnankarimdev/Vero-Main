@@ -3,6 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -21,8 +28,14 @@ export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [buisnessName, setBuisnessName] = useState("");
+  const [accountType, setAccountType] = useState("google-business");
   const { toast } = useToast();
   const router = useRouter();
+
+  const accountTypeOptions = [
+    { value: "google-business", label: "Google Business" },
+    // { value: "instagram-business", label: "Instagram Online Business" },
+  ];
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
@@ -42,6 +55,7 @@ export default function AuthPage() {
       .then((response) => {
         localStorage.setItem("authToken", response.data.token);
         localStorage.setItem("userEmail", email);
+        localStorage.setItem("accountType", response.data.account_type);
         toast({
           title: "Successfully Logged In",
           description: "Welcome to Vero.",
@@ -68,6 +82,7 @@ export default function AuthPage() {
         email: email,
         password: password,
         business_name: buisnessName,
+        account_type: accountType,
       })
       .then((response) => {
         toast({
@@ -76,8 +91,14 @@ export default function AuthPage() {
           duration: 1000,
         });
         localStorage.setItem("userEmail", email);
+        localStorage.setItem("accountType", accountType);
         setTimeout(() => {
-          router.push("/placefinder");
+          if (accountType == "google-business") {
+            router.push("/placefinder");
+          }
+          if (accountType == "instagram-business") {
+            router.push("/instagramsignup");
+          }
         }, 2000);
       })
       .catch((error) => {
@@ -149,6 +170,24 @@ export default function AuthPage() {
             <form onSubmit={onSubmit}>
               <div className="grid gap-2">
                 <div className="grid gap-1">
+                  <Label className="mt-2" htmlFor="account-select">
+                    Account Type
+                  </Label>
+                  <Select
+                    onValueChange={setAccountType}
+                    defaultValue={accountType}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select an Account Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {accountTypeOptions.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <Label className="mt-2" htmlFor="email">
                     Buisness Name
                   </Label>

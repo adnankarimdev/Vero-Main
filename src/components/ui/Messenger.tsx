@@ -170,7 +170,6 @@ export default function Messenger() {
           };
         });
         setReviews(updatedReviews.reverse() as any);
-        console.log(updatedReviews);
         setRatingsToBadgesData(ratingToBadges(updatedReviews));
         setIsLoading(false);
       } catch (err) {
