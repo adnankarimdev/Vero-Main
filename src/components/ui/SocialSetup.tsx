@@ -24,12 +24,11 @@ export default function SocialSetup(): JSX.Element {
   const [socialHandle, setSocialHandle] = useState("");
   const { toast } = useToast();
   const router = useRouter();
-  const accountType = localStorage.getItem("accountType");
 
   const determineFormattedAddress = () => {
-    if (accountType === "online-business") {
+    if (localStorage.getItem("accountType") === "online-business") {
       return "online_place";
-    } else if (accountType === "influencer") {
+    } else if (localStorage.getItem("accountType") === "influencer") {
       return "influencer_place";
     } else {
       return "";
