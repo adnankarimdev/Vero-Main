@@ -34,7 +34,7 @@ export default function AuthPage() {
 
   const accountTypeOptions = [
     { value: "google-business", label: "Google Business" },
-    // { value: "instagram-business", label: "Instagram Online Business" },
+    { value: "instagram-business", label: "Instagram Online Business" },
   ];
 
   async function onSubmit(event: React.SyntheticEvent) {
