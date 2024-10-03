@@ -32,10 +32,11 @@ export default function AuthPage() {
   const { toast } = useToast();
   const router = useRouter();
 
+  // Hiding online business & influencer on prod for now
   const accountTypeOptions = [
     { value: "google-business", label: "Google Business 🏢" },
-    { value: "online-business", label: "Social Media Business 🧑‍💻" },
-    { value: "influencer", label: "Social Media Icon ⭐️" },
+    // { value: "online-business", label: "Social Media Business 🧑‍💻" },
+    // { value: "influencer", label: "Social Media Icon ⭐️" },
   ];
 
   async function onSubmit(event: React.SyntheticEvent) {
