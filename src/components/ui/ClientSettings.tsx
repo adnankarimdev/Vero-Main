@@ -79,6 +79,7 @@ export default function ClientSettings() {
   const [qrLinkInStore, setQrLinkInStore] = useState("");
   const [qrNameInStore, setQrNameInStore] = useState("");
   const [isOnlineBusiness, setIsOnlineBusiness] = useState(false);
+  const [accountType, setAccountType] = useState("");
   const qrCodeInStoreRef = useRef<HTMLDivElement>(null);
   const [settings, setSettings] = useState({
     questions: Array(4)
@@ -297,6 +298,7 @@ export default function ClientSettings() {
         {
           context: fullContext,
           type: selectedRadioValue,
+          accountType: accountType,
         }
       )
       .then((response) => {
@@ -381,6 +383,10 @@ export default function ClientSettings() {
           return;
         }
 
+        const userData = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-user-data/${email}/`
+        );
+        setAccountType(userData.data.account_type);
         const placeIdResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
         );
@@ -389,8 +395,10 @@ export default function ClientSettings() {
         setPlaceIds(placeIdResponse.data.placeIds);
         setPlacesInfo(placeIdResponse.data.places);
         setIsOnlineBusiness(
-          placeIdResponse.data.places[0].name ===
-            placeIdResponse.data.places[0].place_id
+          userData.data.account_type === "influencer" ||
+            userData.data.account_type === "online-business"
+            ? true
+            : false
         );
         setWebsiteURLS(placeIdResponse.data.websiteUrls);
         setLocationURLS(placeIdResponse.data.locationUrls);
@@ -470,7 +478,7 @@ export default function ClientSettings() {
                       </AlertDialogTitle>
                       <AlertDialogDescription>
                         {selectedRadioValue === "overall"
-                          ? "This will generate badges for the customers. You can input which areas you'd like the Badges to be focused on. Otherwise, the Badges will be generated more generically."
+                          ? "This will generate badges. You can input which areas you'd like the Badges to be focused on. Otherwise, the Badges will be generated more generically."
                           : "This will generate badges for each category. You can input which areas you'd like the Categories to be focused on. Otherwise, the Categories will be generated more generically."}
                         <Separator className="mb-4 mt-4" />
                         <RadioGroup
@@ -489,9 +497,8 @@ export default function ClientSettings() {
                             <Label htmlFor="r2">Separate Categories</Label>
                           </div>
                         </RadioGroup>
-                        <Input
+                        <Textarea
                           id="areaFocus"
-                          type="text"
                           className="mt-4"
                           value={areasToFocusOn}
                           onChange={(e) => setAreasToFocusOn(e.target.value)}
@@ -787,7 +794,7 @@ export default function ClientSettings() {
                     </Label>
                     <p className="text-gray-500 text-xs">
                       {isOnlineBusiness
-                        ? "The link to use with your Social Media accounts so customers can leave reviews quickly."
+                        ? "The link to use with your Social Media accounts so your followers can engage quickly."
                         : "The links that customers will tap/scan with their own personal devices to leave feedback."}
                     </p>
                     {websiteURLS.map((website, index) => (

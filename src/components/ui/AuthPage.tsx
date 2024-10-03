@@ -33,8 +33,9 @@ export default function AuthPage() {
   const router = useRouter();
 
   const accountTypeOptions = [
-    { value: "google-business", label: "Google Business" },
-    // { value: "instagram-business", label: "Instagram Online Business" },
+    { value: "google-business", label: "Google Business 🏢" },
+    { value: "online-business", label: "Social Media Business 🧑‍💻" },
+    { value: "influencer", label: "Social Media Icon ⭐️" },
   ];
 
   async function onSubmit(event: React.SyntheticEvent) {
@@ -96,8 +97,8 @@ export default function AuthPage() {
           if (accountType == "google-business") {
             router.push("/placefinder");
           }
-          if (accountType == "instagram-business") {
-            router.push("/instagramsignup");
+          if (accountType == "online-business" || accountType == "influencer") {
+            router.push("/socialsignup");
           }
         }, 2000);
       })
@@ -189,7 +190,7 @@ export default function AuthPage() {
                     </SelectContent>
                   </Select>
                   <Label className="mt-2" htmlFor="email">
-                    Buisness Name
+                    {accountType === "influencer" ? "Name" : "Buisness Name"}
                   </Label>
                   <Input
                     id="buisnessName"

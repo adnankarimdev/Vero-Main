@@ -88,6 +88,7 @@ export default function SummaryTab({
     Record<number, Record<string, number>>
   >({});
   const [chartData, setChartData] = useState<ChartReviewFormat[]>([]);
+  const [isSocialMediaAccount, setIsSocialMediaAccount] = useState(false);
 
   const calculateAdditionalReviews = (
     currentRating: number,
@@ -236,6 +237,11 @@ export default function SummaryTab({
         const placeIdResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
         );
+        console.log(placeIdResponse.data);
+        setIsSocialMediaAccount(
+          placeIdResponse.data.places[0].name ===
+            placeIdResponse.data.places[0].place_id
+        );
         setPlacesInfo(placeIdResponse.data.places);
         const placeIdsAsArray = placeIdResponse.data.places.map(
           (place: any) => place.place_id
@@ -296,7 +302,10 @@ export default function SummaryTab({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>All Locations</CardTitle>
+        <CardTitle>
+          {" "}
+          {isSocialMediaAccount ? "All Engagement" : "All Locations"}
+        </CardTitle>
         <CardDescription>Overview</CardDescription>
       </CardHeader>
       <CardContent>
@@ -333,139 +342,149 @@ export default function SummaryTab({
           </Card>
           <AreaChartComponent
             chartData={chartData}
-            chartTitle={"Reviews per month"}
+            chartTitle={
+              isSocialMediaAccount
+                ? "Engagements per month"
+                : "Reviews per month"
+            }
             chartDescription={""}
             chartFact={""}
             chartFooter={""}
           />
         </div>
-        <div className="grid gap-4 md:grid-cols-2 mb-10">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {"Average Review Rating with Customers using Vero"}
-              </CardTitle>
-              <Star className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{averageReviewRating}</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {"Total Reviews with Vero"}
-              </CardTitle>
-              <Sigma className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalReviewsWithVero}</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {"Total Kiosk Reviews"}
-              </CardTitle>
-              <Tablet className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalReviewsWithKiosk}</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {"Total Personal Device Reviews"}
-              </CardTitle>
-              <Smartphone className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {totalReviewsWithPersonalDevice}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {"Negative Reviews Prevented with Vero"}
-              </CardTitle>
-              <Ban className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {totalNegativeReviewsPrevented}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {"5 Star Reviews with Vero"}
-              </CardTitle>
-              <MessageSquare className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {totalNumberOfFiveStarReviews}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {"5 Star Reviews Posted to Google"}
-              </CardTitle>
-              <FaGoogle className="h-4 w-4 text-muted-foreground" size={16} />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {totalNumberOfFiveStarReviewsPostedToGoogle}
-              </div>
-            </CardContent>
-          </Card>
-          {/* Hiding review times. For kiosk, it won't make sense. since the timer starts on the review page. */}
-          <Card hidden={true}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {"Average Review Time (In Store + Personal Devices)"}
-              </CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {averageReviewTime} {"s"}
-              </div>
-            </CardContent>
-          </Card>
-          <Card hidden={true}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {"Average In Store Review Time"}
-              </CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {averageInStoreReviewTime} {"s"}
-              </div>
-            </CardContent>
-          </Card>
-          <Card hidden={true}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {"Average Personal Device Review Time"}
-              </CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {averagePersonalDeviceReviewTime} {"s"}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+
+        {!isSocialMediaAccount && (
+          <div className="grid gap-4 md:grid-cols-2 mb-10">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {"Average Review Rating with Customers using Vero"}
+                </CardTitle>
+                <Star className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{averageReviewRating}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {"Total Reviews with Vero"}
+                </CardTitle>
+                <Sigma className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{totalReviewsWithVero}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {"Total Kiosk Reviews"}
+                </CardTitle>
+                <Tablet className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {totalReviewsWithKiosk}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {"Total Personal Device Reviews"}
+                </CardTitle>
+                <Smartphone className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {totalReviewsWithPersonalDevice}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {"Negative Reviews Prevented with Vero"}
+                </CardTitle>
+                <Ban className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {totalNegativeReviewsPrevented}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {"5 Star Reviews with Vero"}
+                </CardTitle>
+                <MessageSquare className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {totalNumberOfFiveStarReviews}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {"5 Star Reviews Posted to Google"}
+                </CardTitle>
+                <FaGoogle className="h-4 w-4 text-muted-foreground" size={16} />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {totalNumberOfFiveStarReviewsPostedToGoogle}
+                </div>
+              </CardContent>
+            </Card>
+            {/* Hiding review times. For kiosk, it won't make sense. since the timer starts on the review page. */}
+            <Card hidden={true}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {"Average Review Time (In Store + Personal Devices)"}
+                </CardTitle>
+                <Clock className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {averageReviewTime} {"s"}
+                </div>
+              </CardContent>
+            </Card>
+            <Card hidden={true}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {"Average In Store Review Time"}
+                </CardTitle>
+                <Clock className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {averageInStoreReviewTime} {"s"}
+                </div>
+              </CardContent>
+            </Card>
+            <Card hidden={true}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {"Average Personal Device Review Time"}
+                </CardTitle>
+                <Clock className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {averagePersonalDeviceReviewTime} {"s"}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Table will be here eventually. should probs create own component.*/}
         {/* <Separator className="my-4" /> */}
         {/* <CardHeader>

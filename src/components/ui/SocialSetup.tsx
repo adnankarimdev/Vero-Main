@@ -19,17 +19,27 @@ declare global {
   }
 }
 
-export default function InstagramSetup(): JSX.Element {
+export default function SocialSetup(): JSX.Element {
   const [isLoading, setIsLoading] = useState(false);
-  const [instagramHandle, setInstagramHandle] = useState("");
+  const [socialHandle, setSocialHandle] = useState("");
   const { toast } = useToast();
   const router = useRouter();
+  const accountType = localStorage.getItem("accountType");
 
+  const determineFormattedAddress = () => {
+    if (accountType === "online-business") {
+      return "online_place";
+    } else if (accountType === "influencer") {
+      return "influencer_place";
+    } else {
+      return "";
+    }
+  };
   const handleLocationsSubmit = () => {
     const newPlace: Place = {
-      name: instagramHandle,
-      formatted_address: "instagram_place",
-      place_id: instagramHandle,
+      name: socialHandle,
+      formatted_address: determineFormattedAddress(),
+      place_id: socialHandle,
     };
 
     newPlace.currentRating = "0";
@@ -65,7 +75,7 @@ export default function InstagramSetup(): JSX.Element {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Update the state without the '@' symbol
-    setInstagramHandle(e.target.value.replace(/^@/, ""));
+    setSocialHandle(e.target.value.replace(/^@/, ""));
   };
   return (
     <div className="w-full max-w-md space-y-4">
@@ -96,14 +106,14 @@ export default function InstagramSetup(): JSX.Element {
         }
       `}</style>
       <div className="space-y-2">
-        <Label htmlFor="location">Instagram Handle</Label>
+        <Label htmlFor="location">Social Handle</Label>
         <div className="relative">
           <Input
-            value={`@${instagramHandle}`} // Always display '@' at the beginning
+            value={`@${socialHandle}`} // Always display '@' at the beginning
             onChange={handleChange} // Update state without the '@'
             id="location"
             type="text"
-            placeholder="Instagram handle for your business"
+            placeholder="Enter any social handle"
             className="w-full"
           />
         </div>

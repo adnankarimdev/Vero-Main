@@ -63,6 +63,7 @@ export function AreaChartComponent({
             margin={{
               left: 20,
               right: 12,
+              top: 10,
             }}
           >
             <CartesianGrid vertical={false} />
