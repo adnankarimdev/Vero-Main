@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RiAiGenerate } from "react-icons/ri";
+import { RiAiGenerate, RiTwitterXLine } from "react-icons/ri";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -815,7 +815,8 @@ export default function ClientSettings() {
                                 <Badge variant="outline">
                                   <InstagramLogoIcon className="mr-2" />
                                   <FaTiktok className="mr-2" />
-                                  <FaYoutube size={16} />
+                                  <FaYoutube size={16} className="mr-2" />
+                                  <RiTwitterXLine />
                                 </Badge>
                               )}
                               {!isOnlineBusiness && (
@@ -837,35 +838,42 @@ export default function ClientSettings() {
                           onOpenChange={setOpenQrLinkInStoreDialog}
                         >
                           <DialogContent className="w-half max-w-2xl">
-                            <DialogHeader className="justify-center items-center">
-                              <DialogTitle>
-                                {" "}
-                                {isOnlineBusiness
-                                  ? "Printable QR Code"
-                                  : "Personal Device QR Code"}
-                              </DialogTitle>
-                              <DialogDescription>
-                                Print this QR code for customers to scan with
-                                ease to leave feedback for{" "}
-                                <a
-                                  href={qrLinkInStore}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
+                            <div hidden={accountType === "influencer"}>
+                              <DialogHeader className="justify-center items-center">
+                                <DialogTitle>
+                                  {" "}
+                                  {isOnlineBusiness
+                                    ? "Printable QR Code"
+                                    : "Personal Device QR Code"}
+                                </DialogTitle>
+                                <DialogDescription>
+                                  Print this QR code for customers to scan with
+                                  ease to leave feedback for{" "}
+                                  <a
+                                    href={qrLinkInStore}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <strong>{qrNameInStore}</strong>
+                                  </a>
+                                </DialogDescription>
+                              </DialogHeader>
+                              <div
+                                ref={qrCodeInStoreRef}
+                                className="flex justify-center p-6 bg-background rounded-lg"
+                              >
+                                <QRCodeSVG value={qrLinkInStore} size={200} />
+                              </div>
+                              <div className="flex justify-center items-center">
+                                <Button
+                                  onClick={handleDownload}
+                                  variant="ghost"
                                 >
-                                  <strong>{qrNameInStore}</strong>
-                                </a>
-                              </DialogDescription>
-                            </DialogHeader>
-                            <div
-                              ref={qrCodeInStoreRef}
-                              className="flex justify-center p-6 bg-background rounded-lg"
-                            >
-                              <QRCodeSVG value={qrLinkInStore} size={200} />
+                                  <ImageUp />
+                                </Button>
+                              </div>
+                              <Separator />
                             </div>
-                            <Button onClick={handleDownload} variant="ghost">
-                              <ImageUp />
-                            </Button>
-                            <Separator />
                             <DialogTitle className="text-center">
                               {isOnlineBusiness
                                 ? "Social Bio/Post Link"
@@ -873,7 +881,7 @@ export default function ClientSettings() {
                             </DialogTitle>
                             <DialogDescription>
                               {isOnlineBusiness
-                                ? "Pop this link on your social bio or post so customers can easily leave reviews for "
+                                ? "Pop this link on your social bio or post so your followers can easily leave feedback for "
                                 : "Copy the link and program it into your NFC tag so customers can easily tap to access it to leave feedback for "}
 
                               <a
