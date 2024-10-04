@@ -62,6 +62,8 @@ import TabsSkeletonLoader from "./Skeletons/TabsSkeletonLoader";
 import Logo from "../../app/favicon.ico";
 import RatingBubbleCardClient from "./RatingBubbleCardClient";
 import LocationLinkQR from "./LocationQRCodes";
+import { InstagramLogoIcon } from "@radix-ui/react-icons";
+import { FaTiktok, FaYoutube } from "react-icons/fa";
 
 interface Category {
   name: string;
@@ -808,9 +810,22 @@ export default function ClientSettings() {
                           }
                         >
                           <div className="text-lg font-medium">
-                            <Badge className="text-white">
-                              {" " + placesInfo[index].name}
-                            </Badge>
+                            <div className="flex flex-row">
+                              {isOnlineBusiness && (
+                                <Badge variant="outline">
+                                  <InstagramLogoIcon className="mr-2" />
+                                  <FaTiktok className="mr-2" />
+                                  <FaYoutube size={16} />
+                                </Badge>
+                              )}
+                              {!isOnlineBusiness && (
+                                <>
+                                  <Badge className="text-white">
+                                    {" " + placesInfo[index].name}
+                                  </Badge>
+                                </>
+                              )}
+                            </div>
                           </div>
                         </Button>
                       </div>
