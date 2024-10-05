@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Card,
   CardHeader,
@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Star, Plus, X } from "lucide-react";
+import { Star, Plus, X, Pencil } from "lucide-react";
 
 interface Category {
   name: string;
@@ -25,6 +25,7 @@ interface RatingBubbleCardClientProps {
   categories: any;
   setCategories: any;
   handleSettingChange: any;
+  userCardDescription?: string;
 }
 
 export default function RatingBubbleCardClient({
@@ -32,6 +33,7 @@ export default function RatingBubbleCardClient({
   categories,
   setCategories,
   handleSettingChange,
+  userCardDescription,
 }: RatingBubbleCardClientProps) {
   const [categoryRatings, setCategoryRatings] = useState<{
     [key: string]: number;
@@ -47,6 +49,35 @@ export default function RatingBubbleCardClient({
   const [newBadge, setNewBadge] = useState("");
   const [newBadgeRating, setNewBadgeRating] = useState(1);
   const [editingCategory, setEditingCategory] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [cardDescription, setCardDescription] = useState(userCardDescription);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleSettingChange("cardDescription", e.target.value);
+    setCardDescription(e.target.value || "");
+  };
+
+  const handleInputBlur = () => {
+    setIsEditing(false);
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSettingChange("cardDescription", cardDescription);
+      setIsEditing(false);
+    }
+  };
+
+  const handleCardClick = () => {
+    setIsEditing(true);
+  };
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
 
   useEffect(() => {
     handleSettingChange("categories", categories);
@@ -176,9 +207,25 @@ export default function RatingBubbleCardClient({
         <CardTitle className="flex items-center justify-center space-x-1 text-sm">
           {businessName}
         </CardTitle>
-        <CardDescription className="flex items-center justify-center space-x-1 mb-2">
-          {"How did we do? 🤔"}
-        </CardDescription>
+        {isEditing ? (
+          <Input
+            ref={inputRef}
+            type="text"
+            value={cardDescription}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            onKeyDown={handleInputKeyDown}
+            className="text-center"
+          />
+        ) : (
+          <CardDescription
+            className="flex items-center justify-center space-x-1 mb-2 cursor-pointer"
+            onClick={handleCardClick}
+          >
+            {cardDescription}
+            <Pencil className="ml-2" size={12} />
+          </CardDescription>
+        )}
       </CardHeader>
       <CardContent>
         {categories.map((category: Category) => (

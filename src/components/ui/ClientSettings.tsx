@@ -80,11 +80,12 @@ export default function ClientSettings() {
   const [qrName, setQrName] = useState("");
   const [qrLinkInStore, setQrLinkInStore] = useState("");
   const [qrNameInStore, setQrNameInStore] = useState("");
+  const [userCardDescription, setUserCardDescription] = useState("");
   const [isOnlineBusiness, setIsOnlineBusiness] = useState(false);
   const [accountType, setAccountType] = useState("");
   const qrCodeInStoreRef = useRef<HTMLDivElement>(null);
   const [settings, setSettings] = useState({
-    questions: Array(4)
+    questions: Array(1)
       .fill(null)
       .map((_, i) => ({
         id: i + 1,
@@ -110,6 +111,7 @@ export default function ClientSettings() {
     useBubblePlatform: false,
     emailDelay: 60,
     keywords: [],
+    cardDescription: "",
   });
   const [placeIds, setPlaceIds] = useState([]);
   const [placesInfo, setPlacesInfo] = useState<Place[]>([]);
@@ -417,6 +419,7 @@ export default function ClientSettings() {
         setSettings(reviewSettingsResponse.data);
         setKeywords(reviewSettingsResponse.data.keywords || []);
         setCategories(reviewSettingsResponse.data.categories);
+        setUserCardDescription(reviewSettingsResponse.data.card_description);
         setCompanyWebsites(reviewSettingsResponse.data.companyUrls);
         setIsTabsLoading(false);
         if (reviewSettingsResponse.data.questions.length == 0) {
@@ -524,6 +527,7 @@ export default function ClientSettings() {
                   setCategories={setCategories}
                   businessName={placesInfo[0]?.name || ""}
                   handleSettingChange={handleSettingChange}
+                  userCardDescription={userCardDescription}
                 />
               </div>
               {!settings.useBubblePlatform &&
