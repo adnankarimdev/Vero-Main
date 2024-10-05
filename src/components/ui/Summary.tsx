@@ -5,6 +5,7 @@ import {
   CustomerReviewInfoFromSerializer,
   ChartReviewFormat,
 } from "../Types/types";
+import { PiTranslate } from "react-icons/pi";
 import { FaGoogle } from "react-icons/fa";
 import {
   Table,
@@ -44,6 +45,13 @@ import Iframe from "react-iframe";
 import axios from "axios";
 import TableSkeletonLoader from "./Skeletons/TableSkeletonLoader";
 import { AreaChartComponent } from "./AreaChartComponent";
+import BadgeLoader from "./Skeletons/BadgeLoader";
+
+interface BadgeTexts {
+  [recordNumber: string]: {
+    [badge: string]: string;
+  };
+}
 
 export default function SummaryTab({
   averageRating,
@@ -89,6 +97,59 @@ export default function SummaryTab({
   >({});
   const [chartData, setChartData] = useState<ChartReviewFormat[]>([]);
   const [isSocialMediaAccount, setIsSocialMediaAccount] = useState(false);
+  const [badgeTexts, setBadgeTexts] = useState<BadgeTexts>({});
+  const [isTranslationLoading, setIsTranslationLoading] = useState(false);
+  const [loadingBadges, setLoadingBadges] = useState<{
+    [key: string]: boolean;
+  }>({});
+
+  const handleBadgeTranslationChange = (
+    recordNumber: string,
+    badge: string
+  ) => {
+    setLoadingBadges((prev) => ({
+      ...prev,
+      [`${recordNumber}-${badge}`]: true, // Unique key for each badge
+    }));
+    axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/translate-badge/`,
+        {
+          badge: badge,
+        }
+      )
+      .then((response) => {
+        const translatedBadge = response.data["content"];
+        console.log(translatedBadge);
+        setBadgeTexts((prev) => ({
+          ...prev,
+          [recordNumber]: {
+            ...prev[recordNumber],
+            [badge]: translatedBadge,
+          },
+        }));
+        setLoadingBadges((prev) => ({
+          ...prev,
+          [`${recordNumber}-${badge}`]: false,
+        }));
+        toast({
+          title: "Success",
+          description: "Badge translated.",
+          duration: 1000,
+        });
+      })
+      .catch((error) => {
+        setLoadingBadges((prev) => ({
+          ...prev,
+          [`${recordNumber}-${badge}`]: false,
+        }));
+        toast({
+          title: "Failed to generate",
+          description: "Try again",
+          duration: 1000,
+        });
+      });
+  };
 
   const calculateAdditionalReviews = (
     currentRating: number,
@@ -319,24 +380,47 @@ export default function SummaryTab({
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-[400px] pr-4">
-                <div className="space-y-4">
-                  {Object.entries(organizedBadges).map(
-                    ([recordNumber, badgeCounts]) => (
-                      <div key={recordNumber} className="border rounded-lg p-4">
-                        <h3 className="text-lg font-semibold mb-2">
-                          {recordNumber}
-                        </h3>
-                        <div className="flex flex-wrap gap-2">
-                          {Object.entries(badgeCounts).map(([badge, count]) => (
-                            <Badge key={badge} variant="outline">
-                              {badge}: {count}
-                            </Badge>
-                          ))}
-                        </div>
+                {Object.entries(organizedBadges).map(
+                  ([recordNumber, badgeCounts]) => (
+                    <div key={recordNumber} className="border rounded-lg p-4">
+                      <h3 className="text-lg font-semibold mb-2">
+                        {recordNumber}
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        {Object.entries(badgeCounts).map(([badge, count]) => (
+                          <Badge key={badge} variant="outline">
+                            {/* Check if there's an updated badge text; otherwise use the original badge */}
+                            {!loadingBadges[`${recordNumber}-${badge}`] && (
+                              <>
+                                {badgeTexts[recordNumber]?.[badge] || badge}:{" "}
+                                {count}
+                              </>
+                            )}
+
+                            {/* Show loader only for the specific badge */}
+                            {loadingBadges[`${recordNumber}-${badge}`] && (
+                              <BadgeLoader />
+                            )}
+
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="hover:bg-transparent"
+                              onClick={() =>
+                                handleBadgeTranslationChange(
+                                  recordNumber,
+                                  badge
+                                )
+                              }
+                            >
+                              <PiTranslate />
+                            </Button>
+                          </Badge>
+                        ))}
                       </div>
-                    )
-                  )}
-                </div>
+                    </div>
+                  )
+                )}
               </ScrollArea>
             </CardContent>
           </Card>
