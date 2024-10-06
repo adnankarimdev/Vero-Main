@@ -9,6 +9,7 @@ import {
   MonitorCheck,
   Star,
   MessageCircle,
+  Reply,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -28,6 +29,7 @@ const navItems = [
   //Hiding Messenger for now, won't release to public just yet.
   // { icon: MessageCircle, label: "Messenger", href: "/messenger" },
   { icon: Star, label: "Reviews", href: "/reviews" },
+  { icon: Reply, label: "Respond", href: "/respond" },
   { icon: FilePenLine, label: "Platform Settings", href: "/settings" },
   { icon: LogOut, label: "Logout", href: "/" },
 ];
