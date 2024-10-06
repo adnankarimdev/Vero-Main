@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,6 +43,7 @@ const TypingIndicator = () => (
 );
 
 export default function Messenger() {
+  const router = useRouter();
   const [messages, setMessages] = useState<MessagesState>({
     1: [
       {
@@ -130,6 +132,11 @@ export default function Messenger() {
       try {
         const email = localStorage.getItem("userEmail");
         if (!email) {
+          toast({
+            title: "Please sign in.",
+            duration: 3000,
+          });
+          router.push("/login")
           console.error("Email not found in localStorage");
           return;
         }

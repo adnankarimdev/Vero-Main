@@ -1,6 +1,8 @@
+import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { CustomerReviewInfoFromSerializer } from "../Types/types";
 import { useState, useEffect } from "react";
+import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 import ReviewsSkeletonLoader from "./Skeletons/ReviewsSkeletonLoader";
 import FlipCards from "./FlipCards";
@@ -10,6 +12,8 @@ import { Switch } from "@/components/ui/switch";
 
 export default function ReviewsTab({}: any) {
   const [placeIds, setPlaceIds] = useState([]);
+  const { toast } = useToast();
+  const router = useRouter();
   const [streamlinedView, setStreamlinedView] = useState(true);
   const [reviews, setReviews] = useState<CustomerReviewInfoFromSerializer[]>(
     []
@@ -48,6 +52,11 @@ export default function ReviewsTab({}: any) {
       try {
         const email = localStorage.getItem("userEmail");
         if (!email) {
+          toast({
+            title: "Please sign in.",
+            duration: 3000,
+          });
+          router.push("/login")
           console.error("Email not found in localStorage");
           return;
         }
