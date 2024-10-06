@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RiAiGenerate, RiTwitterXLine } from "react-icons/ri";
@@ -72,6 +73,7 @@ interface Category {
 
 export default function ClientSettings() {
   const { toast } = useToast();
+  const router = useRouter();
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedRadioValue, setSelectedRadioValue] = useState("overall");
   const [openQrLinkDialog, setOpenQrLinkDialog] = useState(false);
@@ -383,6 +385,11 @@ export default function ClientSettings() {
       try {
         const email = localStorage.getItem("userEmail");
         if (!email) {
+          toast({
+            title: "Please sign in.",
+            duration: 3000,
+          });
+          router.push("/login")
           console.error("Email not found in localStorage");
           return;
         }

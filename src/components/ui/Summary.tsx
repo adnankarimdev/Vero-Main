@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Place } from "../Types/types";
 import { Separator } from "@/components/ui/separator";
@@ -74,6 +75,7 @@ export default function SummaryTab({
   toast,
 }: any) {
   const [placesInfo, setPlacesInfo] = useState<Place[]>([]);
+  const router = useRouter();
   const [isTableLoading, setIsTableLoading] = useState(true);
   const [
     totalNumberOfFiveStarReviewsPostedToGoogle,
@@ -291,6 +293,11 @@ export default function SummaryTab({
       try {
         const email = localStorage.getItem("userEmail");
         if (!email) {
+          toast({
+            title: "Please sign in.",
+            duration: 3000,
+          });
+          router.push("/login")
           console.error("Email not found in localStorage");
           return;
         }
