@@ -104,7 +104,7 @@ export default function Onboarding() {
             title: "Please sign in.",
             duration: 3000,
           });
-          router.push("/login")
+          router.push("/login");
           console.error("Email not found in localStorage");
           return;
         }

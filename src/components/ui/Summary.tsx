@@ -47,6 +47,7 @@ import axios from "axios";
 import TableSkeletonLoader from "./Skeletons/TableSkeletonLoader";
 import { AreaChartComponent } from "./AreaChartComponent";
 import BadgeLoader from "./Skeletons/BadgeLoader";
+import UpgradeButton from "./UpgradeButton";
 
 interface BadgeTexts {
   [recordNumber: string]: {
@@ -297,7 +298,7 @@ export default function SummaryTab({
             title: "Please sign in.",
             duration: 3000,
           });
-          router.push("/login")
+          router.push("/login");
           console.error("Email not found in localStorage");
           return;
         }
@@ -371,10 +372,12 @@ export default function SummaryTab({
     <Card>
       <CardHeader>
         <CardTitle>
-          {" "}
           {isSocialMediaAccount ? "All Engagement" : "All Locations"}
         </CardTitle>
-        <CardDescription>Overview</CardDescription>
+        <div className="flex justify-between">
+          <CardDescription>Overview</CardDescription>
+          {/* {totalNumberOfFiveStarReviewsPostedToGoogle >= 5 && <UpgradeButton />} */}
+        </div>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4 md:grid-cols-2 mb-10 place-items-center">
