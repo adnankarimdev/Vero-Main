@@ -504,10 +504,10 @@ export default function ClientSettings() {
                             <RadioGroupItem value="overall" id="r1" />
                             <Label htmlFor="r1">Overall Rating</Label>
                           </div>
-                          <div className="flex items-center space-x-2">
+                          {/* <div className="flex items-center space-x-2">
                             <RadioGroupItem value="separate" id="r2" />
                             <Label htmlFor="r2">Separate Categories</Label>
-                          </div>
+                          </div> */}
                         </RadioGroup>
                         <Textarea
                           id="areaFocus"
