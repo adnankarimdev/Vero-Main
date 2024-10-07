@@ -87,12 +87,7 @@ export default function ClientSettings() {
   const [accountType, setAccountType] = useState("");
   const qrCodeInStoreRef = useRef<HTMLDivElement>(null);
   const [settings, setSettings] = useState({
-    questions: Array(1)
-      .fill(null)
-      .map((_, i) => ({
-        id: i + 1,
-        questions: [""],
-      })),
+    questions:[{id:"", questions:['']}],
     categories: [],
     emailIntro: "",
     emailSignature: "",
@@ -148,48 +143,48 @@ export default function ClientSettings() {
     }
   };
 
-  const handleQuestionChange = (
-    ratingId: number,
-    questionIndex: number,
-    value: string
-  ) => {
-    setSettings((prev) => ({
-      ...prev,
-      questions: prev.questions.map((q) =>
-        q.id === ratingId
-          ? {
-              ...q,
-              questions: q.questions.map((oldQ, i) =>
-                i === questionIndex ? value : oldQ
-              ),
-            }
-          : q
-      ),
-    }));
-  };
+  // const handleQuestionChange = (
+  //   ratingId: number,
+  //   questionIndex: number,
+  //   value: string
+  // ) => {
+  //   setSettings((prev) => ({
+  //     ...prev,
+  //     questions: prev.questions.map((q) =>
+  //       q.id === ratingId
+  //         ? {
+  //             ...q,
+  //             questions: q.questions.map((oldQ, i) =>
+  //               i === questionIndex ? value : oldQ
+  //             ),
+  //           }
+  //         : q
+  //     ),
+  //   }));
+  // };
 
-  const addQuestion = (ratingId: number) => {
-    setSettings((prev) => ({
-      ...prev,
-      questions: prev.questions.map((q) =>
-        q.id === ratingId ? { ...q, questions: [...q.questions, ""] } : q
-      ),
-    }));
-  };
+  // const addQuestion = (ratingId: number) => {
+  //   setSettings((prev) => ({
+  //     ...prev,
+  //     questions: prev.questions.map((q) =>
+  //       q.id === ratingId ? { ...q, questions: [...q.questions, ""] } : q
+  //     ),
+  //   }));
+  // };
 
-  const removeQuestion = (ratingId: number, questionIndex: number) => {
-    setSettings((prev) => ({
-      ...prev,
-      questions: prev.questions.map((q) =>
-        q.id === ratingId
-          ? {
-              ...q,
-              questions: q.questions.filter((_, i) => i !== questionIndex),
-            }
-          : q
-      ),
-    }));
-  };
+  // const removeQuestion = (ratingId: number, questionIndex: number) => {
+  //   setSettings((prev) => ({
+  //     ...prev,
+  //     questions: prev.questions.map((q) =>
+  //       q.id === ratingId
+  //         ? {
+  //             ...q,
+  //             questions: q.questions.filter((_, i) => i !== questionIndex),
+  //           }
+  //         : q
+  //     ),
+  //   }));
+  // };
 
   const handleSettingChange = (
     key: string,
@@ -539,52 +534,53 @@ export default function ClientSettings() {
               </div>
               {!settings.useBubblePlatform &&
                 settings.questions.map((rating) => (
-                  <div key={rating.id} className="mb-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-semibold">
-                        Rating {rating.id}
-                      </h3>
-                    </div>
-                    {rating.questions.map((question, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center mb-2 space-x-2"
-                      >
-                        <Textarea
-                          placeholder={`Question ${index + 1} for rating ${rating.id}`}
-                          value={question}
-                          onChange={(e) =>
-                            handleQuestionChange(
-                              rating.id,
-                              index,
-                              e.target.value
-                            )
-                          }
-                          className="w-3/4"
-                        />
-                        {index === 0 && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => addQuestion(rating.id)}
-                            aria-label={`Add question for rating ${rating.id}`}
-                          >
-                            <PlusCircle className="h-4 w-4" />
-                          </Button>
-                        )}
-                        {rating.questions.length > 1 && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => removeQuestion(rating.id, index)}
-                            aria-label={`Remove question ${index + 1} for rating ${rating.id}`}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                  <></>
+                  // <div key={rating.id} className="mb-6">
+                  //   <div className="flex items-center justify-between mb-2">
+                  //     <h3 className="text-lg font-semibold">
+                  //       Rating {rating.id}
+                  //     </h3>
+                  //   </div>
+                  //   {rating.questions.map((question, index) => (
+                  //     <div
+                  //       key={index}
+                  //       className="flex items-center mb-2 space-x-2"
+                  //     >
+                  //       <Textarea
+                  //         placeholder={`Question ${index + 1} for rating ${rating.id}`}
+                  //         value={question}
+                  //         onChange={(e) =>
+                  //           handleQuestionChange(
+                  //             rating.id,
+                  //             index,
+                  //             e.target.value
+                  //           )
+                  //         }
+                  //         className="w-3/4"
+                  //       />
+                  //       {index === 0 && (
+                  //         <Button
+                  //           variant="ghost"
+                  //           size="icon"
+                  //           onClick={() => addQuestion(rating.id)}
+                  //           aria-label={`Add question for rating ${rating.id}`}
+                  //         >
+                  //           <PlusCircle className="h-4 w-4" />
+                  //         </Button>
+                  //       )}
+                  //       {rating.questions.length > 1 && (
+                  //         <Button
+                  //           variant="ghost"
+                  //           size="icon"
+                  //           onClick={() => removeQuestion(rating.id, index)}
+                  //           aria-label={`Remove question ${index + 1} for rating ${rating.id}`}
+                  //         >
+                  //           <Trash2 className="h-4 w-4" />
+                  //         </Button>
+                  //       )}
+                  //     </div>
+                  //   ))}
+                  // </div>
                 ))}
             </TabsContent>
             <TabsContent value="email">
