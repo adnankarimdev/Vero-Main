@@ -5,8 +5,8 @@ import { ArrowUpCircle } from "lucide-react";
 import axios from "axios";
 
 export default function UpgradeButton() {
-    const { toast } = useToast();
-    const router = useRouter();
+  const { toast } = useToast();
+  const router = useRouter();
   const handleStripeTest = () => {
     const email = localStorage.getItem("userEmail");
     if (!email) {
@@ -24,7 +24,7 @@ export default function UpgradeButton() {
         {
           product_id: "prod_Qz5SH3mFC68qkl",
           quantity: "1",
-          email: email
+          email: email,
         },
         {
           validateStatus: function (status) {
