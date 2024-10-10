@@ -133,7 +133,8 @@ export default function LandingPage() {
               Vero
             </h1>
             <p className="text-l text-gray-600 max-w-2xl mx-auto">
-              Lightning fast Engagement, Data-Driven Insights
+            Turning every customer interaction into opportunity, by capturing experiences instantly.
+
             </p>
             {/* <MindMap /> */}
             <div className="flex justify-center space-x-4">
