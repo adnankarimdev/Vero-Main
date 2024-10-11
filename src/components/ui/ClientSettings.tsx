@@ -87,7 +87,7 @@ export default function ClientSettings() {
   const [accountType, setAccountType] = useState("");
   const qrCodeInStoreRef = useRef<HTMLDivElement>(null);
   const [settings, setSettings] = useState({
-    questions:[{id:"", questions:['']}],
+    questions: [{ id: "", questions: [""] }],
     categories: [],
     emailIntro: "",
     emailSignature: "",

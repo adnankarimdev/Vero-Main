@@ -21,7 +21,9 @@ export default function PaymentFailed() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-center text-gray-600">
-            {"We're sorry, but your payment could not be processed at this time."}
+            {
+              "We're sorry, but your payment could not be processed at this time."
+            }
           </p>
           <Separator />
           <div className="space-y-2">
