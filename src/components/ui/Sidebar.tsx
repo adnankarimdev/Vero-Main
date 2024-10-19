@@ -46,8 +46,8 @@ export default function Sidebar() {
   return (
     <TooltipProvider>
       <aside className="flex h-screen w-16 flex-col items-center space-y-8 bg-background py-8 transition-all">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
-          <span className="text-2xl font-bold text-primary-foreground">A</span>
+        <div className="flex h-12 w-12 items-center justify-center rounded-full">
+          <Logo/>
         </div>
         <nav className="flex flex-col items-center space-y-2">
           {navItems.map((item) => (
