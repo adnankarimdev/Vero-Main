@@ -10,6 +10,7 @@ import {
   Star,
   MessageCircle,
   Reply,
+  Route,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -26,6 +27,7 @@ import LogoSvg from "../../app/logo.svg";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
+  { icon: Route, label: "Customer Journey", href: "/customer-journies" },
   //Hiding Messenger for now, won't release to public just yet.
   // { icon: MessageCircle, label: "Messenger", href: "/messenger" },
   { icon: Star, label: "Reviews", href: "/reviews" },
@@ -47,7 +49,7 @@ export default function Sidebar() {
     <TooltipProvider>
       <aside className="flex h-screen w-16 flex-col items-center space-y-8 bg-background py-8 transition-all">
         <div className="flex h-12 w-12 items-center justify-center rounded-full">
-          <Logo/>
+          <Logo />
         </div>
         <nav className="flex flex-col items-center space-y-2">
           {navItems.map((item) => (

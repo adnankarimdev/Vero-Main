@@ -54,6 +54,7 @@ export interface CustomerReviewInfo {
 
 export interface CustomerReviewInfoFromSerializer {
   analyzed_review_details: object;
+  customer_email: string;
   badges: string; // This will be a JSON string initially
   email_sent_to_company: boolean;
   final_review_body: string;
@@ -82,4 +83,10 @@ export interface AnalyzedReviewInfo {
 export interface ChartReviewFormat {
   month: string;
   total: number;
+}
+
+export interface ChartCustomerJourneyFormat {
+  rating: number;
+  review_date: string;
+  badges: string[];
 }
