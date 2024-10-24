@@ -57,7 +57,7 @@ export const description = "A stacked area chart";
 const chartConfig = {
   desktop: {
     label: "Desktop",
-    color: "hsl(var(--chart-1))",
+    color: `hsl(var(--chart-${Math.floor(Math.random() * 2) + 1}))`,
   },
   mobile: {
     label: "Mobile",
@@ -192,11 +192,11 @@ export function CustomerJourneyChart({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     className="ml-auto"
                     onClick={getCustomerAnalysis}
                   >
-                    <TbReportAnalytics />
+                    Deeper Insights
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent className="bg-white text-black border border-gray-200 shadow-md">

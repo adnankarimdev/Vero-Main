@@ -2,6 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   ChartCustomerJourneyFormat,
@@ -11,6 +19,7 @@ import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CustomerJourneyChart } from "./CustomerJourneyChart";
+import { AestheticLoader } from "./Skeletons/GeneratingLoader";
 
 type RatingToBadges = {
   [key: number]: string[];
@@ -60,6 +69,52 @@ export default function CustomerJourney() {
       }
       return acc;
     }, {});
+  }
+
+  function hasImprovementNoted(reviews: any) {
+    if (reviews.length < 2) {
+      // Not enough reviews to notice improvement
+      return false;
+    }
+
+    // Sort reviews by review date to compare in chronological order
+    const sortedReviews = reviews.sort(
+      (a: any, b: any) =>
+        new Date(a.review_date).getTime() - new Date(b.review_date).getTime()
+    );
+
+    // Check for improvement in ratings
+    if (
+      sortedReviews[sortedReviews.length - 1].rating >
+      sortedReviews[sortedReviews.length - 2].rating
+    ) {
+      return true; // Improvement noted
+    }
+
+    return false; // No improvement
+  }
+
+  function hasRatingDropped(reviews: any) {
+    if (reviews.length < 2) {
+      // Not enough reviews to notice improvement
+      return false;
+    }
+
+    // Sort reviews by review date to compare in chronological order
+    const sortedReviews = reviews.sort(
+      (a: any, b: any) =>
+        new Date(a.review_date).getTime() - new Date(b.review_date).getTime()
+    );
+
+    // Check for drop in ratings
+    if (
+      sortedReviews[sortedReviews.length - 1].rating <
+      sortedReviews[sortedReviews.length - 2].rating
+    ) {
+      return true; // No Improvement noted
+    }
+
+    return false; // Improvement Noted
   }
 
   useEffect(() => {
@@ -156,7 +211,12 @@ export default function CustomerJourney() {
 
   return (
     <div className="flex h-screen bg-white">
-      {Object.keys(customerJournies).length === 0 && (
+      {isLoading && (
+        <div className="flex items-center justify-center w-full">
+          <AestheticLoader />
+        </div>
+      )}
+      {!isLoading && Object.keys(customerJournies).length === 0 && (
         <div className="flex items-center justify-center w-full">
           <p className="text-center">
             {
@@ -182,11 +242,77 @@ export default function CustomerJourney() {
                   onClick={() => handleCustomerClick(customer_email)}
                 >
                   <Avatar className="h-10 w-10 rounded-full">
-                    <AvatarImage src={avatarImage(5)} />
+                    <AvatarImage
+                      src={
+                        hasRatingDropped(customerJournies[customer_email])
+                          ? avatarImage(3)
+                          : avatarImage(5)
+                      }
+                    />
                     <AvatarFallback>{customer_email.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="ml-4">
                     <p className="font-semibold">{customer_email}</p>
+                    {customerJournies[customer_email].length > 2 && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Badge
+                              className={cn(
+                                "bg-violet-500 text-white font-medium mt-2 ml-2"
+                              )}
+                            >
+                              Loyal
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-white text-black border border-gray-200 shadow-md">
+                            <p>
+                              {`${customerEmail.split("@")[0]} is loyal to your business having visited more than 2 times. `}
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                    {hasImprovementNoted(customerJournies[customer_email]) && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Badge
+                              className={cn(
+                                "bg-emerald-500 text-white font-medium mt-2 ml-2"
+                              )}
+                            >
+                              Improvement Noticed
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-white text-black border border-gray-200 shadow-md">
+                            <p>
+                              {`${customerEmail.split("@")[0]} noticed an improvement from their last two visits. `}
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                    {hasRatingDropped(customerJournies[customer_email]) && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Badge
+                              className={cn(
+                                "bg-red-600 text-white font-medium mt-2 ml-2"
+                              )}
+                            >
+                              Rating Drop
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-white text-black border border-gray-200 shadow-md">
+                            <p>
+                              {`${customerEmail.split("@")[0]}'s rating dropped from their last two visits. `}
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
                   </div>
                 </div>
               ))}
