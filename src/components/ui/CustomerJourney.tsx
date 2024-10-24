@@ -156,44 +156,55 @@ export default function CustomerJourney() {
 
   return (
     <div className="flex h-screen bg-white">
-      {/* Sidebar */}
-      <div className="w-1/3 border-r border-gray-200">
-        <div className="p-4 border-b border-gray-200">
-          <h2 className="text-xl font-bold">Customers</h2>
-          <p className="text-gray-500 text-xs">
-            Click on a customer to see their journey at your location(s).
+      {Object.keys(customerJournies).length === 0 && (
+        <div className="flex items-center justify-center w-full">
+          <p className="text-center">
+            {
+              "You can start viewing customer journeys once a signed up Vero user leaves reviews for you! 🤗"
+            }
           </p>
         </div>
-        <ScrollArea className="h-[calc(100vh-5rem)]">
-          {Object.keys(customerJournies).map((customer_email, i) => (
-            <div
-              key={customer_email}
-              className="flex items-center p-4 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleCustomerClick(customer_email)}
-            >
-              <Avatar className="h-10 w-10 rounded-full">
-                <AvatarImage src={avatarImage(5)} />
-                <AvatarFallback>{customer_email.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div className="ml-4">
-                <p className="font-semibold">{customer_email}</p>
-              </div>
+      )}
+      {Object.keys(customerJournies).length > 0 && (
+        <>
+          <div className="w-1/3 border-r border-gray-200">
+            <div className="p-4 border-b border-gray-200">
+              <h2 className="text-xl font-bold">Customers</h2>
+              <p className="text-gray-500 text-xs">
+                Click on a customer to see their journey at your location(s).
+              </p>
             </div>
-          ))}
-        </ScrollArea>
-      </div>
-      {/* Main content area */}
-      <div className="flex-1 flex  justify-center">
-        <div className="w-4/5 max-w-4xl">
-          <CustomerJourneyChart
-            chartData={chartData}
-            chartTitle={`Customer: ${customerEmail.split("@")[0]}`}
-            chartDescription={""}
-            chartFact={""}
-            chartFooter={`email: ${customerEmail}`}
-          />
-        </div>
-      </div>
+            <ScrollArea className="h-[calc(100vh-5rem)]">
+              {Object.keys(customerJournies).map((customer_email, i) => (
+                <div
+                  key={customer_email}
+                  className="flex items-center p-4 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleCustomerClick(customer_email)}
+                >
+                  <Avatar className="h-10 w-10 rounded-full">
+                    <AvatarImage src={avatarImage(5)} />
+                    <AvatarFallback>{customer_email.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <div className="ml-4">
+                    <p className="font-semibold">{customer_email}</p>
+                  </div>
+                </div>
+              ))}
+            </ScrollArea>
+          </div>
+          <div className="flex-1 flex  justify-center">
+            <div className="w-4/5 max-w-4xl">
+              <CustomerJourneyChart
+                chartData={chartData}
+                chartTitle={`Customer: ${customerEmail.split("@")[0]}`}
+                chartDescription={""}
+                chartFact={""}
+                chartFooter={`email: ${customerEmail}`}
+              />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
