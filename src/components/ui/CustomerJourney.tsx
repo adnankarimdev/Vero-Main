@@ -222,12 +222,32 @@ export default function CustomerJourney() {
 
   const userImage = (customerEmail: string): string | null => {
     const customer = customerSvgs.find(customer => customer.email === customerEmail);
+    console.log("customer", customer?.avatar_svg)
     return customer ? customer.avatar_svg : null; // Return the SVG or null if not found
   };
 
   const handleCustomerClick = (customer_email: string) => {
     setCustomerEmail(customer_email);
     setChartData(customerJournies[customer_email]);
+  };
+
+  const resizeSvg = (svgString: string): string => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svgString, 'image/svg+xml');
+    const svgElement = doc.documentElement;
+    
+    // Add viewBox if it doesn't exist
+    if (!svgElement.getAttribute('viewBox')) {
+      const width = svgElement.getAttribute('width') || '100';
+      const height = svgElement.getAttribute('height') || '100';
+      svgElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    }
+    
+    // Remove width and height attributes to allow CSS sizing
+    svgElement.removeAttribute('width');
+    svgElement.removeAttribute('height');
+    
+    return new XMLSerializer().serializeToString(svgElement);
   };
 
   return (
@@ -262,16 +282,25 @@ export default function CustomerJourney() {
                   className="flex items-center p-4 hover:bg-gray-100 cursor-pointer"
                   onClick={() => handleCustomerClick(customer_email)}
                 >
-                  <Avatar className="h-10 w-10 rounded-full">
-                    <AvatarImage
-                      src={
-                        hasRatingDropped(customerJournies[customer_email])
-                          ? avatarImage(3)
-                          : avatarImage(5)
-                      }
+                  {userImage(customer_email) ? (
+                    <div 
+                      className="h-10 w-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-100"
+                      dangerouslySetInnerHTML={{ 
+                        __html: resizeSvg(userImage(customer_email) || '') 
+                      }}
                     />
-                    <AvatarFallback>{customer_email.charAt(0)}</AvatarFallback>
-                  </Avatar>
+                  ) : (
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage
+                        src={
+                          hasRatingDropped(customerJournies[customer_email])
+                            ? avatarImage(3)
+                            : avatarImage(5)
+                        }
+                      />
+                      <AvatarFallback>{customer_email.charAt(0).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                  )}
                   <div className="ml-4">
                     <p className="font-semibold">{customer_email}</p>
                     {customerJournies[customer_email].length > 2 && (
