@@ -25,6 +25,11 @@ type RatingToBadges = {
   [key: number]: string[];
 };
 
+type CustomerSvgs = {
+    email: string;
+    avatar_svg: string;
+}
+
 export default function CustomerJourney() {
   const router = useRouter();
   const { toast } = useToast();
@@ -41,6 +46,7 @@ export default function CustomerJourney() {
     {}
   );
   const [chartData, setChartData] = useState<ChartCustomerJourneyFormat[]>([]);
+  const [customerSvgs, setCustomerSvgs] = useState<CustomerSvgs[]>([])
 
   const findKeywordsInReview = (textBody: string, keywordsArray: string[]) => {
     const foundKeywords: string[] = [];
@@ -155,7 +161,17 @@ export default function CustomerJourney() {
         );
         const data = response.data as CustomerReviewInfoFromSerializer[];
         const customerJourniesAdjusted = groupReviewsByCustomerEmail(data);
-        console.log("journey", customerJourniesAdjusted);
+        const userEmails =  Object.keys(customerJourniesAdjusted);
+        console.log(userEmails)
+        const userSvgs = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-customer-svgs/`,
+            {
+              params: {
+                emails: userEmails,
+              },
+            }
+          );
+        setCustomerSvgs(userSvgs.data)
         setCustomerJournies(customerJourniesAdjusted);
         const updatedReviews = data.map((review) => {
           const badgesArray = review.badges ? JSON.parse(review.badges) : [];
@@ -202,6 +218,11 @@ export default function CustomerJourney() {
 
   const avatarImage = (rating: number): string => {
     return `/Avatars/rating${rating}.png`;
+  };
+
+  const userImage = (customerEmail: string): string | null => {
+    const customer = customerSvgs.find(customer => customer.email === customerEmail);
+    return customer ? customer.avatar_svg : null; // Return the SVG or null if not found
   };
 
   const handleCustomerClick = (customer_email: string) => {
