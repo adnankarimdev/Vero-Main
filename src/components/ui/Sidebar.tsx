@@ -11,6 +11,7 @@ import {
   MessageCircle,
   Reply,
   Route,
+  MonitorCog
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -26,13 +27,13 @@ import Logo from "./Logo";
 import LogoSvg from "../../app/logo.svg";
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
+  { icon: LayoutDashboard, label: "Your Dashboard", href: "/dashboard" },
+  { icon: MonitorCog, label: "Platform Settings", href: "/settings" },
   { icon: Route, label: "Customer Journey", href: "/customer-journies" },
   //Hiding Messenger for now, won't release to public just yet.
   // { icon: MessageCircle, label: "Messenger", href: "/messenger" },
-  { icon: Star, label: "Reviews", href: "/reviews" },
+  { icon: Star, label: "Customer Reviews", href: "/reviews" },
   { icon: Reply, label: "Respond", href: "/respond" },
-  { icon: FilePenLine, label: "Platform Settings", href: "/settings" },
   { icon: LogOut, label: "Logout", href: "/" },
 ];
 
