@@ -26,9 +26,9 @@ type RatingToBadges = {
 };
 
 type CustomerSvgs = {
-    email: string;
-    avatar_svg: string;
-}
+  email: string;
+  avatar_svg: string;
+};
 
 export default function CustomerJourney() {
   const router = useRouter();
@@ -46,7 +46,7 @@ export default function CustomerJourney() {
     {}
   );
   const [chartData, setChartData] = useState<ChartCustomerJourneyFormat[]>([]);
-  const [customerSvgs, setCustomerSvgs] = useState<CustomerSvgs[]>([])
+  const [customerSvgs, setCustomerSvgs] = useState<CustomerSvgs[]>([]);
 
   const findKeywordsInReview = (textBody: string, keywordsArray: string[]) => {
     const foundKeywords: string[] = [];
@@ -161,17 +161,17 @@ export default function CustomerJourney() {
         );
         const data = response.data as CustomerReviewInfoFromSerializer[];
         const customerJourniesAdjusted = groupReviewsByCustomerEmail(data);
-        const userEmails =  Object.keys(customerJourniesAdjusted);
-        console.log(userEmails)
+        const userEmails = Object.keys(customerJourniesAdjusted);
+        console.log(userEmails);
         const userSvgs = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-customer-svgs/`,
-            {
-              params: {
-                emails: userEmails,
-              },
-            }
-          );
-        setCustomerSvgs(userSvgs.data)
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-customer-svgs/`,
+          {
+            params: {
+              emails: userEmails,
+            },
+          }
+        );
+        setCustomerSvgs(userSvgs.data);
         setCustomerJournies(customerJourniesAdjusted);
         const updatedReviews = data.map((review) => {
           const badgesArray = review.badges ? JSON.parse(review.badges) : [];
@@ -221,8 +221,10 @@ export default function CustomerJourney() {
   };
 
   const userImage = (customerEmail: string): string | null => {
-    const customer = customerSvgs.find(customer => customer.email === customerEmail);
-    console.log("customer", customer?.avatar_svg)
+    const customer = customerSvgs.find(
+      (customer) => customer.email === customerEmail
+    );
+    console.log("customer", customer?.avatar_svg);
     return customer ? customer.avatar_svg : null; // Return the SVG or null if not found
   };
 
@@ -233,20 +235,20 @@ export default function CustomerJourney() {
 
   const resizeSvg = (svgString: string): string => {
     const parser = new DOMParser();
-    const doc = parser.parseFromString(svgString, 'image/svg+xml');
+    const doc = parser.parseFromString(svgString, "image/svg+xml");
     const svgElement = doc.documentElement;
-    
+
     // Add viewBox if it doesn't exist
-    if (!svgElement.getAttribute('viewBox')) {
-      const width = svgElement.getAttribute('width') || '100';
-      const height = svgElement.getAttribute('height') || '100';
-      svgElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    if (!svgElement.getAttribute("viewBox")) {
+      const width = svgElement.getAttribute("width") || "100";
+      const height = svgElement.getAttribute("height") || "100";
+      svgElement.setAttribute("viewBox", `0 0 ${width} ${height}`);
     }
-    
+
     // Remove width and height attributes to allow CSS sizing
-    svgElement.removeAttribute('width');
-    svgElement.removeAttribute('height');
-    
+    svgElement.removeAttribute("width");
+    svgElement.removeAttribute("height");
+
     return new XMLSerializer().serializeToString(svgElement);
   };
 
@@ -283,10 +285,10 @@ export default function CustomerJourney() {
                   onClick={() => handleCustomerClick(customer_email)}
                 >
                   {userImage(customer_email) ? (
-                    <div 
+                    <div
                       className="h-10 w-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-100"
-                      dangerouslySetInnerHTML={{ 
-                        __html: resizeSvg(userImage(customer_email) || '') 
+                      dangerouslySetInnerHTML={{
+                        __html: resizeSvg(userImage(customer_email) || ""),
                       }}
                     />
                   ) : (
@@ -298,7 +300,9 @@ export default function CustomerJourney() {
                             : avatarImage(5)
                         }
                       />
-                      <AvatarFallback>{customer_email.charAt(0).toUpperCase()}</AvatarFallback>
+                      <AvatarFallback>
+                        {customer_email.charAt(0).toUpperCase()}
+                      </AvatarFallback>
                     </Avatar>
                   )}
                   <div className="ml-4">

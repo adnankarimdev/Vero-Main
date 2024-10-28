@@ -1,80 +1,57 @@
-import { useRouter } from "next/navigation";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { CustomerReviewInfoFromSerializer } from "../Types/types";
-import { useState, useEffect } from "react";
-import { useToast } from "@/components/ui/use-toast";
-import axios from "axios";
-import ReviewsSkeletonLoader from "./Skeletons/ReviewsSkeletonLoader";
-import FlipCards from "./FlipCards";
-import ReviewsClassic from "./ReviewsClassic";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+'use client'
 
-export default function ReviewsTab({}: any) {
-  const [placeIds, setPlaceIds] = useState([]);
-  const { toast } = useToast();
-  const router = useRouter();
-  const [streamlinedView, setStreamlinedView] = useState(true);
-  const [reviews, setReviews] = useState<CustomerReviewInfoFromSerializer[]>(
-    []
-  );
-  const customerProfiles = [
-    {
-      id: 1,
-      customerProfile: "Grumpy Gus",
-      Description: "Totally unimpressed and ready to rant.",
-    },
-    {
-      id: 2,
-      customerProfile: "Meh Maggie",
-      Description: "Couldn’t care less, just average.",
-    },
-    {
-      id: 3,
-      customerProfile: "Content Carl",
-      Description: "Fine with it, nothing to write home about.",
-    },
-    {
-      id: 4,
-      customerProfile: "Chipper Charlie",
-      Description: "Quite happy, had a good time!",
-    },
-    {
-      id: 5,
-      customerProfile: "Raving Ricky",
-      Description: "Absolutely thrilled, shouting from the rooftops!",
-    },
-  ];
-  const [isLoading, setIsLoading] = useState(true);
+import { useRouter } from "next/navigation"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
+import { CustomerReviewInfoFromSerializer } from "../Types/types"
+import { useState, useEffect } from "react"
+import { useToast } from "@/components/ui/use-toast"
+import axios from "axios"
+import ReviewsSkeletonLoader from "./Skeletons/ReviewsSkeletonLoader"
+import FlipCards from "./FlipCards"
+import ReviewsClassic from "./ReviewsClassic"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+export default function ReviewsTab() {
+  const [placeIds, setPlaceIds] = useState([])
+  const { toast } = useToast()
+  const router = useRouter()
+  const [streamlinedView, setStreamlinedView] = useState(true)
+  const [reviews, setReviews] = useState<CustomerReviewInfoFromSerializer[]>([])
+  const [filteredReviews, setFilteredReviews] = useState<CustomerReviewInfoFromSerializer[]>([])
+  const [selectedRating, setSelectedRating] = useState("all")
+  const [isLoading, setIsLoading] = useState(true)
+
   useEffect(() => {
-    setIsLoading(true);
+    setIsLoading(true)
     const fetchData = async () => {
       try {
-        const email = localStorage.getItem("userEmail");
+        const email = localStorage.getItem("userEmail")
         if (!email) {
           toast({
             title: "Please sign in.",
             duration: 3000,
-          });
-          router.push("/login");
-          console.error("Email not found in localStorage");
-          return;
+          })
+          router.push("/login")
+          console.error("Email not found in localStorage")
+          return
         }
 
         // First, fetch the placeId
         const placeIdResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
-        );
-        setPlaceIds(placeIdResponse.data.placeIds);
+        )
+        setPlaceIds(placeIdResponse.data.placeIds)
 
         const placeIdsAsArray = placeIdResponse.data.places.map(
           (place: any) => place.place_id
-        );
-        const placeIdsQuery = placeIdsAsArray.join(",");
+        )
+        const placeIdsQuery = placeIdsAsArray.join(",")
 
         const reviewSettingsResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-review-settings/${placeIdsQuery}/`
-        );
+        )
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-reviews-by-client-ids/`,
           {
@@ -82,11 +59,11 @@ export default function ReviewsTab({}: any) {
               clientIds: placeIdsAsArray,
             },
           }
-        );
-        const data = response.data as CustomerReviewInfoFromSerializer[];
+        )
+        const data = response.data as CustomerReviewInfoFromSerializer[]
         const updatedReviews = data.map((review) => {
           // Convert badges JSON string to array or empty array if invalid
-          const badgesArray = review.badges ? JSON.parse(review.badges) : [];
+          const badgesArray = review.badges ? JSON.parse(review.badges) : []
           return {
             ...review,
             badges: Array.isArray(badgesArray) ? badgesArray : [],
@@ -94,66 +71,73 @@ export default function ReviewsTab({}: any) {
               review.final_review_body,
               reviewSettingsResponse.data.keywords
             ),
-          };
-        });
-        setReviews(updatedReviews.reverse() as any);
-        setIsLoading(false);
+          }
+        })
+        setReviews(updatedReviews.reverse() as any)
+        setFilteredReviews(updatedReviews.reverse() as any)
+        setIsLoading(false)
       } catch (err) {
-        console.error(err);
-        false;
+        console.error(err)
+        setIsLoading(false)
       }
-    };
+    }
 
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
-  const capitalizeFirstLetter = (string: string) => {
-    if (!string) return ""; // Handle empty or null strings
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
+  useEffect(() => {
+    if (selectedRating === "all") {
+      setFilteredReviews(reviews)
+    } else {
+      setFilteredReviews(reviews.filter(review => review.rating === parseInt(selectedRating)))
+    }
+  }, [selectedRating, reviews])
 
   const findKeywordsInReview = (textBody: string, keywordsArray: string[]) => {
-    const foundKeywords: string[] = [];
+    const foundKeywords: string[] = []
 
     keywordsArray.forEach((keyword) => {
       if (textBody.toLowerCase().includes(keyword.toLowerCase())) {
-        foundKeywords.push(keyword);
+        foundKeywords.push(keyword)
       }
-    });
+    })
 
-    return foundKeywords;
-  };
+    return foundKeywords
+  }
 
-  const avatarImage = (rating: number) => {
-    return `/Avatars/rating${rating}.png`;
-  };
   return (
     <div className="space-y-8">
-      <div className="relative flex justify-end">
-        {/* <div className="flex items-center">
-          <Switch
-            id="airplane-mode"
-            checked={streamlinedView}
-            onCheckedChange={(checked) => setStreamlinedView(checked)}
-          />
-          <Label htmlFor="airplane-mode" className="ml-2">
-            Streamlined View
-          </Label>
-        </div> */}
+      <div className="flex justify-between items-center">
+        <Select value={selectedRating} onValueChange={setSelectedRating}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by rating" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Ratings</SelectItem>
+            <SelectItem value="5">5 Stars</SelectItem>
+            <SelectItem value="4">4 Stars</SelectItem>
+            <SelectItem value="3">3 Stars</SelectItem>
+            <SelectItem value="2">2 Stars</SelectItem>
+            <SelectItem value="1">1 Star</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
+
       {isLoading && <ReviewsSkeletonLoader />}
 
-      {!isLoading && streamlinedView && <FlipCards reviews={reviews} />}
+      {!isLoading && streamlinedView && <FlipCards reviews={filteredReviews} />}
 
-      {!isLoading && !streamlinedView && <ReviewsClassic reviews={reviews} />}
+      {!isLoading && !streamlinedView && <ReviewsClassic reviews={filteredReviews} />}
 
-      {!isLoading && reviews.length == 0 && (
+      {!isLoading && filteredReviews.length === 0 && (
         <div className="flex justify-center items-center h-screen">
           <h1 className="text-xl md:text-xl lg:text-xl font-bold tracking-tight">
-            Watch Vero work its magic. Reviews coming soon! 🚀
+            {selectedRating === "all" 
+              ? "Watch Vero work its magic. Reviews coming soon! 🚀"
+              : `No ${selectedRating}-star reviews posted with Vero.`}
           </h1>
         </div>
       )}
     </div>
-  );
+  )
 }

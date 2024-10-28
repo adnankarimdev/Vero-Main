@@ -9,6 +9,12 @@ import {
 import { PiTranslate } from "react-icons/pi";
 import { FaGoogle } from "react-icons/fa";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Table,
   TableBody,
   TableCaption,
@@ -412,19 +418,28 @@ export default function SummaryTab({
                               <BadgeLoader />
                             )}
 
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="hover:bg-transparent"
-                              onClick={() =>
-                                handleBadgeTranslationChange(
-                                  recordNumber,
-                                  badge
-                                )
-                              }
-                            >
-                              <PiTranslate />
-                            </Button>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="hover:bg-transparent"
+                                    onClick={() =>
+                                      handleBadgeTranslationChange(
+                                        recordNumber,
+                                        badge
+                                      )
+                                    }
+                                  >
+                                    <PiTranslate />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-white text-black border border-gray-200 shadow-md">
+                                  <p>{`Translate to English`}</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           </Badge>
                         ))}
                       </div>
