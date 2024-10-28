@@ -62,12 +62,13 @@ export default function CustomerJourney() {
     reviews: CustomerReviewInfoFromSerializer[]
   ) {
     return reviews.reduce((acc: { [key: string]: any }, review) => {
-      const { customer_email, rating, review_date, badges } = review;
+      const { customer_email, rating, review_date, badges, id } = review;
       if (!acc[customer_email] && customer_email !== "") {
         acc[customer_email] = [];
       }
       if (customer_email !== "") {
         acc[customer_email].push({
+          id,
           rating,
           review_date,
           badges,
@@ -224,13 +225,19 @@ export default function CustomerJourney() {
     const customer = customerSvgs.find(
       (customer) => customer.email === customerEmail
     );
-    console.log("customer", customer?.avatar_svg);
     return customer ? customer.avatar_svg : null; // Return the SVG or null if not found
   };
 
   const handleCustomerClick = (customer_email: string) => {
     setCustomerEmail(customer_email);
-    setChartData(customerJournies[customer_email]);
+    setChartData(
+      customerJournies[customer_email].sort(
+        (
+          a: CustomerReviewInfoFromSerializer,
+          b: CustomerReviewInfoFromSerializer
+        ) => a.id - b.id
+      )
+    );
   };
 
   const resizeSvg = (svgString: string): string => {
