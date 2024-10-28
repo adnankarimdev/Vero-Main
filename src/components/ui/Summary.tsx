@@ -396,9 +396,9 @@ export default function SummaryTab({
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-[400px] pr-4">
-                {Object.entries(organizedBadges).map(
+                {Object.entries(organizedBadges).reverse().map(
                   ([recordNumber, badgeCounts]) => (
-                    <div key={recordNumber} className="border rounded-lg p-4">
+                    <div key={recordNumber} className="border rounded-lg p-4 mb-4">
                       <h3 className="text-lg font-semibold mb-2">
                         {recordNumber}
                       </h3>
