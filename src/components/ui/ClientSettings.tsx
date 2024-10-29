@@ -54,6 +54,8 @@ import {
   XIcon,
   ArrowDownToLine,
   ImageUp,
+  Tablet,
+  ScanQrCode
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
@@ -760,8 +762,9 @@ export default function ClientSettings() {
                           >
                             <div className="text-lg font-medium">
                               <Badge className="text-white">
-                                {" " + placesInfo[index].name}
+                              {" " + placesInfo[index].name} <Tablet size={12} className="ml-2"/> 
                               </Badge>
+                              
                             </div>
                           </Button>
                         </div>
@@ -829,7 +832,7 @@ export default function ClientSettings() {
                               {!isOnlineBusiness && (
                                 <>
                                   <Badge className="text-white">
-                                    {" " + placesInfo[index].name}
+                                    {" " + placesInfo[index].name} <NfcIcon size={12} className="ml-2"/> <ScanQrCode size={12} className="ml-2"/>
                                   </Badge>
                                 </>
                               )}
