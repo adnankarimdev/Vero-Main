@@ -52,6 +52,7 @@ export interface CustomerReviewInfo {
   timeTakenToWriteReview?: number;
 }
 
+export type TopCustomer = { email: string; count: number };
 export interface CustomerReviewInfoFromSerializer {
   analyzed_review_details: object;
   customer_email: string;

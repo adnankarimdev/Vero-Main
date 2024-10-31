@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   CustomerReviewInfoFromSerializer,
   ChartReviewFormat,
+  TopCustomer,
 } from "../Types/types";
 import { PiTranslate } from "react-icons/pi";
 import { FaGoogle } from "react-icons/fa";
@@ -54,6 +55,7 @@ import TableSkeletonLoader from "./Skeletons/TableSkeletonLoader";
 import { AreaChartComponent } from "./AreaChartComponent";
 import BadgeLoader from "./Skeletons/BadgeLoader";
 import UpgradeButton from "./UpgradeButton";
+import TopCustomersTable from "./TopCustomersTable";
 
 interface BadgeTexts {
   [recordNumber: string]: {
@@ -108,6 +110,7 @@ export default function SummaryTab({
   const [isSocialMediaAccount, setIsSocialMediaAccount] = useState(false);
   const [badgeTexts, setBadgeTexts] = useState<BadgeTexts>({});
   const [isTranslationLoading, setIsTranslationLoading] = useState(false);
+  const [topCustomers, setTopCustomers] = useState<TopCustomer[]>([]);
   const [loadingBadges, setLoadingBadges] = useState<{
     [key: string]: boolean;
   }>({});
@@ -295,6 +298,28 @@ export default function SummaryTab({
     );
   };
 
+  function getTopCustomers(
+    reviews: CustomerReviewInfoFromSerializer[]
+  ): { email: string; count: number }[] {
+    const emailCounts: Record<string, number> = {};
+
+    // Count occurrences of each email
+    reviews.forEach((review) => {
+      const email = review.customer_email;
+      if (email.length !== 0) {
+        emailCounts[email] = (emailCounts[email] || 0) + 1;
+      }
+    });
+
+    // Convert counts to an array and sort by count descending
+    const sortedEmails = Object.entries(emailCounts)
+      .map(([email, count]) => ({ email, count }))
+      .sort((a, b) => b.count - a.count);
+
+    // Return top 5
+    return sortedEmails.slice(0, 5);
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -334,6 +359,8 @@ export default function SummaryTab({
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-review-settings/${placeIdsQuery}/`
         );
         const data = response.data as CustomerReviewInfoFromSerializer[];
+        const topCustomers = setTopCustomers(getTopCustomers(data));
+        console.log(topCustomers);
         const chartDataToStore =
           convertReviewDataToChartForReviewsPerMonth(data);
         setChartData(chartDataToStore);
@@ -396,9 +423,13 @@ export default function SummaryTab({
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-[400px] pr-4">
-                {Object.entries(organizedBadges).reverse().map(
-                  ([recordNumber, badgeCounts]) => (
-                    <div key={recordNumber} className="border rounded-lg p-4 mb-4">
+                {Object.entries(organizedBadges)
+                  .reverse()
+                  .map(([recordNumber, badgeCounts]) => (
+                    <div
+                      key={recordNumber}
+                      className="border rounded-lg p-4 mb-4"
+                    >
                       <h3 className="text-lg font-semibold mb-2">
                         {recordNumber}
                       </h3>
@@ -444,8 +475,7 @@ export default function SummaryTab({
                         ))}
                       </div>
                     </div>
-                  )
-                )}
+                  ))}
               </ScrollArea>
             </CardContent>
           </Card>
@@ -462,6 +492,19 @@ export default function SummaryTab({
           />
         </div>
 
+        <div className="mb-10">
+          <Card>
+            <CardHeader>
+              <CardTitle>Top 5 Customers</CardTitle>
+              <CardDescription>
+                Based on the number of times visited
+              </CardDescription>
+            </CardHeader>
+
+            {isTableLoading && topCustomers && <TableSkeletonLoader />}
+            {!isTableLoading && topCustomers && <TopCustomersTable customers={topCustomers} />}
+          </Card>
+        </div>
         {!isSocialMediaAccount && (
           <div className="grid gap-4 md:grid-cols-2 mb-10">
             <Card>
@@ -595,46 +638,7 @@ export default function SummaryTab({
         )}
 
         {/* Table will be here eventually. should probs create own component.*/}
-        {/* <Separator className="my-4" /> */}
-        {/* <CardHeader>
-          <CardTitle>Per Location</CardTitle>
-          <CardDescription>Overview</CardDescription>
-        </CardHeader>
-
-        {isTableLoading && <TableSkeletonLoader />}
-        {!isTableLoading && (
-          <Table className="w-full mt-2">
-            <TableCaption>An overview of all your locations</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Current Rating</TableHead>
-                <TableHead>Total Google Reviews</TableHead>
-                <TableHead>5-Star Reviews Needed (+0.1)</TableHead>
-                <TableHead>5-Star Reviews with Vero</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {placesInfo.map((place) => (
-                <TableRow key={place.place_id} className="text-center">
-                  <TableCell className="font-medium text-left">
-                    {place.name}
-                  </TableCell>
-                  <TableCell>{place.currentRating}</TableCell>
-                  <TableCell>{place.currentTotalReviews}</TableCell>
-                  <TableCell>
-                    {calculateAdditionalReviews(
-                      Number(place.currentRating!),
-                      Number(place.currentTotalReviews),
-                      Number(place.currentRating! + 0.1)
-                    )}
-                  </TableCell>
-                  <TableCell>{0}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )} */}
+        <Separator className="my-4" />
       </CardContent>
     </Card>
   );

@@ -83,8 +83,16 @@ export default function ReviewsTab() {
             ),
           };
         });
-        setReviews(updatedReviews.sort((a, b) => b.id - a.id) as unknown as CustomerReviewInfoFromSerializer[]);
-        setFilteredReviews(updatedReviews.sort((a, b) => b.id - a.id) as unknown as CustomerReviewInfoFromSerializer[]);
+        setReviews(
+          updatedReviews.sort(
+            (a, b) => b.id - a.id
+          ) as unknown as CustomerReviewInfoFromSerializer[]
+        );
+        setFilteredReviews(
+          updatedReviews.sort(
+            (a, b) => b.id - a.id
+          ) as unknown as CustomerReviewInfoFromSerializer[]
+        );
         setIsLoading(false);
       } catch (err) {
         console.error(err);
