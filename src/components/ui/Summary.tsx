@@ -132,7 +132,6 @@ export default function SummaryTab({
       )
       .then((response) => {
         const translatedBadge = response.data["content"];
-        console.log(translatedBadge);
         setBadgeTexts((prev) => ({
           ...prev,
           [recordNumber]: {
@@ -337,7 +336,6 @@ export default function SummaryTab({
         const placeIdResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
         );
-        console.log(placeIdResponse.data);
         setIsSocialMediaAccount(
           placeIdResponse.data.places[0].name ===
             placeIdResponse.data.places[0].place_id
@@ -360,7 +358,6 @@ export default function SummaryTab({
         );
         const data = response.data as CustomerReviewInfoFromSerializer[];
         const topCustomers = setTopCustomers(getTopCustomers(data));
-        console.log(topCustomers);
         const chartDataToStore =
           convertReviewDataToChartForReviewsPerMonth(data);
         setChartData(chartDataToStore);
