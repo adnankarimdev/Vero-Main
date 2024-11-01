@@ -31,7 +31,14 @@ export default function TopCustomersTable({
           <TableRow key={index}>
             <TableCell className="font-medium text-left">
               {" "}
+              <a
+                href={`mailto:${customer.email}`}
+                className="flex items-center hover:text-primary transition-colors"
+                aria-label={`Send email to ${customer.email}`}
+              >
+               
               <Badge className="bg-emerald-500">{customer.email}</Badge>
+              </a>
             </TableCell>
             <TableCell className="font-medium text-right">
               {customer.count}
