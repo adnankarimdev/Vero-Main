@@ -700,42 +700,6 @@ export default function ClientSettings() {
                       </div>
                     </div>
                   )}
-                  <div className="flex items-center space-x-2 mt-2">
-                    <Switch
-                      id="showComplimentaryItem"
-                      checked={settings.showComplimentaryItem}
-                      disabled={!settings.showWorryDialog}
-                      onCheckedChange={(checked) =>
-                        handleSettingChange("showComplimentaryItem", checked)
-                      }
-                    />
-                    <Label htmlFor="showComplimentaryItem">
-                      Offer Complimentary Item
-                    </Label>
-                  </div>
-                  {settings.showComplimentaryItem && (
-                    <div className="mt-2">
-                      <Label htmlFor="complimentaryItem">
-                        Complimentary Item
-                      </Label>
-                      <p className="text-gray-500 text-xs">
-                        {
-                          "Specify the complimentary items you'd like to offer, which will be included in the email when addressing concerns."
-                        }
-                      </p>
-                      <Input
-                        id="complimentaryItem"
-                        placeholder="10% off Item A, $2 off next purchase, etc..."
-                        value={settings.complimentaryItem}
-                        onChange={(e) =>
-                          handleSettingChange(
-                            "complimentaryItem",
-                            e.target.value
-                          )
-                        }
-                      />
-                    </div>
-                  )}
                 </div>
               </div>
             </TabsContent>
@@ -925,6 +889,40 @@ export default function ClientSettings() {
                         </Dialog>
                       </div>
                     )}
+                    <Separator className="mt-5 mb-5" />
+                                      <div className="flex items-center space-x-2 mt-2">
+                    <Switch
+                      id="showComplimentaryItem"
+                      checked={settings.showComplimentaryItem}
+                      disabled={!settings.showWorryDialog}
+                      onCheckedChange={(checked) =>
+                        handleSettingChange("showComplimentaryItem", checked)
+                      }
+                    />
+                    <Label htmlFor="showComplimentaryItem">
+                      Offer Complimentary Item
+                    </Label>
+                  </div>
+                  {settings.showComplimentaryItem && (
+                    <div className="mt-2">
+                      <p className="text-gray-500 text-xs">
+                        {
+                          "Specify the complimentary items you'd like to offer, which will be shown on the vero homepage."
+                        }
+                      </p>
+                      <Input
+                        id="complimentaryItem"
+                        placeholder="10% off Item A, $2 off next purchase, etc..."
+                        value={settings.complimentaryItem}
+                        onChange={(e) =>
+                          handleSettingChange(
+                            "complimentaryItem",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+                  )}
                     <div hidden={isOnlineBusiness}>
                       <Separator className="mt-5 mb-5" />
                       <Label htmlFor="keywords">Google Keywords</Label>
