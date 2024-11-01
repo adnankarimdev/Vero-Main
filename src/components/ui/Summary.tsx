@@ -207,7 +207,7 @@ export default function SummaryTab({
     if (data.length === 0) return 0; // Return 0 if there's no data
 
     const totalReviewTime = data.reduce((total, review) => {
-      return total + review.time_taken_to_write_review_in_seconds;
+      return !review.posted_with_in_store_mode ? total + review.time_taken_to_write_review_in_seconds : total;
     }, 0);
 
     const averageReviewTime = Math.round(totalReviewTime / data.length); // Calculate average
@@ -595,7 +595,7 @@ export default function SummaryTab({
             <Card hidden={true}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  {"Average Review Time (In Store + Personal Devices)"}
+                  {"Average Review Time (Personal Devices)"}
                 </CardTitle>
                 <Clock className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
