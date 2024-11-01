@@ -492,7 +492,7 @@ export default function SummaryTab({
         <div className="mb-10">
           <Card>
             <CardHeader>
-              <CardTitle>Top 5 Customers</CardTitle>
+              <CardTitle>Top 5 Vero Customers</CardTitle>
               <CardDescription>
                 Based on the number of times visited
               </CardDescription>
