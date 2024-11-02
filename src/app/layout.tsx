@@ -11,7 +11,7 @@ const staatliches = Staatliches({
 
 export const metadata: Metadata = {
   title: "Vero",
-  description: "Insights from your reviews",
+  description: "Instant Insights.",
 };
 
 export default function RootLayout({

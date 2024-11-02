@@ -1,9 +1,10 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { useRouter } from "next/navigation"
 import {
   Star,
   MessageCircle,
@@ -11,67 +12,127 @@ import {
   Shield,
   ArrowRight,
   Menu,
-} from "lucide-react";
-import Link from "next/link";
-import MindMap from "@/components/ui/MindMap";
-import Logo from "@/components/ui/Logo";
+  CheckCircle,
+  Calendar,
+  FileText,
+  Users,
+  LayoutDashboardIcon,
+  Route,
+  StarIcon,
+  BadgeCheck,
+  HammerIcon,
+  BadgePlus,
+  BadgeMinus,
+  Clock
+} from "lucide-react"
+import Link from "next/link"
+import Image from "next/image"
+import { FaGoogle } from "react-icons/fa"
 
-export default function LandingPage() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const router = useRouter();
+const slides = [
+  { src: "/HomepageImages/dash-1.png?height=400&width=800&text=Slide1", alt: "Vero workspace illustration 1", label:"Dashboard", icon: LayoutDashboardIcon },
+  { src: "/HomepageImages/customer-journey-1.png?height=400&width=800&text=Slide2", alt: "Vero workspace illustration 2", label: "Customer Journey", icon: Route },
+  { src: "/HomepageImages/reviews-1.png?height=400&width=800&text=Slide3", alt: "Vero workspace illustration 3", label: "Reviews", icon: StarIcon },
+  { src: "/HomepageImages/badges.png?height=400&width=800&text=Slide4", alt: "Vero workspace illustration 4", label: "Badges", icon: BadgeCheck },
+]
+
+const customerSlides = [
+  { src: "/HomepageImages/customer-1.png?height=400&width=800&text=Slide1", alt: "Vero workspace illustration 1", label:"Select", icon: BadgePlus },
+  { src: "/HomepageImages/customer-2.png?height=400&width=800&text=Slide2", alt: "Vero workspace illustration 2", label: "Route", icon: Route },
+  { src: "/HomepageImages/customer-3.png?height=400&width=800&text=Slide3", alt: "Vero workspace illustration 3", label: "Build", icon: HammerIcon },
+  { src: "/HomepageImages/customer-4.png?height=400&width=800&text=Slide4", alt: "Vero workspace illustration 4", label: "Post", icon: FaGoogle },
+  { src: "/HomepageImages/customer-7.png?height=400&width=800&text=Slide4", alt: "Vero workspace illustration 5", label: "Later", icon: Clock },
+  { src: "/HomepageImages/customer-5.png?height=400&width=800&text=Slide3", alt: "Vero workspace illustration 6", label: "Detect", icon: BadgeMinus },
+  { src: "/HomepageImages/customer-6.png?height=400&width=800&text=Slide4", alt: "Vero workspace illustration 7", label: "Shield", icon: Shield },
+]
+
+const LandingPage = () => {
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [currentCustomerSlide, setCurrentCustomerSlide] = useState(0)
+  const router = useRouter()
+
   const onGetStarted = () => {
-    router.push("/login");
-  };
+    router.push("/login")
+  }
 
   useEffect(() => {
-    if (localStorage.getItem("authToken")) {
-      router.push("/dashboard");
+    if (typeof window !== 'undefined' && localStorage.getItem("authToken")) {
+      router.push("/dashboard")
     }
-  }, []);
+  }, [router])
+
+
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+      setIsScrolled(window.scrollY > 10)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length)
+    }, 5000) // Change slide every 5 seconds
+
+    return () => clearInterval(timer)
+  }, [])
+
+    const goToSlide = (index: number) => {
+      setCurrentSlide(index)
+    }
+
+    useEffect(() => {
+      const timer = setInterval(() => {
+        setCurrentCustomerSlide((prevSlide) => (prevSlide + 1) % customerSlides.length)
+      }, 5000) // Change slide every 5 seconds
+  
+      return () => clearInterval(timer)
+    }, [])
+  
+      const goToCustomerSlide = (index: number) => {
+        setCurrentCustomerSlide(index)
+      }
+
+    
   return (
-    <div className="flex flex-col min-h-screen bg-white text-gray-900">
+    <div className="flex flex-col min-h-screen bg-[#FFFFFF] text-gray-900">
       <header
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? "bg-white shadow-sm" : "bg-transparent"}`}
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+          isScrolled ? "bg-white shadow-sm" : "bg-transparent"
+        }`}
       >
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link className="flex items-center justify-center" href="#">
-            <Logo size={50}></Logo>
-            {/* <span className="text-2xl font-bold text-gray-900">edefeyn</span> */}
+          <Link className="flex items-center justify-center" href="/">
+            <span className="text-2xl font-bold text-gray-900">Vero</span>
           </Link>
           <nav className="hidden md:flex space-x-8">
             <Link
-              className="text-sm font-medium hover:text-black-600 transition-colors"
+              className="text-sm font-medium hover:text-gray-600 transition-colors"
               href="#"
             >
               Features
             </Link>
             <Link
-              className="text-sm font-medium hover:text-black-600 transition-colors"
+              className="text-sm font-medium hover:text-gray-600 transition-colors"
               href="#"
-              // href="/pricing"
+            >
+              Templates
+            </Link>
+            <Link
+              className="text-sm font-medium hover:text-gray-600 transition-colors"
+              href="#"
             >
               Pricing
             </Link>
             <Link
-              className="text-sm font-medium hover:text-black-600 transition-colors"
+              className="text-sm font-medium hover:text-gray-600 transition-colors"
               href="#"
             >
               About
-            </Link>
-            <Link
-              className="text-sm font-medium hover:text-black-600 transition-colors"
-              href="#"
-            >
-              Contact
             </Link>
           </nav>
           <Button
@@ -93,28 +154,28 @@ export default function LandingPage() {
         {isMenuOpen && (
           <nav className="md:hidden bg-white p-4 shadow-md">
             <Link
-              className="block py-2 text-sm font-medium hover:text-black-600 transition-colors"
+              className="block py-2 text-sm font-medium hover:text-gray-600 transition-colors"
               href="#"
             >
               Features
             </Link>
             <Link
-              className="block py-2 text-sm font-medium hover:text-black-600 transition-colors"
+              className="block py-2 text-sm font-medium hover:text-gray-600 transition-colors"
+              href="#"
+            >
+              Templates
+            </Link>
+            <Link
+              className="block py-2 text-sm font-medium hover:text-gray-600 transition-colors"
               href="#"
             >
               Pricing
             </Link>
             <Link
-              className="block py-2 text-sm font-medium hover:text-black-600 transition-colors"
+              className="block py-2 text-sm font-medium hover:text-gray-600 transition-colors"
               href="#"
             >
               About
-            </Link>
-            <Link
-              className="block py-2 text-sm font-medium hover:text-black-600 transition-colors"
-              href="#"
-            >
-              Contact
             </Link>
             <Button
               variant="outline"
@@ -126,52 +187,132 @@ export default function LandingPage() {
           </nav>
         )}
       </header>
-      <main className="flex-1 pt-20">
+      <main className="flex-1">
         <section className="container mx-auto px-4 py-24 md:py-32 lg:py-40">
-          <div className="max-w-3xl mx-auto text-center space-y-8">
+          <div className="max-w-4xl mx-auto text-center space-y-8">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              Vero
+            Customer interactions, captured instantly.
             </h1>
-            <p className="text-l text-gray-600 max-w-2xl mx-auto">
-              Turning every customer interaction into opportunity, by capturing
-              experiences instantly.
+            <p className="text-xl max-w-2xl mx-auto">
+              Quick. Engaging. Instant. Insights have never been this simple.
             </p>
-            {/* <MindMap /> */}
+            <div className="relative">
+              <Image
+                src={slides[currentSlide].src}
+                alt={slides[currentSlide].alt}
+                width={800}
+                height={400}
+                layout="responsive" // Automatically scales images
+                className="rounded-lg shadow-lg"
+              />
+            </div>
+            <div className="flex justify-center space-x-4">
+                {slides.map((slide, index) => (
+                  <Badge
+                    key={index}
+                    variant={currentSlide === index ? "default" : "outline"}
+                    className="cursor-pointer"
+                    onClick={() => goToSlide(index)}
+                  >
+                  <slide.icon size={12} className="mr-2" />{slide.label}
+                  </Badge>
+                ))}
+              </div>
             <div className="flex justify-center space-x-4">
               <Button variant="default" size="lg" onClick={onGetStarted}>
                 Get Started
               </Button>
-              <Button variant="outline" size="lg">
-                Learn More
+              <Button variant="outline" size="lg" onClick={() => window.open("https://calendly.com/adnan-karim-vero-io/vero-demo", "_blank")}>
+                Schedule a Demo
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        <section className="container mx-auto px-4 py-24 md:py-32 lg:py-24">
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+            Customer Feedback in seconds.
+            </h1>
+            <p className="text-xl max-w-2xl mx-auto">
+              Routing experiences to their respective channels.
+            </p>
+            <div className="relative">
+              <Image
+                src={customerSlides[currentCustomerSlide].src}
+                alt={customerSlides[currentCustomerSlide].alt}
+                width={800}
+                height={400}
+                layout="responsive" // Automatically scales images
+                className="rounded-lg shadow-lg"
+              />
+            </div>
+            <div className="flex justify-center space-x-4">
+                {customerSlides.map((slide, index) => (
+                  <Badge
+                    key={index}
+                    variant={currentCustomerSlide === index ? "default" : "outline"}
+                    className="cursor-pointer"
+                    onClick={() => goToCustomerSlide(index)}
+                  >
+                  <slide.icon size={12} className="mr-2" />{slide.label}
+                  </Badge>
+                ))}
+              </div>
+            <div className="flex justify-center space-x-4">
+              <Button variant="default" size="lg" onClick={onGetStarted}>
+                Get Started
+              </Button>
+              <Button variant="outline" size="lg" onClick={() => window.open("https://calendly.com/adnan-karim-vero-io/vero-demo", "_blank")}>
+                Schedule a Demo
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-24">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-3xl font-bold mb-6">
+                Vero is looking for early adopters
+              </h2>
+              <Button variant="default" size="lg" onClick={onGetStarted}>
+                Get started
               </Button>
             </div>
           </div>
         </section>
       </main>
-      <footer className="py-12">
+      <footer className="bg-gray-50 py-12">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
-              <span className="ml-2 text-xl font-bold text-gray-900">Vero</span>
+              <span className="text-xl font-bold text-gray-900">Vero</span>
             </div>
             <nav className="flex flex-wrap justify-center md:justify-end gap-6">
               <Link
-                className="text-sm text-gray-600 hover:text-black-600 transition-colors"
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 href="#"
               >
-                Terms of Service
+                Terms
               </Link>
               <Link
-                className="text-sm text-gray-600 hover:text-black-600 transition-colors"
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 href="#"
               >
-                Privacy Policy
+                Privacy
               </Link>
               <Link
-                className="text-sm text-gray-600 hover:text-black-600 transition-colors"
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 href="#"
               >
-                Contact Us
+                Contact
+              </Link>
+              <Link
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                href="#"
+              >
+                About us
               </Link>
             </nav>
           </div>
@@ -181,5 +322,6 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
-  );
+  )
 }
+export default LandingPage
