@@ -67,6 +67,7 @@ import RatingBubbleCardClient from "./RatingBubbleCardClient";
 import LocationLinkQR from "./LocationQRCodes";
 import { InstagramLogoIcon } from "@radix-ui/react-icons";
 import { FaTiktok, FaYoutube } from "react-icons/fa";
+import AnimatedLayout from "@/animations/AnimatedLayout";
 
 interface Category {
   name: string;
@@ -469,71 +470,74 @@ export default function ClientSettings() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="badges">
-              <AlertDialog>
-                <div className="flex justify-end items-center">
-                  <AlertDialogTrigger>
-                    {
-                      <Button variant="ghost">
-                        <RiAiGenerate size={24} />
-                      </Button>
-                    }
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        {selectedRadioValue === "overall"
-                          ? "Generate Badges"
-                          : "Generate Badges & Categories"}
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        {selectedRadioValue === "overall"
-                          ? "This will generate badges. You can input which areas you'd like the Badges to be focused on. Otherwise, the Badges will be generated more generically."
-                          : "This will generate badges for each category. You can input which areas you'd like the Categories to be focused on. Otherwise, the Categories will be generated more generically."}
-                        <Separator className="mb-4 mt-4" />
-                        <RadioGroup
-                          defaultValue="overall"
-                          value={selectedRadioValue}
-                          onValueChange={(value) =>
-                            setSelectedRadioValue(value)
-                          }
-                        >
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="overall" id="r1" />
-                            <Label htmlFor="r1">Overall Rating</Label>
-                          </div>
-                          {/* <div className="flex items-center space-x-2">
+              <AnimatedLayout>
+                <AlertDialog>
+                  <div className="flex justify-end items-center">
+                    <AlertDialogTrigger>
+                      {
+                        <Button variant="ghost">
+                          <RiAiGenerate size={24} />
+                        </Button>
+                      }
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          {selectedRadioValue === "overall"
+                            ? "Generate Badges"
+                            : "Generate Badges & Categories"}
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          {selectedRadioValue === "overall"
+                            ? "This will generate badges. You can input which areas you'd like the Badges to be focused on. Otherwise, the Badges will be generated more generically."
+                            : "This will generate badges for each category. You can input which areas you'd like the Categories to be focused on. Otherwise, the Categories will be generated more generically."}
+                          <Separator className="mb-4 mt-4" />
+                          <RadioGroup
+                            defaultValue="overall"
+                            value={selectedRadioValue}
+                            onValueChange={(value) =>
+                              setSelectedRadioValue(value)
+                            }
+                          >
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="overall" id="r1" />
+                              <Label htmlFor="r1">Overall Rating</Label>
+                            </div>
+                            {/* <div className="flex items-center space-x-2">
                             <RadioGroupItem value="separate" id="r2" />
                             <Label htmlFor="r2">Separate Categories</Label>
                           </div> */}
-                        </RadioGroup>
-                        <Textarea
-                          id="areaFocus"
-                          className="mt-4"
-                          value={areasToFocusOn}
-                          onChange={(e) => setAreasToFocusOn(e.target.value)}
-                        />
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={handleGenerateReviewQuestions}
-                      >
-                        Continue
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
+                          </RadioGroup>
+                          <Textarea
+                            id="areaFocus"
+                            className="mt-4"
+                            value={areasToFocusOn}
+                            onChange={(e) => setAreasToFocusOn(e.target.value)}
+                          />
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleGenerateReviewQuestions}
+                        >
+                          Continue
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </div>
+                </AlertDialog>
+
+                <div className="flex items-center justify-center space-x-2 mb-5">
+                  <RatingBubbleCardClient
+                    categories={categories}
+                    setCategories={setCategories}
+                    businessName={placesInfo[0]?.name || ""}
+                    handleSettingChange={handleSettingChange}
+                    userCardDescription={userCardDescription}
+                  />
                 </div>
-              </AlertDialog>
-              <div className="flex items-center justify-center space-x-2 mb-5">
-                <RatingBubbleCardClient
-                  categories={categories}
-                  setCategories={setCategories}
-                  businessName={placesInfo[0]?.name || ""}
-                  handleSettingChange={handleSettingChange}
-                  userCardDescription={userCardDescription}
-                />
-              </div>
+              </AnimatedLayout>
               {!settings.useBubblePlatform &&
                 settings.questions.map((rating) => (
                   <></>
@@ -586,393 +590,400 @@ export default function ClientSettings() {
                 ))}
             </TabsContent>
             <TabsContent value="email">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="clientEmail">
-                    Client Email <span className="text-red-500">*</span>
-                  </Label>
-                  <p className="text-gray-500 text-xs">
-                    {settings.worryRating
-                      ? `The email address to receive all customer concerns when their rating is between 1 to ${settings.worryRating}.`
-                      : "The email address to receive all customer concerns."}
-                  </p>
-                  <Input
-                    id="clientEmail"
-                    type="email"
-                    value={settings.clientEmail}
-                    onChange={(e) =>
-                      handleSettingChange("clientEmail", e.target.value)
-                    }
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="emailDelay">
-                    Email Delay <span className="text-red-500">*</span>
-                  </Label>
-                  <p className="text-gray-500 text-xs">
-                    The time to wait, <strong>in minutes</strong>, before
-                    sending the email addressing customer concerns.
-                  </p>
-                  <Input
-                    id="emailDelay"
-                    type="number"
-                    value={settings.emailDelay}
-                    onChange={(e) =>
-                      handleSettingChange(
-                        "emailDelay",
-                        parseInt(e.target.value)
-                      )
-                    }
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="worryRating">
-                    Worry Rating Threshold{" "}
-                    <span className="text-red-500">*</span>
-                  </Label>
-                  <p className="text-gray-500 text-xs">
-                    {settings.worryRating
-                      ? `Sets the rating limit to not allow customers from being prompted to post reviews on Google. (Ratings 1 to ${settings.worryRating} are considered negative.)`
-                      : "Sets the rating limit to not allow customers from being prompted to post reviews on Google."}
-                  </p>
-                  <Input
-                    id="worryRating"
-                    type="number"
-                    min="1"
-                    max="5"
-                    value={settings.worryRating}
-                    onChange={(e) =>
-                      handleSettingChange(
-                        "worryRating",
-                        parseInt(e.target.value)
-                      )
-                    }
-                  />
-                </div>
-                <div>
-                  <div className="flex items-center space-x-2 mt-4">
-                    <Switch
-                      id="showWorryDialog"
-                      checked={settings.showWorryDialog}
-                      onCheckedChange={(checked) =>
-                        handleSettingChange("showWorryDialog", checked)
+              <AnimatedLayout>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="clientEmail">
+                      Client Email <span className="text-red-500">*</span>
+                    </Label>
+                    <p className="text-gray-500 text-xs">
+                      {settings.worryRating
+                        ? `The email address to receive all customer concerns when their rating is between 1 to ${settings.worryRating}.`
+                        : "The email address to receive all customer concerns."}
+                    </p>
+                    <Input
+                      id="clientEmail"
+                      type="email"
+                      value={settings.clientEmail}
+                      onChange={(e) =>
+                        handleSettingChange("clientEmail", e.target.value)
+                      }
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="emailDelay">
+                      Email Delay <span className="text-red-500">*</span>
+                    </Label>
+                    <p className="text-gray-500 text-xs">
+                      The time to wait, <strong>in minutes</strong>, before
+                      sending the email addressing customer concerns.
+                    </p>
+                    <Input
+                      id="emailDelay"
+                      type="number"
+                      value={settings.emailDelay}
+                      onChange={(e) =>
+                        handleSettingChange(
+                          "emailDelay",
+                          parseInt(e.target.value)
+                        )
+                      }
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="worryRating">
+                      Worry Rating Threshold{" "}
+                      <span className="text-red-500">*</span>
+                    </Label>
+                    <p className="text-gray-500 text-xs">
+                      {settings.worryRating
+                        ? `Sets the rating limit to not allow customers from being prompted to post reviews on Google. (Ratings 1 to ${settings.worryRating} are considered negative.)`
+                        : "Sets the rating limit to not allow customers from being prompted to post reviews on Google."}
+                    </p>
+                    <Input
+                      id="worryRating"
+                      type="number"
+                      min="1"
+                      max="5"
+                      value={settings.worryRating}
+                      onChange={(e) =>
+                        handleSettingChange(
+                          "worryRating",
+                          parseInt(e.target.value)
+                        )
                       }
                     />
-                    <Label htmlFor="showWorryDialog">Show Worry Dialog</Label>
                   </div>
-                  {settings.showWorryDialog && (
-                    <div>
-                      <div className="mt-2">
-                        <Label htmlFor="dialogTitle">Dialog Title</Label>
-                        <p className="text-gray-500 text-xs">
-                          This is the worry dialog title that will be shown to
-                          customers whose overall rating is less than the worry
-                          rating threshold.
-                        </p>
-                        <Input
-                          id="dialogTitle"
-                          type="text"
-                          value={settings.dialogTitle}
-                          onChange={(e) =>
-                            handleSettingChange("dialogTitle", e.target.value)
-                          }
-                          required
-                        />
-                      </div>
-                      <div className="mt-2">
-                        <Label htmlFor="dialogBody">Dialog Body</Label>
-                        <p className="text-gray-500 text-xs">
-                          This is the worry dialog body that will be shown to
-                          customers whose overall rating is less than the worry
-                          rating threshold.
-                        </p>
-                        <Textarea
-                          id="dialogBody"
-                          value={settings.dialogBody}
-                          rows={5}
-                          onChange={(e) =>
-                            handleSettingChange("dialogBody", e.target.value)
-                          }
-                          className="w-full"
-                        />
-                      </div>
+                  <div>
+                    <div className="flex items-center space-x-2 mt-4">
+                      <Switch
+                        id="showWorryDialog"
+                        checked={settings.showWorryDialog}
+                        onCheckedChange={(checked) =>
+                          handleSettingChange("showWorryDialog", checked)
+                        }
+                      />
+                      <Label htmlFor="showWorryDialog">Show Worry Dialog</Label>
                     </div>
-                  )}
+                    {settings.showWorryDialog && (
+                      <div>
+                        <div className="mt-2">
+                          <Label htmlFor="dialogTitle">Dialog Title</Label>
+                          <p className="text-gray-500 text-xs">
+                            This is the worry dialog title that will be shown to
+                            customers whose overall rating is less than the
+                            worry rating threshold.
+                          </p>
+                          <Input
+                            id="dialogTitle"
+                            type="text"
+                            value={settings.dialogTitle}
+                            onChange={(e) =>
+                              handleSettingChange("dialogTitle", e.target.value)
+                            }
+                            required
+                          />
+                        </div>
+                        <div className="mt-2">
+                          <Label htmlFor="dialogBody">Dialog Body</Label>
+                          <p className="text-gray-500 text-xs">
+                            This is the worry dialog body that will be shown to
+                            customers whose overall rating is less than the
+                            worry rating threshold.
+                          </p>
+                          <Textarea
+                            id="dialogBody"
+                            value={settings.dialogBody}
+                            rows={5}
+                            onChange={(e) =>
+                              handleSettingChange("dialogBody", e.target.value)
+                            }
+                            className="w-full"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </AnimatedLayout>
             </TabsContent>
             <TabsContent value="locations">
-              <div className="space-y-4">
-                <div>
-                  <div className="mb-4">
-                    <Separator className="mt-5 mb-5" />
-                    <div hidden={isOnlineBusiness}>
-                      <Label htmlFor="placeIds">In Store Kiosk Links</Label>
+              <AnimatedLayout>
+                <div className="space-y-4">
+                  <div>
+                    <div className="mb-4">
+                      <Separator className="mt-5 mb-5" />
+                      <div hidden={isOnlineBusiness}>
+                        <Label htmlFor="placeIds">In Store Kiosk Links</Label>
+                        <p className="text-gray-500 text-xs">
+                          The links that is used for in store reviews, for
+                          example, in an in store iPad, to leave feedback.
+                        </p>
+                        {locationURLS.map((website, index) => (
+                          <div key={index}>
+                            <Button
+                              variant="ghost"
+                              disabled={categories.length == 0}
+                              className="p-0 inline-flex items-center justify-center hover:bg-transparent hover:text-current focus:ring-0 active:bg-transparent"
+                              onClick={() =>
+                                openQrCode(placesInfo[index].name, website)
+                              }
+                            >
+                              <div className="text-lg font-medium">
+                                <Badge className="text-white">
+                                  {" " + placesInfo[index].name}{" "}
+                                  <Tablet size={12} className="ml-2" />
+                                </Badge>
+                              </div>
+                            </Button>
+                          </div>
+                        ))}
+                        {openQrLinkDialog && (
+                          <div className="flex justify-center p-4">
+                            <Dialog
+                              open={openQrLinkDialog}
+                              onOpenChange={setOpenQrLinkDialog}
+                            >
+                              <DialogContent className="w-half max-w-2xl">
+                                <DialogHeader className="justify-center items-center">
+                                  <DialogTitle>Kiosk QR Code</DialogTitle>
+                                  <DialogDescription>
+                                    Scan this QR code with your iPad or any
+                                    device to open the link for{" "}
+                                    <a
+                                      href={qrLink}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      <strong>{qrName}</strong>
+                                    </a>
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <div className="flex justify-center p-6 bg-background rounded-lg">
+                                  <QRCodeSVG value={qrLink} size={200} />
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                          </div>
+                        )}
+                        <Separator className="mt-5 mb-5" />
+                      </div>
+                      <Label htmlFor="placeIds">
+                        {isOnlineBusiness
+                          ? "Social Links"
+                          : "Customer Device Links"}
+                      </Label>
                       <p className="text-gray-500 text-xs">
-                        The links that is used for in store reviews, for
-                        example, in an in store iPad, to leave feedback.
+                        {isOnlineBusiness
+                          ? "The link to use with your Social Media accounts so your followers can engage quickly."
+                          : "The links that customers will tap/scan with their own personal devices to leave feedback."}
                       </p>
-                      {locationURLS.map((website, index) => (
+                      {websiteURLS.map((website, index) => (
                         <div key={index}>
                           <Button
                             variant="ghost"
                             disabled={categories.length == 0}
                             className="p-0 inline-flex items-center justify-center hover:bg-transparent hover:text-current focus:ring-0 active:bg-transparent"
                             onClick={() =>
-                              openQrCode(placesInfo[index].name, website)
+                              openQrCodeInStore(placesInfo[index].name, website)
                             }
                           >
                             <div className="text-lg font-medium">
-                              <Badge className="text-white">
-                                {" " + placesInfo[index].name}{" "}
-                                <Tablet size={12} className="ml-2" />
-                              </Badge>
+                              <div className="flex flex-row">
+                                {isOnlineBusiness && (
+                                  <Badge variant="outline">
+                                    <InstagramLogoIcon className="mr-2" />
+                                    <FaTiktok className="mr-2" />
+                                    <FaYoutube size={16} className="mr-2" />
+                                    <RiTwitterXLine />
+                                  </Badge>
+                                )}
+                                {!isOnlineBusiness && (
+                                  <>
+                                    <Badge className="text-white">
+                                      {" " + placesInfo[index].name}{" "}
+                                      <NfcIcon size={12} className="ml-2" />{" "}
+                                      <ScanQrCode size={12} className="ml-2" />
+                                    </Badge>
+                                  </>
+                                )}
+                              </div>
                             </div>
                           </Button>
                         </div>
                       ))}
-                      {openQrLinkDialog && (
+                      {openQrLinkInStoreDialog && (
                         <div className="flex justify-center p-4">
                           <Dialog
-                            open={openQrLinkDialog}
-                            onOpenChange={setOpenQrLinkDialog}
+                            open={openQrLinkInStoreDialog}
+                            onOpenChange={setOpenQrLinkInStoreDialog}
                           >
                             <DialogContent className="w-half max-w-2xl">
-                              <DialogHeader className="justify-center items-center">
-                                <DialogTitle>Kiosk QR Code</DialogTitle>
-                                <DialogDescription>
-                                  Scan this QR code with your iPad or any device
-                                  to open the link for{" "}
-                                  <a
-                                    href={qrLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                              <div hidden={accountType === "influencer"}>
+                                <DialogHeader className="justify-center items-center">
+                                  <DialogTitle>
+                                    {" "}
+                                    {isOnlineBusiness
+                                      ? "Printable QR Code"
+                                      : "Personal Device QR Code"}
+                                  </DialogTitle>
+                                  <DialogDescription>
+                                    Print this QR code for customers to scan
+                                    with ease to leave feedback for{" "}
+                                    <a
+                                      href={qrLinkInStore}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      <strong>{qrNameInStore}</strong>
+                                    </a>
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <div
+                                  ref={qrCodeInStoreRef}
+                                  className="flex justify-center p-6 bg-background rounded-lg"
+                                >
+                                  <QRCodeSVG value={qrLinkInStore} size={200} />
+                                </div>
+                                <div className="flex justify-center items-center">
+                                  <Button
+                                    onClick={handleDownload}
+                                    variant="ghost"
                                   >
-                                    <strong>{qrName}</strong>
-                                  </a>
-                                </DialogDescription>
-                              </DialogHeader>
+                                    <ImageUp />
+                                  </Button>
+                                </div>
+                                <Separator />
+                              </div>
+                              <DialogTitle className="text-center">
+                                {isOnlineBusiness
+                                  ? "Social Bio/Post Link"
+                                  : "Personal Device NFC Link"}
+                              </DialogTitle>
+                              <DialogDescription>
+                                {isOnlineBusiness
+                                  ? "Pop this link on your social bio or post so your followers can easily leave feedback for "
+                                  : "Copy the link and program it into your NFC tag so customers can easily tap to access it to leave feedback for "}
+
+                                <a
+                                  href={qrLinkInStore}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <strong>{qrNameInStore}</strong>
+                                </a>
+                              </DialogDescription>
                               <div className="flex justify-center p-6 bg-background rounded-lg">
-                                <QRCodeSVG value={qrLink} size={200} />
+                                <Button
+                                  variant="ghost"
+                                  disabled={categories.length === 0}
+                                  className="p-0 inline-flex items-center justify-center hover:bg-transparent hover:text-current focus:ring-0 active:bg-transparent"
+                                  onClick={() =>
+                                    handleBadgeClick(0, qrLinkInStore)
+                                  }
+                                >
+                                  <div className="text-lg font-medium">
+                                    <Badge className="" variant="outline">
+                                      {qrLinkInStore}
+                                    </Badge>
+                                  </div>
+                                </Button>
                               </div>
                             </DialogContent>
+                            <DialogFooter></DialogFooter>
                           </Dialog>
                         </div>
                       )}
                       <Separator className="mt-5 mb-5" />
-                    </div>
-                    <Label htmlFor="placeIds">
-                      {isOnlineBusiness
-                        ? "Social Links"
-                        : "Customer Device Links"}
-                    </Label>
-                    <p className="text-gray-500 text-xs">
-                      {isOnlineBusiness
-                        ? "The link to use with your Social Media accounts so your followers can engage quickly."
-                        : "The links that customers will tap/scan with their own personal devices to leave feedback."}
-                    </p>
-                    {websiteURLS.map((website, index) => (
-                      <div key={index}>
-                        <Button
-                          variant="ghost"
-                          disabled={categories.length == 0}
-                          className="p-0 inline-flex items-center justify-center hover:bg-transparent hover:text-current focus:ring-0 active:bg-transparent"
-                          onClick={() =>
-                            openQrCodeInStore(placesInfo[index].name, website)
+                      <div className="flex items-center space-x-2 mt-2">
+                        <Switch
+                          id="showComplimentaryItem"
+                          checked={settings.showComplimentaryItem}
+                          disabled={!settings.showWorryDialog}
+                          onCheckedChange={(checked) =>
+                            handleSettingChange(
+                              "showComplimentaryItem",
+                              checked
+                            )
                           }
-                        >
-                          <div className="text-lg font-medium">
-                            <div className="flex flex-row">
-                              {isOnlineBusiness && (
-                                <Badge variant="outline">
-                                  <InstagramLogoIcon className="mr-2" />
-                                  <FaTiktok className="mr-2" />
-                                  <FaYoutube size={16} className="mr-2" />
-                                  <RiTwitterXLine />
-                                </Badge>
-                              )}
-                              {!isOnlineBusiness && (
-                                <>
-                                  <Badge className="text-white">
-                                    {" " + placesInfo[index].name}{" "}
-                                    <NfcIcon size={12} className="ml-2" />{" "}
-                                    <ScanQrCode size={12} className="ml-2" />
-                                  </Badge>
-                                </>
-                              )}
-                            </div>
-                          </div>
-                        </Button>
+                        />
+                        <Label htmlFor="showComplimentaryItem">
+                          Offer Complimentary Item
+                        </Label>
                       </div>
-                    ))}
-                    {openQrLinkInStoreDialog && (
-                      <div className="flex justify-center p-4">
-                        <Dialog
-                          open={openQrLinkInStoreDialog}
-                          onOpenChange={setOpenQrLinkInStoreDialog}
-                        >
-                          <DialogContent className="w-half max-w-2xl">
-                            <div hidden={accountType === "influencer"}>
-                              <DialogHeader className="justify-center items-center">
-                                <DialogTitle>
-                                  {" "}
-                                  {isOnlineBusiness
-                                    ? "Printable QR Code"
-                                    : "Personal Device QR Code"}
-                                </DialogTitle>
-                                <DialogDescription>
-                                  Print this QR code for customers to scan with
-                                  ease to leave feedback for{" "}
-                                  <a
-                                    href={qrLinkInStore}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    <strong>{qrNameInStore}</strong>
-                                  </a>
-                                </DialogDescription>
-                              </DialogHeader>
-                              <div
-                                ref={qrCodeInStoreRef}
-                                className="flex justify-center p-6 bg-background rounded-lg"
-                              >
-                                <QRCodeSVG value={qrLinkInStore} size={200} />
-                              </div>
-                              <div className="flex justify-center items-center">
-                                <Button
-                                  onClick={handleDownload}
-                                  variant="ghost"
-                                >
-                                  <ImageUp />
-                                </Button>
-                              </div>
-                              <Separator />
-                            </div>
-                            <DialogTitle className="text-center">
-                              {isOnlineBusiness
-                                ? "Social Bio/Post Link"
-                                : "Personal Device NFC Link"}
-                            </DialogTitle>
-                            <DialogDescription>
-                              {isOnlineBusiness
-                                ? "Pop this link on your social bio or post so your followers can easily leave feedback for "
-                                : "Copy the link and program it into your NFC tag so customers can easily tap to access it to leave feedback for "}
-
-                              <a
-                                href={qrLinkInStore}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <strong>{qrNameInStore}</strong>
-                              </a>
-                            </DialogDescription>
-                            <div className="flex justify-center p-6 bg-background rounded-lg">
-                              <Button
-                                variant="ghost"
-                                disabled={categories.length === 0}
-                                className="p-0 inline-flex items-center justify-center hover:bg-transparent hover:text-current focus:ring-0 active:bg-transparent"
-                                onClick={() =>
-                                  handleBadgeClick(0, qrLinkInStore)
-                                }
-                              >
-                                <div className="text-lg font-medium">
-                                  <Badge className="" variant="outline">
-                                    {qrLinkInStore}
-                                  </Badge>
-                                </div>
-                              </Button>
-                            </div>
-                          </DialogContent>
-                          <DialogFooter></DialogFooter>
-                        </Dialog>
-                      </div>
-                    )}
-                    <Separator className="mt-5 mb-5" />
-                                      <div className="flex items-center space-x-2 mt-2">
-                    <Switch
-                      id="showComplimentaryItem"
-                      checked={settings.showComplimentaryItem}
-                      disabled={!settings.showWorryDialog}
-                      onCheckedChange={(checked) =>
-                        handleSettingChange("showComplimentaryItem", checked)
-                      }
-                    />
-                    <Label htmlFor="showComplimentaryItem">
-                      Offer Complimentary Item
-                    </Label>
-                  </div>
-                  {settings.showComplimentaryItem && (
-                    <div className="mt-2">
-                      <p className="text-gray-500 text-xs">
-                        {
-                          "Specify the complimentary items you'd like to offer, which will be shown on the vero homepage."
-                        }
-                      </p>
-                      <Input
-                        id="complimentaryItem"
-                        placeholder="10% off Item A, $2 off next purchase, etc..."
-                        value={settings.complimentaryItem}
-                        onChange={(e) =>
-                          handleSettingChange(
-                            "complimentaryItem",
-                            e.target.value
-                          )
-                        }
-                      />
-                    </div>
-                  )}
-                    <div hidden={isOnlineBusiness}>
-                      <Separator className="mt-5 mb-5" />
-                      <Label htmlFor="keywords">Google Keywords</Label>
-                      <p className="text-gray-500 text-xs mb-2">
-                        Keywords that will be naturally integrated into
-                        customer-generated reviews for posting on Google
-                        Reviews.
-                      </p>
-                      <div className="flex flex-wrap gap-2 mb-2">
-                        {keywords.map((keyword) => (
-                          <Badge
-                            key={keyword}
-                            variant="secondary"
-                            className="bg-green-500 text-white hover:bg-red-500 cursor-pointer"
-                            onClick={() => handleRemoveKeyword(keyword)}
-                          >
-                            {keyword}
-                            <XIcon className="ml-2 h-4 w-4" />
-                          </Badge>
-                        ))}
-                      </div>
-                      {isAddingKeyword ? (
-                        <div className="flex items-center gap-2">
+                      {settings.showComplimentaryItem && (
+                        <div className="mt-2">
+                          <p className="text-gray-500 text-xs">
+                            {
+                              "Specify the complimentary items you'd like to offer, which will be shown on the vero homepage."
+                            }
+                          </p>
                           <Input
-                            value={newKeyword}
-                            onChange={(e) => setNewKeyword(e.target.value)}
-                            placeholder="Enter new keyword"
-                            className="flex-grow"
+                            id="complimentaryItem"
+                            placeholder="10% off Item A, $2 off next purchase, etc..."
+                            value={settings.complimentaryItem}
+                            onChange={(e) =>
+                              handleSettingChange(
+                                "complimentaryItem",
+                                e.target.value
+                              )
+                            }
                           />
-                          <Button onClick={handleAddKeyword}>Save</Button>
-                          <Button
-                            variant="outline"
-                            onClick={() => setIsAddingKeyword(false)}
-                          >
-                            Cancel
-                          </Button>
                         </div>
-                      ) : (
-                        <Button
-                          onClick={() => setIsAddingKeyword(true)}
-                          variant="ghost"
-                        >
-                          <PlusCircle className="mr-2 h-4 w-4" />
-                          Add Keyword
-                        </Button>
                       )}
+                      <div hidden={isOnlineBusiness}>
+                        <Separator className="mt-5 mb-5" />
+                        <Label htmlFor="keywords">Google Keywords</Label>
+                        <p className="text-gray-500 text-xs mb-2">
+                          Keywords that will be naturally integrated into
+                          customer-generated reviews for posting on Google
+                          Reviews.
+                        </p>
+                        <div className="flex flex-wrap gap-2 mb-2">
+                          {keywords.map((keyword) => (
+                            <Badge
+                              key={keyword}
+                              variant="secondary"
+                              className="bg-green-500 text-white hover:bg-red-500 cursor-pointer"
+                              onClick={() => handleRemoveKeyword(keyword)}
+                            >
+                              {keyword}
+                              <XIcon className="ml-2 h-4 w-4" />
+                            </Badge>
+                          ))}
+                        </div>
+                        {isAddingKeyword ? (
+                          <div className="flex items-center gap-2">
+                            <Input
+                              value={newKeyword}
+                              onChange={(e) => setNewKeyword(e.target.value)}
+                              placeholder="Enter new keyword"
+                              className="flex-grow"
+                            />
+                            <Button onClick={handleAddKeyword}>Save</Button>
+                            <Button
+                              variant="outline"
+                              onClick={() => setIsAddingKeyword(false)}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        ) : (
+                          <Button
+                            onClick={() => setIsAddingKeyword(true)}
+                            variant="ghost"
+                          >
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            Add Keyword
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </AnimatedLayout>
             </TabsContent>
           </Tabs>
         )}
