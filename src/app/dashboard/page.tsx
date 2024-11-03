@@ -118,29 +118,29 @@ export default function Dashboard() {
 
   return (
     <AnimatedLayout>
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">Vero Dashboard</h1>
-      <Summary
-        averageRating={averageRating}
-        totalReviews={totalReviews}
-        searchQueryGpt={searchQueryGpt}
-        setSearchQueryGpt={setSearchQueryGpt}
-        handleSubmit={handleSubmit}
-        loading={loading}
-        returnedGraph={returnedGraph}
-        handlePreMadeQueryClick={handlePreMadeQueryClick}
-        preMadeQueries={preMadeQueries}
-        BarChart={Bar}
-        PieChart={Pie}
-        LineChart={Line}
-        DoughnutChart={Doughnut}
-        RadarChart={Radar}
-        PolarAreaChart={PolarArea}
-        BubbleChart={Bubble}
-        ScatterChart={Scatter}
-        toast={toast}
-      />
-    </div>
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-4 text-center">Vero Dashboard</h1>
+        <Summary
+          averageRating={averageRating}
+          totalReviews={totalReviews}
+          searchQueryGpt={searchQueryGpt}
+          setSearchQueryGpt={setSearchQueryGpt}
+          handleSubmit={handleSubmit}
+          loading={loading}
+          returnedGraph={returnedGraph}
+          handlePreMadeQueryClick={handlePreMadeQueryClick}
+          preMadeQueries={preMadeQueries}
+          BarChart={Bar}
+          PieChart={Pie}
+          LineChart={Line}
+          DoughnutChart={Doughnut}
+          RadarChart={Radar}
+          PolarAreaChart={PolarArea}
+          BubbleChart={Bubble}
+          ScatterChart={Scatter}
+          toast={toast}
+        />
+      </div>
     </AnimatedLayout>
   );
 }

@@ -207,7 +207,9 @@ export default function SummaryTab({
     if (data.length === 0) return 0; // Return 0 if there's no data
 
     const totalReviewTime = data.reduce((total, review) => {
-      return !review.posted_with_in_store_mode ? total + review.time_taken_to_write_review_in_seconds : total;
+      return !review.posted_with_in_store_mode
+        ? total + review.time_taken_to_write_review_in_seconds
+        : total;
     }, 0);
 
     const averageReviewTime = Math.round(totalReviewTime / data.length); // Calculate average
@@ -499,7 +501,9 @@ export default function SummaryTab({
             </CardHeader>
 
             {isTableLoading && topCustomers && <TableSkeletonLoader />}
-            {!isTableLoading && topCustomers && <TopCustomersTable customers={topCustomers} />}
+            {!isTableLoading && topCustomers && (
+              <TopCustomersTable customers={topCustomers} />
+            )}
           </Card>
         </div>
         {!isSocialMediaAccount && (

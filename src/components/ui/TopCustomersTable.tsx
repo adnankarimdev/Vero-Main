@@ -36,8 +36,7 @@ export default function TopCustomersTable({
                 className="flex items-center hover:text-primary transition-colors"
                 aria-label={`Send email to ${customer.email}`}
               >
-               
-              <Badge className="bg-emerald-500">{customer.email}</Badge>
+                <Badge className="bg-emerald-500">{customer.email}</Badge>
               </a>
             </TableCell>
             <TableCell className="font-medium text-right">
