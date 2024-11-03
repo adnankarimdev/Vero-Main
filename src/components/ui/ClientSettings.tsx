@@ -112,7 +112,9 @@ export default function ClientSettings() {
     emailDelay: 60,
     keywords: [],
     cardDescription: "",
+    chosenIcon: "Star",
   });
+  const [chosenIcon, setChosenIcon] = useState("Star");
   const [placeIds, setPlaceIds] = useState([]);
   const [placesInfo, setPlacesInfo] = useState<Place[]>([]);
   const [websiteURLS, setWebsiteURLS] = useState([]);
@@ -426,6 +428,7 @@ export default function ClientSettings() {
         setCategories(reviewSettingsResponse.data.categories);
         setUserCardDescription(reviewSettingsResponse.data.card_description);
         setCompanyWebsites(reviewSettingsResponse.data.companyUrls);
+        setChosenIcon(reviewSettingsResponse.data.chosen_icon);
         setIsTabsLoading(false);
         if (reviewSettingsResponse.data.questions.length == 0) {
           handleSettingChange(
@@ -535,6 +538,8 @@ export default function ClientSettings() {
                     businessName={placesInfo[0]?.name || ""}
                     handleSettingChange={handleSettingChange}
                     userCardDescription={userCardDescription}
+                    chosenIcon={chosenIcon}
+                    setChosenIcon={setChosenIcon}
                   />
                 </div>
               </AnimatedLayout>

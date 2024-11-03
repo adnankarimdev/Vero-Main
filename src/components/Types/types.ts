@@ -1,3 +1,4 @@
+import { flattenedIconMap } from "@/utils/IconList";
 export type KeywordCounts = {
   [key: string]: number;
 };
@@ -53,6 +54,8 @@ export interface CustomerReviewInfo {
 }
 
 export type TopCustomer = { email: string; count: number };
+export type IconMapType = typeof flattenedIconMap;
+
 export interface CustomerReviewInfoFromSerializer {
   analyzed_review_details: object;
   customer_email: string;

@@ -9,11 +9,22 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { IconMapType } from "../Types/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Star, Plus, X, Pencil } from "lucide-react";
+import { iconMap, flattenedIconMap } from "@/utils/IconList";
 
 interface Category {
   name: string;
@@ -26,6 +37,8 @@ interface RatingBubbleCardClientProps {
   setCategories: any;
   handleSettingChange: any;
   userCardDescription?: string;
+  chosenIcon?: string;
+  setChosenIcon?: any;
 }
 
 export default function RatingBubbleCardClient({
@@ -34,6 +47,8 @@ export default function RatingBubbleCardClient({
   setCategories,
   handleSettingChange,
   userCardDescription,
+  chosenIcon,
+  setChosenIcon,
 }: RatingBubbleCardClientProps) {
   const [categoryRatings, setCategoryRatings] = useState<{
     [key: string]: number;
@@ -83,6 +98,10 @@ export default function RatingBubbleCardClient({
     handleSettingChange("categories", categories);
   }, [categories]); // Whenever categories update, this effect will trigger
 
+  const handleIconChange = (value: string) => {
+    setChosenIcon(value);
+    handleSettingChange("chosenIcon", value);
+  };
   const handleCategoryRating = (categoryName: string, newRating: number) => {
     setCategoryRatings((prev) => ({ ...prev, [categoryName]: newRating }));
     setSelectedBadges((prevBadges) => ({
@@ -201,11 +220,78 @@ export default function RatingBubbleCardClient({
     });
   };
 
+  const SelectedIcon = flattenedIconMap[chosenIcon as keyof IconMapType];
+
   return (
     <Card className="w-full max-w-3xl border-0">
       <CardHeader>
-        <CardTitle className="flex items-center justify-center space-x-1 text-sm">
-          {businessName}
+        <CardTitle className="relative flex items-center justify-center text-sm">
+          {/* Title centered in the middle */}
+          <div className="absolute left-0 top-0">
+            <Select onValueChange={handleIconChange} defaultValue={chosenIcon}>
+              <SelectTrigger className="w-half h-1/4">
+                {" "}
+                {/* Adjust width as needed */}
+                <SelectValue placeholder="Select an icon" />
+              </SelectTrigger>
+              <SelectContent>
+                {/* Map through icon groups */}
+                <SelectGroup>
+                  <SelectLabel>{"Traditional"}</SelectLabel>
+                  {Object.entries(iconMap.actions).map(
+                    ([key, IconComponent]) => (
+                      <SelectItem key={key} value={key}>
+                        <IconComponent size={12} />
+                      </SelectItem>
+                    )
+                  )}
+                </SelectGroup>
+                <SelectGroup>
+                  <SelectLabel>{"Symbols"}</SelectLabel>
+                  {Object.entries(iconMap.emotionsAndSymbols).map(
+                    ([key, IconComponent]) => (
+                      <SelectItem key={key} value={key}>
+                        <IconComponent size={12} />
+                      </SelectItem>
+                    )
+                  )}
+                </SelectGroup>
+                <SelectGroup>
+                  <SelectLabel>{"Animals"}</SelectLabel>
+                  {Object.entries(iconMap.animals).map(
+                    ([key, IconComponent]) => (
+                      <SelectItem key={key} value={key}>
+                        <IconComponent size={12} />
+                      </SelectItem>
+                    )
+                  )}
+                </SelectGroup>
+                <SelectGroup>
+                  <SelectLabel>{"Food & Drinks"}</SelectLabel>
+                  {Object.entries(iconMap.foodAndDrink).map(
+                    ([key, IconComponent]) => (
+                      <SelectItem key={key} value={key}>
+                        <IconComponent size={12} />
+                      </SelectItem>
+                    )
+                  )}
+                </SelectGroup>
+                <SelectGroup>
+                  <SelectLabel>{"Fitness"}</SelectLabel>
+                  {Object.entries(iconMap.healthAndFitness).map(
+                    ([key, IconComponent]) => (
+                      <SelectItem key={key} value={key}>
+                        <IconComponent size={12} />
+                      </SelectItem>
+                    )
+                  )}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Centered Title */}
+          <span>{businessName}</span>
         </CardTitle>
         {isEditing ? (
           <Input
@@ -251,12 +337,12 @@ export default function RatingBubbleCardClient({
               >
                 <div className="flex items-center space-x-1 justify-center">
                   {[...Array(5)].map((_, i) => (
-                    <Star
+                    <SelectedIcon
                       key={i}
                       className={`w-5 h-5 cursor-pointer ${
                         i < categoryRatings[category.name]
-                          ? "text-primary fill-primary"
-                          : "text-muted stroke-muted-foreground"
+                          ? "text-yellow-400"
+                          : "text-neutral-400"
                       }`}
                       onClick={() => handleCategoryRating(category.name, i + 1)}
                     />
