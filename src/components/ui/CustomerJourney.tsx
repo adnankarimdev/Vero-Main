@@ -411,7 +411,7 @@ export default function CustomerJourney() {
                           </TooltipTrigger>
                           <TooltipContent className="bg-white text-black border border-gray-200 shadow-md">
                             <p>
-                              {`${customerEmail.split("@")[0]}'s rating dropped from their last two visits. `}
+                              {`${customerEmail.split("@")[0]}'s rating has stayed the same from their last two visits. `}
                             </p>
                           </TooltipContent>
                         </Tooltip>
