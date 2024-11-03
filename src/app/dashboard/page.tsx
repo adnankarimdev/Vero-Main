@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
+import AnimatedLayout from "@/animations/AnimatedLayout";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Bar,
@@ -116,6 +117,7 @@ export default function Dashboard() {
   ).toFixed(1);
 
   return (
+    <AnimatedLayout>
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">Vero Dashboard</h1>
       <Summary
@@ -139,5 +141,6 @@ export default function Dashboard() {
         toast={toast}
       />
     </div>
+    </AnimatedLayout>
   );
 }
