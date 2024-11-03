@@ -6,9 +6,17 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+import {
   Star,
   MessageCircle,
   ThumbsUp,
+  ChevronDown,
   Shield,
   ArrowRight,
   Menu,
@@ -51,6 +59,7 @@ const LandingPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [currentSlide, setCurrentSlide] = useState(0)
   const [currentCustomerSlide, setCurrentCustomerSlide] = useState(0)
+  const [isFeaturesOpen, setIsFeaturesOpen] = useState(false)
   const router = useRouter()
 
   const onGetStarted = () => {
@@ -110,29 +119,48 @@ const LandingPage = () => {
             <span className="text-2xl font-bold text-gray-900">Vero</span>
           </Link>
           <nav className="hidden md:flex space-x-8">
+          <DropdownMenu open={isFeaturesOpen} onOpenChange={setIsFeaturesOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          className="text-sm font-medium hover:text-gray-600 transition-colors flex items-center"
+        >
+          Product
+          <ChevronDown
+            className={`ml-1 h-4 w-4 transition-transform duration-200 ${
+              isFeaturesOpen ? "rotate-180" : ""
+            }`}
+          />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-48">
+        <DropdownMenuItem asChild>
+          <Link href="#" className="w-full">
+            Dashboard
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="#" className="w-full">
+            Badges
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="#" className="w-full">
+            Customer Journies
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="#" className="w-full">
+            Reviews
+          </Link>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
             <Link
-              className="text-sm font-medium hover:text-gray-600 transition-colors"
-              href="#"
-            >
-              Features
-            </Link>
-            <Link
-              className="text-sm font-medium hover:text-gray-600 transition-colors"
-              href="#"
-            >
-              Templates
-            </Link>
-            <Link
-              className="text-sm font-medium hover:text-gray-600 transition-colors"
+              className="text-sm font-medium hover:text-gray-600 transition-colors mt-2"
               href="#"
             >
               Pricing
-            </Link>
-            <Link
-              className="text-sm font-medium hover:text-gray-600 transition-colors"
-              href="#"
-            >
-              About
             </Link>
           </nav>
           <Button
@@ -260,9 +288,6 @@ const LandingPage = () => {
                 ))}
               </div>
             <div className="flex justify-center space-x-4">
-              <Button variant="default" size="lg" onClick={onGetStarted}>
-                Get Started
-              </Button>
               <Button variant="outline" size="lg" onClick={() => window.open("https://calendly.com/adnan-karim-vero-io/vero-demo", "_blank")}>
                 Schedule a Demo
               </Button>
