@@ -108,7 +108,7 @@ export default function GoogleAutoRespond() {
               <Label htmlFor="review">Reviewer Google Review</Label>
               <Textarea
                 id="review"
-                placeholder="Paste the Google review here..."
+                placeholder="Paste the Google review here"
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 className="min-h-[200px] flex-grow"
@@ -138,7 +138,7 @@ export default function GoogleAutoRespond() {
                 onChange={(e) => setResponse(e.target.value)}
                 rows={30}
                 className="min-h-[300px]"
-                placeholder="Your generated response will appear here..."
+                placeholder="Your generated response will appear here"
               />
             )}
           </CardContent>
