@@ -124,6 +124,29 @@ export default function CustomerJourney() {
     return false; // Improvement Noted
   }
 
+  function hasRatingTheSame(reviews: any) {
+    if (reviews.length < 2) {
+      // Not enough reviews to notice improvement
+      return false;
+    }
+
+    // Sort reviews by review date to compare in chronological order
+    const sortedReviews = reviews.sort(
+      (a: any, b: any) =>
+        new Date(a.review_date).getTime() - new Date(b.review_date).getTime()
+    );
+
+    // Check for drop in ratings
+    if (
+      sortedReviews[sortedReviews.length - 1].rating ==
+      sortedReviews[sortedReviews.length - 2].rating
+    ) {
+      return true; // No Improvement noted
+    }
+
+    return false; // Improvement Noted
+  }
+
   useEffect(() => {
     setIsLoading(true);
     const fetchData = async () => {
@@ -364,6 +387,26 @@ export default function CustomerJourney() {
                               )}
                             >
                               Rating Drop
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-white text-black border border-gray-200 shadow-md">
+                            <p>
+                              {`${customerEmail.split("@")[0]}'s rating dropped from their last two visits. `}
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                    {hasRatingTheSame(customerJournies[customer_email]) && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Badge
+                              className={cn(
+                                "bg-yellow-600 text-white font-medium mt-2 ml-2"
+                              )}
+                            >
+                              No Change
                             </Badge>
                           </TooltipTrigger>
                           <TooltipContent className="bg-white text-black border border-gray-200 shadow-md">
