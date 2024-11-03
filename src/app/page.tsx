@@ -216,6 +216,47 @@ const LandingPage = () => {
         )}
       </header>
       <main className="flex-1">
+      <section className="container mx-auto px-4 py-24 md:py-32 lg:py-24">
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+            Customer Feedback in seconds.
+            </h1>
+            <p className="text-xl max-w-2xl mx-auto">
+              Routing experiences to their respective channels.
+            </p>
+            <div className="relative">
+              <Image
+                src={customerSlides[currentCustomerSlide].src}
+                alt={customerSlides[currentCustomerSlide].alt}
+                width={800}
+                height={400}
+                layout="responsive" // Automatically scales images
+                className="rounded-lg shadow-lg"
+              />
+            </div>
+            <div className="flex justify-center space-x-4">
+                {customerSlides.map((slide, index) => (
+                  <Badge
+                    key={index}
+                    variant={currentCustomerSlide === index ? "default" : "outline"}
+                    className="cursor-pointer"
+                    onClick={() => goToCustomerSlide(index)}
+                  >
+                  <slide.icon size={12} className="mr-2" />{slide.label}
+                  </Badge>
+                ))}
+              </div>
+            <div className="flex justify-center space-x-4">
+            <Button variant="default" size="lg" onClick={onGetStarted}>
+                Get Started
+              </Button>
+              <Button variant="outline" size="lg" onClick={() => window.open("https://calendly.com/adnan-karim-vero-io/vero-demo", "_blank")}>
+                Schedule a Demo
+              </Button>
+            </div>
+          </div>
+        </section>
+
         <section className="container mx-auto px-4 py-24 md:py-32 lg:py-40">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
@@ -247,9 +288,6 @@ const LandingPage = () => {
                 ))}
               </div>
             <div className="flex justify-center space-x-4">
-              <Button variant="default" size="lg" onClick={onGetStarted}>
-                Get Started
-              </Button>
               <Button variant="outline" size="lg" onClick={() => window.open("https://calendly.com/adnan-karim-vero-io/vero-demo", "_blank")}>
                 Schedule a Demo
               </Button>
@@ -257,43 +295,6 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <section className="container mx-auto px-4 py-24 md:py-32 lg:py-24">
-          <div className="max-w-4xl mx-auto text-center space-y-8">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-            Customer Feedback in seconds.
-            </h1>
-            <p className="text-xl max-w-2xl mx-auto">
-              Routing experiences to their respective channels.
-            </p>
-            <div className="relative">
-              <Image
-                src={customerSlides[currentCustomerSlide].src}
-                alt={customerSlides[currentCustomerSlide].alt}
-                width={800}
-                height={400}
-                layout="responsive" // Automatically scales images
-                className="rounded-lg shadow-lg"
-              />
-            </div>
-            <div className="flex justify-center space-x-4">
-                {customerSlides.map((slide, index) => (
-                  <Badge
-                    key={index}
-                    variant={currentCustomerSlide === index ? "default" : "outline"}
-                    className="cursor-pointer"
-                    onClick={() => goToCustomerSlide(index)}
-                  >
-                  <slide.icon size={12} className="mr-2" />{slide.label}
-                  </Badge>
-                ))}
-              </div>
-            <div className="flex justify-center space-x-4">
-              <Button variant="outline" size="lg" onClick={() => window.open("https://calendly.com/adnan-karim-vero-io/vero-demo", "_blank")}>
-                Schedule a Demo
-              </Button>
-            </div>
-          </div>
-        </section>
 
         <section className="py-24">
           <div className="container mx-auto px-4">
