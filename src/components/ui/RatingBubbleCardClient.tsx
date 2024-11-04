@@ -240,7 +240,7 @@ export default function RatingBubbleCardClient({
       <CardHeader>
         <CardTitle className="relative flex items-center justify-center text-sm">
           {/* Title centered in the middle */}
-          <div className="absolute left-0 top-0">
+          <div className="absolute left-0 top-0 -mt-4">
             <Select onValueChange={handleIconChange} defaultValue={chosenIcon}>
               <SelectTrigger className="w-half h-1/4">
                 {" "}
