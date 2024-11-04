@@ -279,6 +279,7 @@ export default function ClientSettings() {
           });
         })
         .catch((error) => {
+          console.log(error)
           toast({
             title: "Failed to update",
             description: error.response.data.error,
