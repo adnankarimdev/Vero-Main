@@ -10,6 +10,16 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -24,6 +34,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Star, Plus, X, Pencil } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 import { iconMap, flattenedIconMap } from "@/utils/IconList";
 
 interface Category {
@@ -50,6 +61,7 @@ export default function RatingBubbleCardClient({
   chosenIcon,
   setChosenIcon,
 }: RatingBubbleCardClientProps) {
+  const { toast } = useToast();
   const [categoryRatings, setCategoryRatings] = useState<{
     [key: string]: number;
   }>(
@@ -399,46 +411,71 @@ export default function RatingBubbleCardClient({
                   </Badge>
                 ))}
             </div>
-            {editingCategory === category.name && (
-              <div className="flex items-center justify-between mt-2">
-                <Input
-                  value={newBadge}
-                  onChange={(e) => setNewBadge(e.target.value)}
-                  placeholder="New badge"
-                  className="w-128"
-                />
 
-                <div className="flex items-center space-x-2 ml-auto">
-                  <Label>Rating:</Label>
-                  <Input
-                    type="number"
-                    min="1"
-                    max="5"
-                    value={newBadgeRating}
-                    onChange={(e) => setNewBadgeRating(Number(e.target.value))}
-                    className="w-16"
-                  />
-                  <Button
-                    onClick={() => addBadgeToCategory(category.name)}
-                    variant="outline"
-                  >
-                    Add Badge
-                  </Button>
-                </div>
-              </div>
-            )}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() =>
-                setEditingCategory(
-                  editingCategory === category.name ? null : category.name
-                )
-              }
-              className="mt-2"
-            >
-              {editingCategory === category.name ? "Done" : "Edit Badges"}
-            </Button>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    setEditingCategory(
+                      editingCategory === category.name ? null : category.name
+                    )
+                  }
+                  className="mt-2"
+                >
+                  {"Add Badges"}
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>New Badge</SheetTitle>
+                  <SheetDescription>
+                    {"Add a new badge and then click done."}
+                  </SheetDescription>
+                </SheetHeader>
+                {
+                  <div className="flex flex-col mt-2">
+                    <Label className="mb-2">Badge:</Label>
+                    <Input
+                      value={newBadge}
+                      onChange={(e) => setNewBadge(e.target.value)}
+                      placeholder="New badge"
+                      className="w-128 mb-4"
+                    />
+
+                    <Label className="mb-2">Rating:</Label>
+                    <Input
+                      type="number"
+                      value={newBadgeRating}
+                      onChange={(e) => {
+                        const value = Number(e.target.value);
+                        if (value >= 1 && value <= 5) {
+                          setNewBadgeRating(value);
+                        } else {
+                          toast({
+                            title: "Rating must be between 1 & 5.",
+                            duration: 3000,
+                            variant: "destructive",
+                          });
+                        }
+                      }}
+                      className="w-16 mb-2"
+                    />
+                  </div>
+                }
+                <SheetFooter className="mt-4">
+                  <SheetClose asChild>
+                    <Button
+                      onClick={() => addBadgeToCategory(category.name)}
+                      variant="outline"
+                    >
+                      {"Done"}
+                    </Button>
+                  </SheetClose>
+                </SheetFooter>
+              </SheetContent>
+            </Sheet>
           </div>
         ))}
 

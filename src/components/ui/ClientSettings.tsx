@@ -45,6 +45,15 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
   PlusCircle,
   Trash2,
   MapPin,
@@ -279,7 +288,7 @@ export default function ClientSettings() {
           });
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
           toast({
             title: "Failed to update",
             description: error.response.data.error,
@@ -475,62 +484,61 @@ export default function ClientSettings() {
             </TabsList>
             <TabsContent value="badges">
               <AnimatedLayout>
-                <AlertDialog>
+                <Sheet>
                   <div className="flex justify-end items-center">
-                    <AlertDialogTrigger>
-                      {
-                        <Button variant="ghost">
-                          <RiAiGenerate size={24} />
-                        </Button>
-                      }
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
+                    <SheetTrigger asChild>
+                      <Button variant="ghost">
+                        <RiAiGenerate size={24} />
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent>
+                      <SheetHeader>
+                        <SheetTitle>
                           {selectedRadioValue === "overall"
                             ? "Generate Badges"
                             : "Generate Badges & Categories"}
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
+                        </SheetTitle>
+                        <SheetDescription>
                           {selectedRadioValue === "overall"
                             ? "This will generate badges. You can input which areas you'd like the Badges to be focused on. Otherwise, the Badges will be generated more generically."
                             : "This will generate badges for each category. You can input which areas you'd like the Categories to be focused on. Otherwise, the Categories will be generated more generically."}
-                          <Separator className="mb-4 mt-4" />
-                          <RadioGroup
-                            defaultValue="overall"
-                            value={selectedRadioValue}
-                            onValueChange={(value) =>
-                              setSelectedRadioValue(value)
-                            }
-                          >
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="overall" id="r1" />
-                              <Label htmlFor="r1">Overall Rating</Label>
-                            </div>
-                            {/* <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="separate" id="r2" />
-                            <Label htmlFor="r2">Separate Categories</Label>
-                          </div> */}
-                          </RadioGroup>
-                          <Textarea
-                            id="areaFocus"
-                            className="mt-4"
-                            value={areasToFocusOn}
-                            onChange={(e) => setAreasToFocusOn(e.target.value)}
-                          />
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={handleGenerateReviewQuestions}
+                        </SheetDescription>
+                      </SheetHeader>
+                      <div className="py-4">
+                        <Separator className="mb-4" />
+                        <RadioGroup
+                          defaultValue="overall"
+                          value={selectedRadioValue}
+                          onValueChange={(value) =>
+                            setSelectedRadioValue(value)
+                          }
                         >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="overall" id="r1" />
+                            <Label htmlFor="r1">Overall Rating</Label>
+                          </div>
+                          {/* Uncomment if you want to include the "Separate Categories" option
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="separate" id="r2" />
+              <Label htmlFor="r2">Separate Categories</Label>
+            </div> */}
+                        </RadioGroup>
+                        <Textarea
+                          id="areaFocus"
+                          className="mt-4"
+                          value={areasToFocusOn}
+                          onChange={(e) => setAreasToFocusOn(e.target.value)}
+                          placeholder="Enter areas to focus on..."
+                        />
+                      </div>
+                      <SheetFooter>
+                        <Button onClick={handleGenerateReviewQuestions}>
                           Continue
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
+                        </Button>
+                      </SheetFooter>
+                    </SheetContent>
                   </div>
-                </AlertDialog>
+                </Sheet>
 
                 <div className="flex items-center justify-center space-x-2 mb-5">
                   <RatingBubbleCardClient
@@ -995,7 +1003,7 @@ export default function ClientSettings() {
         )}
       </CardContent>
       <CardFooter>
-        <Button onClick={handleSave} disabled={isTabsLoading}>
+        <Button onClick={handleSave} disabled={isTabsLoading} variant="outline">
           Save Settings
         </Button>
       </CardFooter>
