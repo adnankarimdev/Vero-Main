@@ -65,6 +65,7 @@ import {
   ImageUp,
   Tablet,
   ScanQrCode,
+  Wand,
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
@@ -77,6 +78,8 @@ import LocationLinkQR from "./LocationQRCodes";
 import { InstagramLogoIcon } from "@radix-ui/react-icons";
 import { FaTiktok, FaYoutube } from "react-icons/fa";
 import AnimatedLayout from "@/animations/AnimatedLayout";
+import AnimatedWandIcon from "./AnimatedIcons/AnimatedWandIcon";
+import AnimatedSaveIcon from "./AnimatedIcons/AnimatedSaveIcon";
 
 interface Category {
   name: string;
@@ -283,7 +286,7 @@ export default function ClientSettings() {
         .then((response) => {
           toast({
             title: "Success",
-            description: "Settings Updated.",
+            description: "Settings Saved.",
             duration: 1000,
           });
         })
@@ -487,8 +490,8 @@ export default function ClientSettings() {
                 <Sheet>
                   <div className="flex justify-end items-center">
                     <SheetTrigger asChild>
-                      <Button variant="ghost">
-                        <RiAiGenerate size={24} />
+                      <Button variant="outline" size="sm" className="mb-2">
+                        <AnimatedWandIcon />
                       </Button>
                     </SheetTrigger>
                     <SheetContent>
@@ -499,9 +502,12 @@ export default function ClientSettings() {
                             : "Generate Badges & Categories"}
                         </SheetTitle>
                         <SheetDescription>
-                          {selectedRadioValue === "overall"
-                            ? "This will generate badges. You can input which areas you'd like the Badges to be focused on. Otherwise, the Badges will be generated more generically."
-                            : "This will generate badges for each category. You can input which areas you'd like the Categories to be focused on. Otherwise, the Categories will be generated more generically."}
+                          {"This will generate badges using"}{" "}
+                          <span className="text-emerald-500">AI.</span> <br />
+                          <br />{" "}
+                          {
+                            "You can input which areas you'd like the Badges to be focused on. Otherwise, the Badges will be generated more generically."
+                          }
                         </SheetDescription>
                       </SheetHeader>
                       <div className="py-4">
@@ -528,12 +534,15 @@ export default function ClientSettings() {
                           className="mt-4"
                           value={areasToFocusOn}
                           onChange={(e) => setAreasToFocusOn(e.target.value)}
-                          placeholder="Enter areas to focus on..."
+                          placeholder="Get creative!"
                         />
                       </div>
                       <SheetFooter>
-                        <Button onClick={handleGenerateReviewQuestions}>
-                          Continue
+                        <Button
+                          onClick={handleGenerateReviewQuestions}
+                          variant="outline"
+                        >
+                          Generate
                         </Button>
                       </SheetFooter>
                     </SheetContent>
@@ -1004,7 +1013,7 @@ export default function ClientSettings() {
       </CardContent>
       <CardFooter>
         <Button onClick={handleSave} disabled={isTabsLoading} variant="outline">
-          Save Settings
+          <AnimatedSaveIcon />
         </Button>
       </CardFooter>
     </Card>

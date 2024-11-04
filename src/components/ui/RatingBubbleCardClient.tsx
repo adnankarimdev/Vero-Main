@@ -33,9 +33,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Star, Plus, X, Pencil } from "lucide-react";
+import { Star, Plus, X, Pencil, PlusCircle, BadgePlus } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { iconMap, flattenedIconMap } from "@/utils/IconList";
+import AnimatedBadgePlusIcon from "./AnimatedIcons/AnimatedBadgePlusIcon";
 
 interface Category {
   name: string;
@@ -424,7 +425,7 @@ export default function RatingBubbleCardClient({
                   }
                   className="mt-2"
                 >
-                  {"Add Badges"}
+                  <AnimatedBadgePlusIcon />
                 </Button>
               </SheetTrigger>
               <SheetContent>
