@@ -12,6 +12,7 @@ import {
   Reply,
   Route,
   MonitorCog,
+  BadgePlus,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -23,6 +24,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { GiSpiderWeb } from "react-icons/gi";
 import Logo from "./Logo";
 import LogoSvg from "../../app/logo.svg";
 
@@ -33,6 +35,7 @@ const navItems = [
   //Hiding Messenger for now, won't release to public just yet.
   // { icon: MessageCircle, label: "Messenger", href: "/messenger" },
   { icon: Star, label: "Customer Reviews", href: "/reviews" },
+  // { icon: GiSpiderWeb, label: "Website Creator", href: "/website-creator" },
   { icon: Reply, label: "Respond", href: "/respond" },
   { icon: LogOut, label: "Logout", href: "/" },
 ];
