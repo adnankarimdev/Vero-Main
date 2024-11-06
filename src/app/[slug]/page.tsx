@@ -11,6 +11,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MapPin, Phone, Mail, Clock, Star } from "lucide-react";
 import RecordingLoader from "@/components/ui/Skeletons/RecordingLoader";
+import SparklesText from "@/components/ui/sparkles-text";
+import LetterPullup from "@/components/ui/letter-pullup";
+import BoxReveal from "@/components/ui/box-reveal";
+import RetroGrid from "@/components/ui/retro-grid";
 
 export default function BusinessTemplate() {
   const { slug } = useParams();
@@ -54,15 +58,18 @@ export default function BusinessTemplate() {
       {!isLoading && !noWebsite && (
         <div className="min-h-screen flex flex-col items-center">
           {/* Hero Section */}
+          <RetroGrid />
           <section className="relative h-[70vh] flex items-center justify-center w-full overflow-hidden">
             <div className="absolute inset-0 z-0">
               <div className="absolute inset-0" />
             </div>
             <div className="relative z-10 text-center">
-              <h1 className="text-5xl font-bold mb-4">
+              {/* <h1 className="text-5xl font-bold mb-4">
                 {websiteDetails.businessName}
-              </h1>
-              <p className="text-xl mb-8">{websiteDetails.tagline}</p>
+              </h1> */}
+              <SparklesText className="text-5xl" text={websiteDetails.businessName} sparklesCount={5}/>
+              {/* <p className="text-xl mb-8 mt-10">{websiteDetails.tagline}</p> */}
+              <LetterPullup className="text-xl mb-8 mt-10" words={websiteDetails.tagline} delay={0.05} />
             </div>
           </section>
 
@@ -115,6 +122,7 @@ export default function BusinessTemplate() {
                     {websiteDetails.contactInfo.address && (
                       <div className="flex items-center">
                         <MapPin className="w-6 h-6 mr-4 text-primary" />
+                        <BoxReveal boxColor={"#fff7ed"} duration={0.5}>
                         <a
                           href={`https://www.google.com/maps/search/?api=1&query=${
                             encodeURIComponent(websiteDetails.businessName) +
@@ -127,20 +135,25 @@ export default function BusinessTemplate() {
                         >
                           {websiteDetails.contactInfo.address}
                         </a>
+                        </BoxReveal>
                       </div>
                     )}
 
                     {websiteDetails.contactInfo.phoneNumber && (
                       <div className="flex items-center">
                         <Phone className="w-6 h-6 mr-4 text-primary" />
+                        <BoxReveal boxColor={"#fff7ed"} duration={0.5}>
                         <p>{websiteDetails.contactInfo.phoneNumber}</p>
+                        </BoxReveal>
                       </div>
                     )}
 
                     {websiteDetails.contactInfo.email && (
                       <div className="flex items-center">
                         <Mail className="w-6 h-6 mr-4 text-primary" />
+                        <BoxReveal boxColor={"#fff7ed"} duration={0.5}>
                         <p>{websiteDetails.contactInfo.email}</p>
+                        </BoxReveal>
                       </div>
                     )}
                     <Card className="w-full max-w-md">

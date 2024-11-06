@@ -41,6 +41,7 @@ import AnimatedBadgePlusIcon from "./AnimatedIcons/AnimatedBadgePlusIcon";
 import SparklesText from "./sparkles-text";
 import Particles from "./particles";
 import TypingAnimation from "./typing-animation";
+import WordPullUp from "./word-pull-up";
 
 interface Category {
   name: string;
@@ -416,7 +417,11 @@ export default function RatingBubbleCardClient({
                     }`}
                     onClick={() => toggleBadge(category.name, badge)}
                   >
-                    {badge}
+                    {/* {badge} */}
+                    <WordPullUp
+      className="text-xs"
+      words={badge}
+    />
                     <Button
                       variant="ghost"
                       size="icon"
