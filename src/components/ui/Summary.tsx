@@ -56,6 +56,7 @@ import { AreaChartComponent } from "./AreaChartComponent";
 import BadgeLoader from "./Skeletons/BadgeLoader";
 import UpgradeButton from "./UpgradeButton";
 import TopCustomersTable from "./TopCustomersTable";
+import ShowWebsiteBadge from "./ShowWebsiteBadge";
 
 interface BadgeTexts {
   [recordNumber: string]: {
@@ -111,6 +112,7 @@ export default function SummaryTab({
   const [badgeTexts, setBadgeTexts] = useState<BadgeTexts>({});
   const [isTranslationLoading, setIsTranslationLoading] = useState(false);
   const [topCustomers, setTopCustomers] = useState<TopCustomer[]>([]);
+  const [showWebsiteMessage, setShowWebsiteMessage] = useState(false)
   const [loadingBadges, setLoadingBadges] = useState<{
     [key: string]: boolean;
   }>({});
@@ -335,6 +337,18 @@ export default function SummaryTab({
           return;
         }
 
+        const shouldTriggerWebistePrompt = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-website-message/${email}/`
+        );
+
+        setShowWebsiteMessage(
+          shouldTriggerWebistePrompt.data.data["internal_website"] === null &&
+          shouldTriggerWebistePrompt.data.data["websites"].length === 1 &&
+          shouldTriggerWebistePrompt.data.data["websites"][0] === ''
+        );
+
+        console.log(shouldTriggerWebistePrompt.data.data)
+
         const placeIdResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
         );
@@ -409,6 +423,7 @@ export default function SummaryTab({
         <div className="flex justify-between">
           <CardDescription>Overview</CardDescription>
           {/* {totalNumberOfFiveStarReviewsPostedToGoogle >= 5 && <UpgradeButton />} */}
+          {showWebsiteMessage && <ShowWebsiteBadge />}
         </div>
       </CardHeader>
       <CardContent>

@@ -109,7 +109,7 @@ export default function BusinessTemplate() {
               <h2 className="text-3xl font-bold mb-12">Contact Us</h2>
               <div className="">
                 <div className="flex flex-col items-center">
-                  <div className="space-y-4 flex flex-col justify-center">
+                  <div className="space-y-10 flex flex-col justify-center">
                     <div className="flex items-center">
                       <MapPin className="w-6 h-6 mr-4 text-primary" />
                       {websiteDetails.contactInfo.address}
@@ -122,7 +122,7 @@ export default function BusinessTemplate() {
                       <Mail className="w-6 h-6 mr-4 text-primary" />
                       <p>{websiteDetails.contactInfo.email}</p>
                     </div>
-                    <Card className="w-full max-w-md mx-auto">
+                    <Card className="w-full max-w-md">
                       {" "}
                       {/* Centered card */}
                       <CardHeader>
