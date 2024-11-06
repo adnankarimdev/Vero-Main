@@ -41,6 +41,8 @@ import {
   RadarController,
   RadialLinearScale,
 } from "chart.js";
+import SparklesText from "@/components/ui/sparkles-text";
+import GradualSpacing from "@/components/ui/gradual-spacing";
 // import SmartReviewBuilderNew from "@/components/ui/SmartReviewBuilderNew";
 
 ChartJS.register(
@@ -119,7 +121,7 @@ export default function Dashboard() {
   return (
     <AnimatedLayout>
       <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4 text-center">Vero Dashboard</h1>
+        <GradualSpacing className="text-2xl font-bold mb-4 text-center" text="Vero Dashboard"/>
         <Summary
           averageRating={averageRating}
           totalReviews={totalReviews}

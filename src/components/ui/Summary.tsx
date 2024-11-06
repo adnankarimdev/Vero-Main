@@ -57,6 +57,7 @@ import BadgeLoader from "./Skeletons/BadgeLoader";
 import UpgradeButton from "./UpgradeButton";
 import TopCustomersTable from "./TopCustomersTable";
 import ShowWebsiteBadge from "./ShowWebsiteBadge";
+import NumberTicker from "./number-ticker";
 
 interface BadgeTexts {
   [recordNumber: string]: {
@@ -531,7 +532,7 @@ export default function SummaryTab({
                 <Star className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{averageReviewRating}</div>
+              <NumberTicker className="text-2xl font-bold" value={averageReviewRating} decimalPlaces={1}/>
               </CardContent>
             </Card>
             <Card>
@@ -542,7 +543,7 @@ export default function SummaryTab({
                 <Sigma className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{totalReviewsWithVero}</div>
+                <NumberTicker className="text-2xl font-bold" value={totalReviewsWithVero}/>
               </CardContent>
             </Card>
             <Card>
@@ -553,9 +554,7 @@ export default function SummaryTab({
                 <Tablet className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {totalReviewsWithKiosk}
-                </div>
+              <NumberTicker className="text-2xl font-bold" value={totalReviewsWithKiosk}/>
               </CardContent>
             </Card>
             <Card>
@@ -566,9 +565,7 @@ export default function SummaryTab({
                 <Smartphone className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {totalReviewsWithPersonalDevice}
-                </div>
+              <NumberTicker className="text-2xl font-bold" value={totalReviewsWithPersonalDevice}/>
               </CardContent>
             </Card>
             <Card>
@@ -579,9 +576,7 @@ export default function SummaryTab({
                 <Ban className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {totalNegativeReviewsPrevented}
-                </div>
+              <NumberTicker className="text-2xl font-bold" value={totalNegativeReviewsPrevented}/>
               </CardContent>
             </Card>
             <Card>
@@ -592,9 +587,7 @@ export default function SummaryTab({
                 <MessageSquare className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {totalNumberOfFiveStarReviews}
-                </div>
+              <NumberTicker className="text-2xl font-bold" value={totalNumberOfFiveStarReviews}/>
               </CardContent>
             </Card>
             <Card>
@@ -605,9 +598,7 @@ export default function SummaryTab({
                 <FaGoogle className="h-4 w-4 text-muted-foreground" size={16} />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {totalNumberOfFiveStarReviewsPostedToGoogle}
-                </div>
+              <NumberTicker className="text-2xl font-bold" value={totalNumberOfFiveStarReviewsPostedToGoogle}/>
               </CardContent>
             </Card>
             {/* Hiding review times. For kiosk, it won't make sense. since the timer starts on the review page. */}

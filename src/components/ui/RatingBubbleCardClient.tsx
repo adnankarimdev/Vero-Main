@@ -38,6 +38,9 @@ import { Star, Plus, X, Pencil, PlusCircle, BadgePlus } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { iconMap, flattenedIconMap } from "@/utils/IconList";
 import AnimatedBadgePlusIcon from "./AnimatedIcons/AnimatedBadgePlusIcon";
+import SparklesText from "./sparkles-text";
+import Particles from "./particles";
+import TypingAnimation from "./typing-animation";
 
 interface Category {
   name: string;
@@ -305,7 +308,7 @@ export default function RatingBubbleCardClient({
           </div>
 
           {/* Centered Title */}
-          <span>{businessName}</span>
+          <SparklesText className="text-sm" text={businessName} sparklesCount={5}/>
         </CardTitle>
         {isEditing ? (
           <Input
@@ -321,7 +324,7 @@ export default function RatingBubbleCardClient({
           <CardDescription
             className="flex items-center justify-center space-x-1 mb-2 cursor-pointer"
             onClick={handleCardClick}
-          >
+          >   
             {cardDescription}
             <Pencil className="ml-2" size={12} />
           </CardDescription>

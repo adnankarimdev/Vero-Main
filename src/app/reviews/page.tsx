@@ -2,11 +2,12 @@
 
 import Reviews from "@/components/ui/Reviews";
 import AnimatedLayout from "@/animations/AnimatedLayout";
+import GradualSpacing from "@/components/ui/gradual-spacing";
 export default function Dashboard() {
   return (
     <AnimatedLayout>
       <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4 text-center">Vero Reviews</h1>
+        <GradualSpacing className="text-2xl font-bold mb-4 text-center" text="Vero Reviews"/>
         <Reviews />
       </div>
     </AnimatedLayout>
