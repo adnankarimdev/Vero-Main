@@ -112,7 +112,7 @@ export default function SummaryTab({
   const [badgeTexts, setBadgeTexts] = useState<BadgeTexts>({});
   const [isTranslationLoading, setIsTranslationLoading] = useState(false);
   const [topCustomers, setTopCustomers] = useState<TopCustomer[]>([]);
-  const [showWebsiteMessage, setShowWebsiteMessage] = useState(false)
+  const [showWebsiteMessage, setShowWebsiteMessage] = useState(false);
   const [loadingBadges, setLoadingBadges] = useState<{
     [key: string]: boolean;
   }>({});
@@ -343,11 +343,11 @@ export default function SummaryTab({
 
         setShowWebsiteMessage(
           shouldTriggerWebistePrompt.data.data["internal_website"] === null &&
-          shouldTriggerWebistePrompt.data.data["websites"].length === 1 &&
-          shouldTriggerWebistePrompt.data.data["websites"][0] === ''
+            shouldTriggerWebistePrompt.data.data["websites"].length === 1 &&
+            shouldTriggerWebistePrompt.data.data["websites"][0] === ""
         );
 
-        console.log(shouldTriggerWebistePrompt.data.data)
+        console.log(shouldTriggerWebistePrompt.data.data);
 
         const placeIdResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`

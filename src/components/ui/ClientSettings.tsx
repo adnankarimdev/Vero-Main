@@ -444,8 +444,10 @@ export default function ClientSettings() {
         setUserCardDescription(reviewSettingsResponse.data.card_description);
         setCompanyWebsites(reviewSettingsResponse.data.companyUrls);
         setChosenIcon(reviewSettingsResponse.data.chosen_icon);
-        setCustomerInternalWebsite(reviewSettingsResponse.data.internal_website);
-        console.log("internal ", reviewSettingsResponse.data.internal_website)
+        setCustomerInternalWebsite(
+          reviewSettingsResponse.data.internal_website
+        );
+        console.log("internal ", reviewSettingsResponse.data.internal_website);
         setIsTabsLoading(false);
         if (reviewSettingsResponse.data.questions.length == 0) {
           handleSettingChange(
@@ -740,32 +742,37 @@ export default function ClientSettings() {
               <AnimatedLayout>
                 <div className="space-y-4">
                   <div>
-                    
                     <div className="mb-4">
-
-                    <Separator className="mt-5 mb-5" />
-                    <Label htmlFor="showComplimentaryItem">
-                        Personalized Website
-                        </Label>
-                        <p className="text-gray-500 text-xs">
-                          Powered by Vero
-                        </p>
-                      <div className="flex items-center space-x-2">
-                      <Button
+                      {customerInternalWebsite && (
+                        <>
+                          <Separator className="mt-5 mb-5" />
+                          <Label htmlFor="showComplimentaryItem">
+                            Personalized Website
+                          </Label>
+                          <p className="text-gray-500 text-xs">
+                            Powered by Vero
+                          </p>
+                          <div className="flex items-center space-x-2">
+                            <Button
                               variant="ghost"
                               className="p-0 inline-flex items-center justify-center hover:bg-transparent hover:text-current focus:ring-0 active:bg-transparent"
-                              onClick={() => window.open(customerInternalWebsite, '_blank')}
+                              onClick={() =>
+                                window.open(customerInternalWebsite, "_blank")
+                              }
                             >
                               <div className="text-lg font-medium">
-                                <Badge className={cn(
-        "bg-rose-400  text-white text-xs font-medium mt-2 ml-2 ",
-      )}>
+                                <Badge
+                                  className={cn(
+                                    "bg-rose-400  text-white text-xs font-medium mt-2 ml-2 "
+                                  )}
+                                >
                                   {customerInternalWebsite}
                                 </Badge>
                               </div>
                             </Button>
-
-                      </div>
+                          </div>
+                        </>
+                      )}
 
                       <Separator className="mt-5 mb-5" />
                       <div hidden={isOnlineBusiness}>

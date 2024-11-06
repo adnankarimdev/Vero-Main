@@ -9,7 +9,6 @@ export default function ShowWebsiteBadge() {
   const { toast } = useToast();
   const router = useRouter();
   const handleDirectToWebsiteCreator = () => {
-
     router.push("/website-creator");
   };
 
@@ -18,7 +17,7 @@ export default function ShowWebsiteBadge() {
       variant="ghost"
       size="sm"
       className={cn(
-        "bg-gradient-to-r from-purple-500 to-rose-400  text-white text-xs font-medium mt-2 ml-2 ",
+        "bg-gradient-to-r from-purple-500 to-rose-400  text-white text-xs font-medium mt-2 ml-2 "
       )}
       onClick={handleDirectToWebsiteCreator}
     >
