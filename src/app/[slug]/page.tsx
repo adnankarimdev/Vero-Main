@@ -82,27 +82,26 @@ export default function BusinessTemplate() {
 
           {/* Services Section */}
           {websiteDetails.services.length > 0 && (
-          <section className="py-16 bg-white dark:bg-gray-800 w-full flex justify-center">
-          <div className="container mx-auto max-w-6xl text-center">
-            <h2 className="text-3xl font-bold mb-12">Our Services</h2>
-            <div className="grid gap-8 md:grid-cols-3">
-              {websiteDetails.services.map((service: any, index: any) => (
-                <Card key={index}>
-                  <CardContent className="p-6">
-                    <h3 className="text-2xl font-semibold mb-4">
-                      {service.title}
-                    </h3>
-                    <p className="text-lg leading-relaxed mb-4">
-                      {service.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
+            <section className="py-16 bg-white dark:bg-gray-800 w-full flex justify-center">
+              <div className="container mx-auto max-w-6xl text-center">
+                <h2 className="text-3xl font-bold mb-12">Our Services</h2>
+                <div className="grid gap-8 md:grid-cols-3">
+                  {websiteDetails.services.map((service: any, index: any) => (
+                    <Card key={index}>
+                      <CardContent className="p-6">
+                        <h3 className="text-2xl font-semibold mb-4">
+                          {service.title}
+                        </h3>
+                        <p className="text-lg leading-relaxed mb-4">
+                          {service.description}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </section>
           )}
-
 
           {/* Contact Section */}
           <section className="py-16 bg-white dark:bg-gray-800 w-full flex justify-center">
@@ -114,36 +113,36 @@ export default function BusinessTemplate() {
                 <div className="flex flex-col items-center">
                   <div className="space-y-10 flex flex-col justify-center">
                     {websiteDetails.contactInfo.address && (
-                                      <div className="flex items-center">
-                                      <MapPin className="w-6 h-6 mr-4 text-primary" />
-                                      <a
-                                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(websiteDetails.businessName) + encodeURIComponent(
-                                        websiteDetails.contactInfo.address,
-                                      )}`}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                    >
-                                      {websiteDetails.contactInfo.address}
-                
-                                      </a>
-                
-                                    </div>    
+                      <div className="flex items-center">
+                        <MapPin className="w-6 h-6 mr-4 text-primary" />
+                        <a
+                          href={`https://www.google.com/maps/search/?api=1&query=${
+                            encodeURIComponent(websiteDetails.businessName) +
+                            encodeURIComponent(
+                              websiteDetails.contactInfo.address
+                            )
+                          }`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {websiteDetails.contactInfo.address}
+                        </a>
+                      </div>
                     )}
 
                     {websiteDetails.contactInfo.phoneNumber && (
-                    <div className="flex items-center">
-                    <Phone className="w-6 h-6 mr-4 text-primary" />
-                    <p>{websiteDetails.contactInfo.phoneNumber}</p>
-                  </div>
+                      <div className="flex items-center">
+                        <Phone className="w-6 h-6 mr-4 text-primary" />
+                        <p>{websiteDetails.contactInfo.phoneNumber}</p>
+                      </div>
                     )}
 
-
-                  {websiteDetails.contactInfo.email && (
- <div className="flex items-center">
- <Mail className="w-6 h-6 mr-4 text-primary" />
- <p>{websiteDetails.contactInfo.email}</p>
-</div>
-                  )} 
+                    {websiteDetails.contactInfo.email && (
+                      <div className="flex items-center">
+                        <Mail className="w-6 h-6 mr-4 text-primary" />
+                        <p>{websiteDetails.contactInfo.email}</p>
+                      </div>
+                    )}
                     <Card className="w-full max-w-md">
                       {" "}
                       {/* Centered card */}
