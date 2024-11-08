@@ -34,7 +34,7 @@ const navItems = [
   { icon: Route, label: "Customer Journey", href: "/customer-journies" },
   //Hiding Messenger for now, won't release to public just yet.
   // { icon: MessageCircle, label: "Messenger", href: "/messenger" },
-  { icon: Star, label: "Customer Reviews", href: "/reviews" },
+  { icon: Star, label: "Customer Reviews", href: "/tasks" },
   // { icon: GiSpiderWeb, label: "Website Creator", href: "/website-creator" },
   { icon: Reply, label: "Respond", href: "/respond" },
   { icon: LogOut, label: "Logout", href: "/" },
