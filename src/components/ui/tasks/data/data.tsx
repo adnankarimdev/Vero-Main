@@ -3,6 +3,7 @@ import {
   ArrowRight,
   ArrowUp,
   CheckCircle,
+  ChevronsUp,
   Circle,
   CircleOff,
   HelpCircle,
@@ -26,8 +27,8 @@ export const labels = [
 
 export const statuses = [
   {
-    value: "backlog",
-    label: "Backlog",
+    value: "open",
+    label: "Open",
     icon: HelpCircle,
   },
   {
@@ -67,5 +68,10 @@ export const priorities = [
     label: "High",
     value: "high",
     icon: ArrowUp,
+  },
+  {
+    label: "Critical",
+    value: "critical",
+    icon: ChevronsUp,
   },
 ]

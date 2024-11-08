@@ -13,6 +13,7 @@ import {
   Route,
   MonitorCog,
   BadgePlus,
+  Logs,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -31,6 +32,7 @@ import LogoSvg from "../../app/logo.svg";
 const navItems = [
   { icon: LayoutDashboard, label: "Your Dashboard", href: "/dashboard" },
   { icon: MonitorCog, label: "Platform Settings", href: "/settings" },
+  // { icon: Logs, label: "Tasks List", href: "/tasks" },
   { icon: Route, label: "Customer Journey", href: "/customer-journies" },
   //Hiding Messenger for now, won't release to public just yet.
   // { icon: MessageCircle, label: "Messenger", href: "/messenger" },
