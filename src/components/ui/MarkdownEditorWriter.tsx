@@ -65,6 +65,7 @@ export default function MarkdownEditorWriter({
           replacement +
           content.substring(selectionEnd);
         setContent(newContent);
+        setPassedContent(newContent);
         textarea.focus();
         textarea.setSelectionRange(
           selectionStart + start.length,

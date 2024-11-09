@@ -45,6 +45,13 @@ type Bug = {
   }[];
 };
 
+const priorityColors = {
+  low: "bg-green-100 text-green-800 hover:bg-green-200",
+  medium: "bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
+  high: "bg-orange-100 text-orange-800 hover:bg-orange-200",
+  critical: "bg-red-100 text-red-800 hover:bg-red-200",
+};
+
 const inter = Inter({ subsets: ["latin"] });
 
 export default function DetailedView({
@@ -83,7 +90,27 @@ export default function DetailedView({
         </Button>
         <div className="flex justify-between w-full items-center">
           <CardTitle className="text-2xl flex-grow text-center">
-            {bug.title}
+            <div className="flex flex-col ">
+              <span className="text-sm text-muted-foreground">{bug.id}</span>
+              {bug.title}
+            </div>
+            <div className="flex flex-col ">
+              <div className="space-x-4">
+                <Badge
+                  className={`${priorityColors[bug.priority as keyof typeof priorityColors]} w-24 justify-center`}
+                  // variant={
+                  //   bug.priority === "Critical"
+                  //     ? "destructive"
+                  //     : bug.priority === "Medium"
+                  //       ? "default"
+                  //       : "secondary"
+                  // }
+                >
+                  {bug.priority}
+                </Badge>
+              </div>
+            </div>
+            <div className="flex-grow flex justify-end"></div>
           </CardTitle>
           <Select value={status} onValueChange={handleStatusUpdate}>
             <SelectTrigger className="w-[180px]">
@@ -99,46 +126,20 @@ export default function DetailedView({
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex items-center space-x-4">
-          <Badge
-            variant={
-              bug.status === "Open"
-                ? "default"
-                : bug.status === "In Progress"
-                  ? "secondary"
-                  : "outline"
-            }
-          >
-            {bug.status}
-          </Badge>
-          <Badge
-            variant={
-              bug.priority === "High"
-                ? "destructive"
-                : bug.priority === "Medium"
-                  ? "default"
-                  : "secondary"
-            }
-          >
-            <ArrowUp className="mr-1 h-3 w-3" />
-            {bug.priority}
-          </Badge>
-          <span className="text-sm text-muted-foreground">#{bug.id}</span>
-          <div className="flex-grow flex justify-end">
-            <AlertCircle className="mr-1 h-4 w-4" />
-
-            <span className="text-sm text-muted-foreground">
-              Opened on {bug.createdAt}
-            </span>
-          </div>
-        </div>
-
-        <Separator />
-        <div>
-          {/* <p className={`text-muted-foreground ${inter.className}`}>{bug.description}</p> */}
+        <div className="flex justify-between">
           <Button onClick={handleDescriptionUpdate} variant="outline">
             <AnimatedSaveIcon />
           </Button>
+
+          <span className="inline-flex items-center text-sm ">
+            <AlertCircle className="mr-1 h-4 w-4" />
+            Opened on {bug.createdAt}
+          </span>
+        </div>
+        <Separator />
+        <div>
+          {/* <p className={`text-muted-foreground ${inter.className}`}>{bug.description}</p> */}
+
           <MarkdownEditorWriter
             initialContent={content === "" ? bug.description : content}
             setPassedContent={setContent}

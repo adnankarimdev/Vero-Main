@@ -143,6 +143,11 @@ export function DataTable<TData, TValue>({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
+                      className={
+                        (row.original as any)["status"] === "resolved"
+                          ? "line-through text-gray-500"
+                          : ""
+                      }
                       onClick={() => handleRowClick(row.original)}
                     >
                       {flexRender(

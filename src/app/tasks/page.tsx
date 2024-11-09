@@ -27,7 +27,7 @@ export default function TaskPage() {
   ]);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [dataToRender, setDataToRender] = useState();
+  const [dataToRender, setDataToRender] = useState<any>();
   const [placeId, setPlaceId] = useState("");
 
   const handleStatusUpdate = (bug: any, newStatus: string) => {
@@ -50,7 +50,9 @@ export default function TaskPage() {
       .then((response) => {})
       .catch((error) => {});
     // Now update the state with the new data
-    setTasks(updatedData);
+
+    const reversedTasks = [...updatedData].reverse();
+    setTasks(reversedTasks);
   };
 
   const handleDescriptionUpdate = (bug: any, newDescription: string) => {
@@ -98,8 +100,10 @@ export default function TaskPage() {
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-linear-task-by-place-id/${placeIdsQuery}/`
         );
 
-        setDataToRender(tasks.data.tasks);
-        setTasks(tasks.data.tasks);
+        const reversedTasks = [...tasks.data.tasks].reverse();
+        console.log(tasks.data.tasks);
+        setDataToRender(reversedTasks);
+        setTasks(reversedTasks);
         setPlaceId(tasks.data.place_id);
         setIsLoading(false);
       } catch (err) {
