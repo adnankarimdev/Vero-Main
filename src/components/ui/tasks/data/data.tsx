@@ -42,8 +42,8 @@ export const statuses = [
     icon: Timer,
   },
   {
-    value: "done",
-    label: "Done",
+    value: "resolved",
+    label: "Resolved",
     icon: CheckCircle,
   },
   {

@@ -44,11 +44,13 @@ import DetailedView from "./DetailedView";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  onStatusUpdate: (bug:any) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  onStatusUpdate,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -95,7 +97,9 @@ export function DataTable<TData, TValue>({
           <DrawerContent className="fixed inset-0 w-full max-w-none rounded-none items-center">
             <DetailedView
               bug={selectedRow}
+              onStatusUpdate={onStatusUpdate}
               onBack={() => setIsDrawerOpen(false)}
+              onDrawerChange={() => setIsDrawerOpen(false)}
             />
           </DrawerContent>
         </Drawer>

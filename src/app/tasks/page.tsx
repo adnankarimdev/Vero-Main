@@ -27,6 +27,25 @@ export default function TaskPage() {
   ]);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [dataToRender, setDataToRender] = useState()
+
+  const handleStatusUpdate = (bug: any) => {
+    console.log(bug); // Logging the bug object to ensure it's correct
+    console.log(tasks); // Make sure data is the current state
+  
+    // Directly modifying the status of the rowData
+    const updatedBug = { ...bug, status: "resolved" }; // This will modify the status field of the passed bug
+    
+    // Assuming data is an array of bugs, update the correct bug
+    const updatedData = tasks.map((item) =>
+      item.id === bug.id ? updatedBug : item
+    );
+  
+    console.log(updatedData); // See the updated data
+  
+    // Now update the state with the new data
+    setTasks(updatedData);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,6 +71,7 @@ export default function TaskPage() {
         );
 
         console.log("internal ", tasks.data);
+        setDataToRender(tasks.data)
         setTasks(tasks.data);
         setIsLoading(false);
       } catch (err) {
@@ -77,7 +97,7 @@ export default function TaskPage() {
                 />
               </div>
             </div>
-            <DataTable data={tasks} columns={columns} />
+            <DataTable data={tasks} columns={columns} onStatusUpdate={handleStatusUpdate}/>
           </div>
         </>
       )}

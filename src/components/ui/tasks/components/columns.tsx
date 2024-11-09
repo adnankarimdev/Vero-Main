@@ -79,9 +79,18 @@ export const columns: ColumnDef<Task>[] = [
 
       return (
         <div className="flex w-[100px] items-center">
-          {status.icon && (
-            <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )}
+{status.icon && (
+  <status.icon
+    className={cn(
+      "mr-2 h-4 w-4 text-muted-foreground", // Default muted color
+      status.value === "open" && "text-blue-500", // Blue for "open"
+      status.value === "todo" && "text-yellow-500", // Yellow for "todo"
+      status.value === "in progress" && "text-orange-500", // Orange for "in progress"
+      status.value === "resolved" && "text-green-500", // Green for "done"
+      status.value === "canceled" && "text-red-500" // Red for "canceled"
+    )}
+  />
+)}
           <span>{status.label}</span>
         </div>
       );

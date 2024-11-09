@@ -41,10 +41,22 @@ const inter = Inter({ subsets: ["latin"] });
 export default function DetailedView({
   bug,
   onBack,
+  onStatusUpdate,
+  onDrawerChange
 }: {
   bug: Bug;
   onBack: () => void;
+  onDrawerChange: () => void;
+  onStatusUpdate: (bug:any) => void;
 }) {
+
+    const handleStatusUpdate = () =>
+    {
+        onStatusUpdate(bug)
+        onDrawerChange()
+
+    }
+
   return (
     <div>
       <CardHeader className="flex flex-row items-center">
@@ -52,9 +64,16 @@ export default function DetailedView({
           <ChevronLeft className="h-4 w-4 mr-2" />
           Back to list
         </Button>
-        <div className="flex-grow flex justify-center">
-          <CardTitle className="text-2xl">{bug.title}</CardTitle>
-        </div>
+        <div className="flex justify-between w-full items-center">
+  <CardTitle className="text-2xl flex-grow text-center">
+    {bug.title}
+  </CardTitle>
+
+  <Button variant="default" onClick={handleStatusUpdate} className="ml-4 bg-green-500 hover:bg-green-600 text-white text-xs py-1">
+    {"Resolved"}
+  </Button>
+  
+</div>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex items-center space-x-4">
