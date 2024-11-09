@@ -47,6 +47,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   onStatusUpdate: (bug: any, newStatus: string) => void;
   onDescriptionUpdate: (bug: any, newDescription: string) => void;
+  isNewTaskOpen: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -54,6 +55,7 @@ export function DataTable<TData, TValue>({
   data,
   onStatusUpdate,
   onDescriptionUpdate,
+  isNewTaskOpen,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =

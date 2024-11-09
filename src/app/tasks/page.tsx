@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast"
 import path from "path";
 import { Metadata } from "next";
 import { useEffect, useState } from "react";
@@ -14,8 +16,11 @@ import { UserNav } from "@/components/ui/tasks/components/user-nav";
 import { taskSchema } from "@/components/ui/tasks/data/schema";
 import { AnimatedBeamTransition } from "@/components/ui/AnimatedBeamTransition";
 import GradualSpacing from "@/components/ui/gradual-spacing";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
 
 export default function TaskPage() {
+  const { toast } = useToast();
   const [tasks, setTasks] = useState([
     {
       id: "",
@@ -26,12 +31,37 @@ export default function TaskPage() {
     },
   ]);
 
+  const [newTaskOpen, setIsNewTaskOpen] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
   const [dataToRender, setDataToRender] = useState<any>();
   const [placeId, setPlaceId] = useState("");
 
+
+  const sendEmailToCustomer = (bug: any) =>
+  {
+    console.log(bug)
+    axios
+    .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/send-email-to-customer-resolved/`, {
+      task: bug
+    })
+    .then((response) => {})
+    .catch((error) => {});
+  }
+
   const handleStatusUpdate = (bug: any, newStatus: string) => {
+    console.log(newStatus)
     // Directly modifying the status of the rowData
+    if (newStatus == "resolved" && bug.name != "")
+      {
+        toast({
+          title: `Let ${bug.name} know issue is resolved?`,
+          duration: 10000,
+          action: (
+            <ToastAction altText="Goto schedule to undo" onClick={() => sendEmailToCustomer(bug)}>Email</ToastAction>
+          ),
+        });
+      }
     const updatedTask = { ...bug, status: newStatus }; // This will modify the status field of the passed bug
 
     // Assuming data is an array of bugs, update the correct bug
@@ -51,8 +81,9 @@ export default function TaskPage() {
       .catch((error) => {});
     // Now update the state with the new data
 
-    const reversedTasks = [...updatedData].reverse();
-    setTasks(reversedTasks);
+    setTasks(updatedData);
+
+
   };
 
   const handleDescriptionUpdate = (bug: any, newDescription: string) => {
@@ -128,13 +159,20 @@ export default function TaskPage() {
                   text="Vero Tasks"
                 />
               </div>
+              {/* <Button variant="outline" size="sm" className="h-8 border-dashed" onClick={() => setIsNewTaskOpen(true)}>
+          <PlusCircle />
+          {"New Task"}
+        </Button> */}
             </div>
+            
             <DataTable
               data={tasks}
               columns={columns}
               onStatusUpdate={handleStatusUpdate}
               onDescriptionUpdate={handleDescriptionUpdate}
+              isNewTaskOpen={newTaskOpen}
             />
+
           </div>
         </>
       )}

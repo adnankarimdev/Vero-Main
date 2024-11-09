@@ -31,6 +31,8 @@ type Bug = {
   description: string;
   status: string;
   priority: string;
+  email?: string;
+  name?: string;
   assignee?: {
     name: string;
     avatar: string;
@@ -98,15 +100,15 @@ export default function DetailedView({
               <div className="space-x-4">
                 <Badge
                   className={`${priorityColors[bug.priority as keyof typeof priorityColors]} w-24 justify-center`}
-                  // variant={
-                  //   bug.priority === "Critical"
-                  //     ? "destructive"
-                  //     : bug.priority === "Medium"
-                  //       ? "default"
-                  //       : "secondary"
-                  // }
                 >
                   {bug.priority}
+                </Badge>
+              </div>
+              <div className="space-x-4" hidden={(bug.email == "") && (bug.name == "")}>
+                <Badge
+                  variant="outline"
+                >
+                  {"Concern from: "} <span className="text-green-500 ml-1">{bug.name}</span>
                 </Badge>
               </div>
             </div>
