@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Inter } from "next/font/google";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select"
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { Separator } from "../../separator";
 import MarkdownReader from "../../MarkdownReader";
+import MarkdownEditorWriter from "../../MarkdownEditorWriter";
+import AnimatedSaveIcon from "../../AnimatedIcons/AnimatedSaveIcon";
 
 type Bug = {
   id: string;
@@ -49,23 +51,28 @@ export default function DetailedView({
   bug,
   onBack,
   onStatusUpdate,
-  onDrawerChange
+  onDrawerChange,
+  onDescriptionUpdate,
 }: {
   bug: Bug;
   onBack: () => void;
   onDrawerChange: () => void;
-  onStatusUpdate: (bug:any, newStatus:string) => void;
+  onStatusUpdate: (bug: any, newStatus: string) => void;
+  onDescriptionUpdate: (bug: any, newDescription: string) => void;
 }) {
+  const [status, setStatus] = useState(bug.status);
+  const [content, setContent] = useState("");
 
-    const [status, setStatus] = useState(bug.status)
+  const handleStatusUpdate = (newStatus: string) => {
+    setStatus(newStatus);
+    onStatusUpdate(bug, newStatus);
+    onDrawerChange();
+  };
 
-    const handleStatusUpdate = (newStatus: string) =>
-    {
-        setStatus(newStatus)
-        onStatusUpdate(bug, newStatus)
-        onDrawerChange()
-
-    }
+  const handleDescriptionUpdate = () => {
+    onDescriptionUpdate(bug, content);
+    onDrawerChange();
+  };
 
   return (
     <div>
@@ -75,22 +82,21 @@ export default function DetailedView({
           Back to list
         </Button>
         <div className="flex justify-between w-full items-center">
-  <CardTitle className="text-2xl flex-grow text-center">
-    {bug.title}
-  </CardTitle>
-  <Select value={status} onValueChange={handleStatusUpdate}>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Update status" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="open">Open</SelectItem>
-        <SelectItem value="in progress">In Progress</SelectItem>
-        <SelectItem value="resolved">Resolved</SelectItem>
-        <SelectItem value="canceled">Canceled</SelectItem>
-      </SelectContent>
-    </Select>
-  
-</div>
+          <CardTitle className="text-2xl flex-grow text-center">
+            {bug.title}
+          </CardTitle>
+          <Select value={status} onValueChange={handleStatusUpdate}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Update status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="open">Open</SelectItem>
+              <SelectItem value="in progress">In Progress</SelectItem>
+              <SelectItem value="resolved">Resolved</SelectItem>
+              <SelectItem value="canceled">Canceled</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex items-center space-x-4">
@@ -130,7 +136,13 @@ export default function DetailedView({
         <Separator />
         <div>
           {/* <p className={`text-muted-foreground ${inter.className}`}>{bug.description}</p> */}
-          <MarkdownReader content={bug.description} />
+          <Button onClick={handleDescriptionUpdate} variant="outline">
+            <AnimatedSaveIcon />
+          </Button>
+          <MarkdownEditorWriter
+            initialContent={content === "" ? bug.description : content}
+            setPassedContent={setContent}
+          />
         </div>
 
         {/* <div>
@@ -145,10 +157,10 @@ export default function DetailedView({
         </div> */}
 
         <div className="flex space-x-4 text-sm text-muted-foreground">
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <AlertCircle className="mr-1 h-4 w-4" />
             Opened on {bug.createdAt}
-          </div>
+          </div> */}
           {/* <div className="flex items-center">
             <Clock className="mr-1 h-4 w-4" />
             Updated on {new Date(bug.updatedAt).toLocaleDateString()}

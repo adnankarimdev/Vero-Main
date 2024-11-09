@@ -16,6 +16,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { ScrollArea } from "../../scroll-area";
 
 import {
   Drawer,
@@ -44,13 +45,15 @@ import DetailedView from "./DetailedView";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  onStatusUpdate: (bug:any, newStatus:string) => void;
+  onStatusUpdate: (bug: any, newStatus: string) => void;
+  onDescriptionUpdate: (bug: any, newDescription: string) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   onStatusUpdate,
+  onDescriptionUpdate,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -94,13 +97,18 @@ export function DataTable<TData, TValue>({
     <div className="space-y-4">
       {selectedRow && (
         <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-          <DrawerContent className="fixed inset-0 w-full max-w-none rounded-none items-center">
-            <DetailedView
-              bug={selectedRow}
-              onStatusUpdate={onStatusUpdate}
-              onBack={() => setIsDrawerOpen(false)}
-              onDrawerChange={() => setIsDrawerOpen(false)}
-            />
+          <DrawerContent className="fixed inset-0 w-full h-full max-w-none max-h-none rounded-none">
+            <ScrollArea className="h-full w-full">
+              <div className="p-6">
+                <DetailedView
+                  bug={selectedRow}
+                  onStatusUpdate={onStatusUpdate}
+                  onDescriptionUpdate={onDescriptionUpdate}
+                  onBack={() => setIsDrawerOpen(false)}
+                  onDrawerChange={() => setIsDrawerOpen(false)}
+                />
+              </div>
+            </ScrollArea>
           </DrawerContent>
         </Drawer>
       )}

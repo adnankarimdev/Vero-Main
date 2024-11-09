@@ -27,28 +27,51 @@ export default function TaskPage() {
   ]);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [dataToRender, setDataToRender] = useState()
-  const [placeId, setPlaceId] = useState("")
+  const [dataToRender, setDataToRender] = useState();
+  const [placeId, setPlaceId] = useState("");
 
-  const handleStatusUpdate = (bug: any, newStatus:string) => {
-  
+  const handleStatusUpdate = (bug: any, newStatus: string) => {
     // Directly modifying the status of the rowData
     const updatedTask = { ...bug, status: newStatus }; // This will modify the status field of the passed bug
-    
+
     // Assuming data is an array of bugs, update the correct bug
     const updatedData = tasks.map((item) =>
       item.id === bug.id ? updatedTask : item
     );
-  
+
     axios
-      .put(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/update-task/${placeId}/`, {
-        updatedTask: updatedTask,
-        placeId: placeId,
-      })
-      .then((response) => {
-      })
-      .catch((error) => {
-      });  
+      .put(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/update-task/${placeId}/`,
+        {
+          updatedTask: updatedTask,
+          placeId: placeId,
+        }
+      )
+      .then((response) => {})
+      .catch((error) => {});
+    // Now update the state with the new data
+    setTasks(updatedData);
+  };
+
+  const handleDescriptionUpdate = (bug: any, newDescription: string) => {
+    // Directly modifying the description of the rowData
+    const updatedTask = { ...bug, description: newDescription }; // This will modify the description field of the passed bug
+
+    // Assuming data is an array of bugs, update the correct bug
+    const updatedData = tasks.map((item) =>
+      item.id === bug.id ? updatedTask : item
+    );
+
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/update-description/${placeId}/`,
+        {
+          updatedTask: updatedTask,
+          placeId: placeId,
+        }
+      )
+      .then((response) => {})
+      .catch((error) => {});
     // Now update the state with the new data
     setTasks(updatedData);
   };
@@ -75,9 +98,9 @@ export default function TaskPage() {
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-linear-task-by-place-id/${placeIdsQuery}/`
         );
 
-        setDataToRender(tasks.data.tasks)
+        setDataToRender(tasks.data.tasks);
         setTasks(tasks.data.tasks);
-        setPlaceId(tasks.data.place_id)
+        setPlaceId(tasks.data.place_id);
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
@@ -102,7 +125,12 @@ export default function TaskPage() {
                 />
               </div>
             </div>
-            <DataTable data={tasks} columns={columns} onStatusUpdate={handleStatusUpdate}/>
+            <DataTable
+              data={tasks}
+              columns={columns}
+              onStatusUpdate={handleStatusUpdate}
+              onDescriptionUpdate={handleDescriptionUpdate}
+            />
           </div>
         </>
       )}
