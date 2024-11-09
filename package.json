@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "prodClone": "npm run build && npm run start -- -p 4000",
     "lint": "next lint",
     "format": "npx prettier --write ."
   },
