@@ -30,16 +30,36 @@ import Logo from "./Logo";
 import LogoSvg from "../../app/logo.svg";
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Your Dashboard", href: "/dashboard" },
-  { icon: MonitorCog, label: "Platform Settings", href: "/settings" },
-  // { icon: Logs, label: "Tasks List", href: "/tasks" },
-  { icon: Route, label: "Customer Journey", href: "/customer-journies" },
+  {
+    icon: LayoutDashboard,
+    label: "Your Dashboard",
+    href: "/dashboard",
+    show: true,
+  },
+  {
+    icon: MonitorCog,
+    label: "Platform Settings",
+    href: "/settings",
+    show: true,
+  },
+  { icon: Logs, label: "Tasks List", href: "/tasks", show: true },
+  {
+    icon: Route,
+    label: "Customer Journey",
+    href: "/customer-journies",
+    show: true,
+  },
   //Hiding Messenger for now, won't release to public just yet.
-  // { icon: MessageCircle, label: "Messenger", href: "/messenger" },
-  { icon: Star, label: "Customer Reviews", href: "/reviews" },
-  // { icon: GiSpiderWeb, label: "Website Creator", href: "/website-creator" },
-  { icon: Reply, label: "Respond", href: "/respond" },
-  { icon: LogOut, label: "Logout", href: "/" },
+  // { icon: MessageCircle, label: "Messenger", href: "/messenger", show:true },
+  { icon: Star, label: "Customer Reviews", href: "/reviews", show: true },
+  {
+    icon: GiSpiderWeb,
+    label: "Website Creator",
+    href: "/website-creator",
+    show: true,
+  },
+  { icon: Reply, label: "Respond", href: "/respond", show: true },
+  { icon: LogOut, label: "Logout", href: "/", show: true },
 ];
 
 export default function Sidebar() {
@@ -58,42 +78,45 @@ export default function Sidebar() {
           <Logo />
         </div>
         <nav className="flex flex-col items-center space-y-2">
-          {navItems.map((item) => (
-            <Tooltip key={item.href}>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className={cn(
-                    "w-full justify-start px-2",
-                    "hover:bg-accent hover:text-accent-foreground"
-                  )}
-                  asChild
-                >
-                  {item.label === "Logout" ? (
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center w-full"
+          {navItems.map(
+            (item) =>
+              item.show && (
+                <Tooltip key={item.href}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className={cn(
+                        "w-full justify-start px-2",
+                        "hover:bg-accent hover:text-accent-foreground"
+                      )}
+                      asChild
                     >
-                      <item.icon className="h-5 w-5" />
-                      <span className="ml-2 hidden group-hover:inline-block">
-                        {item.label}
-                      </span>
-                    </button>
-                  ) : (
-                    <Link href={item.href}>
-                      <item.icon className="h-5 w-5" />
-                      <span className="ml-2 hidden group-hover:inline-block">
-                        {item.label}
-                      </span>
-                    </Link>
-                  )}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>{item.label}</p>
-              </TooltipContent>
-            </Tooltip>
-          ))}
+                      {item.label === "Logout" ? (
+                        <button
+                          onClick={handleLogout}
+                          className="flex items-center w-full"
+                        >
+                          <item.icon className="h-5 w-5" />
+                          <span className="ml-2 hidden group-hover:inline-block">
+                            {item.label}
+                          </span>
+                        </button>
+                      ) : (
+                        <Link href={item.href}>
+                          <item.icon className="h-5 w-5" />
+                          <span className="ml-2 hidden group-hover:inline-block">
+                            {item.label}
+                          </span>
+                        </Link>
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    <p>{item.label}</p>
+                  </TooltipContent>
+                </Tooltip>
+              )
+          )}
         </nav>
       </aside>
     </TooltipProvider>

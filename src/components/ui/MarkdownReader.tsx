@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 const MarkdownReader: React.FC<MarkdownReaderProps> = ({ content }) => {
   return (
-    <Card className="w-full max-w-4xl mx-auto bg-white dark:bg-gray-800 shadow-lg">
+    <div>
       <ScrollArea className="h-[80vh]">
         <div className="p-8">
           <ReactMarkdown
@@ -92,7 +92,7 @@ const MarkdownReader: React.FC<MarkdownReaderProps> = ({ content }) => {
           </ReactMarkdown>
         </div>
       </ScrollArea>
-    </Card>
+    </div>
   );
 };
 

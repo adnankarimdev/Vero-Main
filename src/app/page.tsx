@@ -282,15 +282,15 @@ const LandingPage = () => {
           <section className="container mx-auto px-4 py-24 md:py-32 lg:py-24">
             <div className="max-w-4xl mx-auto text-center space-y-8">
               <WordPullUp
-      className="text-4xl font-bold tracking-[-0.02em] text-black dark:text-white md:text-7xl md:leading-[5rem]"
-      words="Customer Feedback in seconds."
-    />
+                className="text-4xl font-bold tracking-[-0.02em] text-black dark:text-white md:text-7xl md:leading-[5rem]"
+                words="Customer Feedback in seconds."
+              />
 
               <TypingAnimation
-              duration={25}
-      className="text-xl max-w-2xl mx-auto"
-      text="Routing experiences to their respective channels."
-    />
+                duration={25}
+                className="text-xl max-w-2xl mx-auto"
+                text="Routing experiences to their respective channels."
+              />
               <div className="relative">
                 <Image
                   src={customerSlides[currentCustomerSlide].src}
@@ -338,12 +338,10 @@ const LandingPage = () => {
 
           <section className="container mx-auto px-4 py-24 md:py-32 lg:py-40">
             <div className="max-w-4xl mx-auto text-center space-y-8">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-                
-              </h1>
-        <div className="text-4xl font-bold tracking-[-0.02em] text-black dark:text-white md:text-7xl md:leading-[5rem]">
-      <TextReveal text="Customer interactions, captured instantly."/>
-    </div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"></h1>
+              <div className="text-4xl font-bold tracking-[-0.02em] text-black dark:text-white md:text-7xl md:leading-[5rem]">
+                <TextReveal text="Customer interactions, captured instantly." />
+              </div>
               <p className="text-xl max-w-2xl mx-auto">
                 Quick. Engaging. Instant. Insights have never been this simple.
               </p>
@@ -439,7 +437,7 @@ const LandingPage = () => {
           </div>
         </footer>
       </div>
-      </AnimatedLayout>
+    </AnimatedLayout>
   );
 };
 export default LandingPage;

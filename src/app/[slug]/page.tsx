@@ -67,9 +67,17 @@ export default function BusinessTemplate() {
               {/* <h1 className="text-5xl font-bold mb-4">
                 {websiteDetails.businessName}
               </h1> */}
-              <SparklesText className="text-5xl" text={websiteDetails.businessName} sparklesCount={5}/>
+              <SparklesText
+                className="text-5xl"
+                text={websiteDetails.businessName}
+                sparklesCount={5}
+              />
               {/* <p className="text-xl mb-8 mt-10">{websiteDetails.tagline}</p> */}
-              <LetterPullup className="text-xl mb-8 mt-10" words={websiteDetails.tagline} delay={0.05} />
+              <LetterPullup
+                className="text-xl mb-8 mt-10"
+                words={websiteDetails.tagline}
+                delay={0.05}
+              />
             </div>
           </section>
 
@@ -123,18 +131,18 @@ export default function BusinessTemplate() {
                       <div className="flex items-center">
                         <MapPin className="w-6 h-6 mr-4 text-primary" />
                         <BoxReveal boxColor={"#fff7ed"} duration={0.5}>
-                        <a
-                          href={`https://www.google.com/maps/search/?api=1&query=${
-                            encodeURIComponent(websiteDetails.businessName) +
-                            encodeURIComponent(
-                              websiteDetails.contactInfo.address
-                            )
-                          }`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {websiteDetails.contactInfo.address}
-                        </a>
+                          <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${
+                              encodeURIComponent(websiteDetails.businessName) +
+                              encodeURIComponent(
+                                websiteDetails.contactInfo.address
+                              )
+                            }`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {websiteDetails.contactInfo.address}
+                          </a>
                         </BoxReveal>
                       </div>
                     )}
@@ -143,7 +151,7 @@ export default function BusinessTemplate() {
                       <div className="flex items-center">
                         <Phone className="w-6 h-6 mr-4 text-primary" />
                         <BoxReveal boxColor={"#fff7ed"} duration={0.5}>
-                        <p>{websiteDetails.contactInfo.phoneNumber}</p>
+                          <p>{websiteDetails.contactInfo.phoneNumber}</p>
                         </BoxReveal>
                       </div>
                     )}
@@ -152,7 +160,7 @@ export default function BusinessTemplate() {
                       <div className="flex items-center">
                         <Mail className="w-6 h-6 mr-4 text-primary" />
                         <BoxReveal boxColor={"#fff7ed"} duration={0.5}>
-                        <p>{websiteDetails.contactInfo.email}</p>
+                          <p>{websiteDetails.contactInfo.email}</p>
                         </BoxReveal>
                       </div>
                     )}

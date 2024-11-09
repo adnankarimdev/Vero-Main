@@ -532,7 +532,11 @@ export default function SummaryTab({
                 <Star className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-              <NumberTicker className="text-2xl font-bold" value={averageReviewRating} decimalPlaces={1}/>
+                <NumberTicker
+                  className="text-2xl font-bold"
+                  value={averageReviewRating}
+                  decimalPlaces={1}
+                />
               </CardContent>
             </Card>
             <Card>
@@ -543,7 +547,10 @@ export default function SummaryTab({
                 <Sigma className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <NumberTicker className="text-2xl font-bold" value={totalReviewsWithVero}/>
+                <NumberTicker
+                  className="text-2xl font-bold"
+                  value={totalReviewsWithVero}
+                />
               </CardContent>
             </Card>
             <Card>
@@ -554,7 +561,10 @@ export default function SummaryTab({
                 <Tablet className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-              <NumberTicker className="text-2xl font-bold" value={totalReviewsWithKiosk}/>
+                <NumberTicker
+                  className="text-2xl font-bold"
+                  value={totalReviewsWithKiosk}
+                />
               </CardContent>
             </Card>
             <Card>
@@ -565,7 +575,10 @@ export default function SummaryTab({
                 <Smartphone className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-              <NumberTicker className="text-2xl font-bold" value={totalReviewsWithPersonalDevice}/>
+                <NumberTicker
+                  className="text-2xl font-bold"
+                  value={totalReviewsWithPersonalDevice}
+                />
               </CardContent>
             </Card>
             <Card>
@@ -576,7 +589,10 @@ export default function SummaryTab({
                 <Ban className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-              <NumberTicker className="text-2xl font-bold" value={totalNegativeReviewsPrevented}/>
+                <NumberTicker
+                  className="text-2xl font-bold"
+                  value={totalNegativeReviewsPrevented}
+                />
               </CardContent>
             </Card>
             <Card>
@@ -587,7 +603,10 @@ export default function SummaryTab({
                 <MessageSquare className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-              <NumberTicker className="text-2xl font-bold" value={totalNumberOfFiveStarReviews}/>
+                <NumberTicker
+                  className="text-2xl font-bold"
+                  value={totalNumberOfFiveStarReviews}
+                />
               </CardContent>
             </Card>
             <Card>
@@ -598,7 +617,10 @@ export default function SummaryTab({
                 <FaGoogle className="h-4 w-4 text-muted-foreground" size={16} />
               </CardHeader>
               <CardContent>
-              <NumberTicker className="text-2xl font-bold" value={totalNumberOfFiveStarReviewsPostedToGoogle}/>
+                <NumberTicker
+                  className="text-2xl font-bold"
+                  value={totalNumberOfFiveStarReviewsPostedToGoogle}
+                />
               </CardContent>
             </Card>
             {/* Hiding review times. For kiosk, it won't make sense. since the timer starts on the review page. */}

@@ -7,7 +7,10 @@ export default function Dashboard() {
   return (
     <AnimatedLayout>
       <div className="container mx-auto p-4">
-        <GradualSpacing className="text-2xl font-bold mb-4 text-center" text="Vero Reviews"/>
+        <GradualSpacing
+          className="text-2xl font-bold mb-4 text-center"
+          text="Vero Reviews"
+        />
         <Reviews />
       </div>
     </AnimatedLayout>

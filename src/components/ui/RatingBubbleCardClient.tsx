@@ -309,7 +309,11 @@ export default function RatingBubbleCardClient({
           </div>
 
           {/* Centered Title */}
-          <SparklesText className="text-sm" text={businessName} sparklesCount={5}/>
+          <SparklesText
+            className="text-sm"
+            text={businessName}
+            sparklesCount={5}
+          />
         </CardTitle>
         {isEditing ? (
           <Input
@@ -325,7 +329,7 @@ export default function RatingBubbleCardClient({
           <CardDescription
             className="flex items-center justify-center space-x-1 mb-2 cursor-pointer"
             onClick={handleCardClick}
-          >   
+          >
             {cardDescription}
             <Pencil className="ml-2" size={12} />
           </CardDescription>
@@ -418,10 +422,7 @@ export default function RatingBubbleCardClient({
                     onClick={() => toggleBadge(category.name, badge)}
                   >
                     {/* {badge} */}
-                    <WordPullUp
-      className="text-xs"
-      words={badge}
-    />
+                    <WordPullUp className="text-xs" words={badge} />
                     <Button
                       variant="ghost"
                       size="icon"
