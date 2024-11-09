@@ -3,6 +3,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Inter } from "next/font/google";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -47,12 +54,15 @@ export default function DetailedView({
   bug: Bug;
   onBack: () => void;
   onDrawerChange: () => void;
-  onStatusUpdate: (bug:any) => void;
+  onStatusUpdate: (bug:any, newStatus:string) => void;
 }) {
 
-    const handleStatusUpdate = () =>
+    const [status, setStatus] = useState(bug.status)
+
+    const handleStatusUpdate = (newStatus: string) =>
     {
-        onStatusUpdate(bug)
+        setStatus(newStatus)
+        onStatusUpdate(bug, newStatus)
         onDrawerChange()
 
     }
@@ -68,10 +78,17 @@ export default function DetailedView({
   <CardTitle className="text-2xl flex-grow text-center">
     {bug.title}
   </CardTitle>
-
-  <Button variant="default" onClick={handleStatusUpdate} className="ml-4 bg-green-500 hover:bg-green-600 text-white text-xs py-1">
-    {"Resolved"}
-  </Button>
+  <Select value={status} onValueChange={handleStatusUpdate}>
+      <SelectTrigger className="w-[180px]">
+        <SelectValue placeholder="Update status" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="open">Open</SelectItem>
+        <SelectItem value="in progress">In Progress</SelectItem>
+        <SelectItem value="resolved">Resolved</SelectItem>
+        <SelectItem value="canceled">Canceled</SelectItem>
+      </SelectContent>
+    </Select>
   
 </div>
       </CardHeader>

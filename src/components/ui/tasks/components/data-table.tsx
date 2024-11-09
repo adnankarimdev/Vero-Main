@@ -44,7 +44,7 @@ import DetailedView from "./DetailedView";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  onStatusUpdate: (bug:any) => void;
+  onStatusUpdate: (bug:any, newStatus:string) => void;
 }
 
 export function DataTable<TData, TValue>({
