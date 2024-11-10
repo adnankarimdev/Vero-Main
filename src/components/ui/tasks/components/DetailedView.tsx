@@ -72,7 +72,6 @@ export default function DetailedView({
 }) {
   const [status, setStatus] = useState(bug.status);
   const [content, setContent] = useState("");
-  console.log(bug)
 
   const handleStatusUpdate = (newStatus: string) => {
     setStatus(newStatus);

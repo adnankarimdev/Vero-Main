@@ -221,7 +221,7 @@ const LandingPage = () => {
               </DropdownMenu>
               <Link
                 className="text-sm font-medium hover:text-gray-600 transition-colors mt-2"
-                href="#"
+                href="/"
               >
                 Pricing
               </Link>
