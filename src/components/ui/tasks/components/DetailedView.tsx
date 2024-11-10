@@ -73,7 +73,14 @@ export default function DetailedView({
   const [status, setStatus] = useState(bug.status);
   const [content, setContent] = useState("");
   const createdAt = new Date(`${bug.createdAt} UTC`);
-  const localTimeString = createdAt.toLocaleString();
+  const localTimeString = createdAt.toLocaleString([], {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true, // Set to false if you prefer a 24-hour format
+  });
 
   const handleStatusUpdate = (newStatus: string) => {
     setStatus(newStatus);
