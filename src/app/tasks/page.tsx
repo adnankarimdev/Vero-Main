@@ -18,6 +18,7 @@ import { AnimatedBeamTransition } from "@/components/ui/AnimatedBeamTransition";
 import GradualSpacing from "@/components/ui/gradual-spacing";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
+import KanbanBoard from "@/components/ui/tasks/components/KanbanBoard";
 
 export default function TaskPage() {
   const { toast } = useToast();
@@ -26,8 +27,13 @@ export default function TaskPage() {
       id: "",
       label: "",
       title: "",
+      description: "", // Missing in your initial object
       status: "",
       priority: "",
+      email: "", // Optional but can be initialized as an empty string
+      email_sent: "", // Optional but can be initialized as an empty string
+      name: "", // Optional but can be initialized as an empty string
+      createdAt: "",
     },
   ]);
 
@@ -175,6 +181,9 @@ export default function TaskPage() {
               onDescriptionUpdate={handleDescriptionUpdate}
               isNewTaskOpen={newTaskOpen}
             />
+          </div>
+          <div>
+          {/* <KanbanBoard initialBugs={tasks}/> */}
           </div>
         </>
       )}
