@@ -416,259 +416,148 @@ export default function SummaryTab({
     fetchData();
   }, []);
   return (
+    <div className="space-y-8">
+      <Card>
+        <CardHeader>
+          <CardTitle>{isSocialMediaAccount ? "All Engagement" : "All Locations"}</CardTitle>
+          <div className="flex justify-between">
+            <CardDescription>Overview</CardDescription>
+            {showWebsiteMessage && <ShowWebsiteBadge />}
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <StatCard
+              title="Average Review Rating"
+              value={averageReviewRating}
+              icon={<Star className="h-4 w-4 text-muted-foreground" />}
+              decimalPlaces={1}
+            />
+            <StatCard
+              title="Total Reviews with Vero"
+              value={totalReviewsWithVero}
+              icon={<Sigma className="h-4 w-4 text-muted-foreground" />}
+            />
+            <StatCard
+              title="Kiosk Reviews"
+              value={totalReviewsWithKiosk}
+              icon={<Tablet className="h-4 w-4 text-muted-foreground" />}
+            />
+            <StatCard
+              title="Personal Device Reviews"
+              value={totalReviewsWithPersonalDevice}
+              icon={<Smartphone className="h-4 w-4 text-muted-foreground" />}
+            />
+            <StatCard
+              title="Negative Reviews Prevented"
+              value={totalNegativeReviewsPrevented}
+              icon={<Ban className="h-4 w-4 text-muted-foreground" />}
+            />
+            <StatCard
+              title="5 Star Reviews"
+              value={totalNumberOfFiveStarReviews}
+              icon={<MessageSquare className="h-4 w-4 text-muted-foreground" />}
+            />
+            <StatCard
+              title="5 Star Reviews Routed to Google"
+              value={totalNumberOfFiveStarReviewsPostedToGoogle}
+              icon={<FaGoogle className="h-4 w-4 text-muted-foreground" />}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Badge Distribution by Rating</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-[400px] pr-4">
+              {Object.entries(organizedBadges)
+                .reverse()
+                .map(([recordNumber, badgeCounts]) => (
+                  <div key={recordNumber} className="border rounded-lg p-4 mb-4">
+                    <h3 className="text-lg font-semibold mb-2">{recordNumber}</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {Object.entries(badgeCounts).map(([badge, count]) => (
+                        <Badge key={badge} variant="outline">
+                          {!loadingBadges[`${recordNumber}-${badge}`] ? (
+                            <>
+                              {badgeTexts[recordNumber]?.[badge] || badge}: {count}
+                            </>
+                          ) : (
+                            <BadgeLoader />
+                          )}
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="hover:bg-transparent"
+                                  onClick={() => handleBadgeTranslationChange(recordNumber, badge)}
+                                >
+                                  <PiTranslate />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent className="bg-white text-black border border-gray-200 shadow-md">
+                                <p>Translate to English</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+            </ScrollArea>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{isSocialMediaAccount ? "Engagements per month" : "Reviews per month"}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <AreaChartComponent
+              chartData={chartData}
+              chartTitle=""
+              chartDescription=""
+              chartFact=""
+              chartFooter=""
+            />
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Top 5 Vero Customers</CardTitle>
+          <CardDescription>Based on the number of times visited</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isTableLoading ? (
+            <div className="h-[200px] flex items-center justify-center">Loading...</div>
+          ) : (
+            <TopCustomersTable customers={topCustomers} />
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+function StatCard({ title, value, icon, decimalPlaces = 0 }:any) {
+  return (
     <Card>
-      <CardHeader>
-        <CardTitle>
-          {isSocialMediaAccount ? "All Engagement" : "All Locations"}
-        </CardTitle>
-        <div className="flex justify-between">
-          <CardDescription>Overview</CardDescription>
-          {/* {totalNumberOfFiveStarReviewsPostedToGoogle >= 5 && <UpgradeButton />} */}
-          {showWebsiteMessage && <ShowWebsiteBadge />}
-        </div>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        {icon}
       </CardHeader>
       <CardContent>
-        <div className="grid gap-4 md:grid-cols-2 mb-10 place-items-center">
-          <Card className="w-full max-w-md">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {"Badge Distrubtion by Rating"}
-              </CardTitle>
-              <Eye className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[400px] pr-4">
-                {Object.entries(organizedBadges)
-                  .reverse()
-                  .map(([recordNumber, badgeCounts]) => (
-                    <div
-                      key={recordNumber}
-                      className="border rounded-lg p-4 mb-4"
-                    >
-                      <h3 className="text-lg font-semibold mb-2">
-                        {recordNumber}
-                      </h3>
-                      <div className="flex flex-wrap gap-2">
-                        {Object.entries(badgeCounts).map(([badge, count]) => (
-                          <Badge key={badge} variant="outline">
-                            {/* Check if there's an updated badge text; otherwise use the original badge */}
-                            {!loadingBadges[`${recordNumber}-${badge}`] && (
-                              <>
-                                {badgeTexts[recordNumber]?.[badge] || badge}:{" "}
-                                {count}
-                              </>
-                            )}
-
-                            {/* Show loader only for the specific badge */}
-                            {loadingBadges[`${recordNumber}-${badge}`] && (
-                              <BadgeLoader />
-                            )}
-
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="hover:bg-transparent"
-                                    onClick={() =>
-                                      handleBadgeTranslationChange(
-                                        recordNumber,
-                                        badge
-                                      )
-                                    }
-                                  >
-                                    <PiTranslate />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent className="bg-white text-black border border-gray-200 shadow-md">
-                                  <p>{`Translate to English`}</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-              </ScrollArea>
-            </CardContent>
-          </Card>
-          <AreaChartComponent
-            chartData={chartData}
-            chartTitle={
-              isSocialMediaAccount
-                ? "Engagements per month"
-                : "Reviews per month"
-            }
-            chartDescription={""}
-            chartFact={""}
-            chartFooter={""}
-          />
-        </div>
-
-        <div className="mb-10">
-          <Card>
-            <CardHeader>
-              <CardTitle>Top 5 Vero Customers</CardTitle>
-              <CardDescription>
-                Based on the number of times visited
-              </CardDescription>
-            </CardHeader>
-
-            {isTableLoading && topCustomers && <TableSkeletonLoader />}
-            {!isTableLoading && topCustomers && (
-              <TopCustomersTable customers={topCustomers} />
-            )}
-          </Card>
-        </div>
-        {!isSocialMediaAccount && (
-          <div className="grid gap-4 md:grid-cols-2 mb-10">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {"Average Review Rating with Customers using Vero"}
-                </CardTitle>
-                <Star className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <NumberTicker
-                  className="text-2xl font-bold"
-                  value={averageReviewRating}
-                  decimalPlaces={1}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {"Total Reviews with Vero"}
-                </CardTitle>
-                <Sigma className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <NumberTicker
-                  className="text-2xl font-bold"
-                  value={totalReviewsWithVero}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {"Total Kiosk Reviews"}
-                </CardTitle>
-                <Tablet className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <NumberTicker
-                  className="text-2xl font-bold"
-                  value={totalReviewsWithKiosk}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {"Total Personal Device Reviews"}
-                </CardTitle>
-                <Smartphone className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <NumberTicker
-                  className="text-2xl font-bold"
-                  value={totalReviewsWithPersonalDevice}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {"Negative Reviews Prevented with Vero"}
-                </CardTitle>
-                <Ban className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <NumberTicker
-                  className="text-2xl font-bold"
-                  value={totalNegativeReviewsPrevented}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {"5 Star Reviews with Vero"}
-                </CardTitle>
-                <MessageSquare className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <NumberTicker
-                  className="text-2xl font-bold"
-                  value={totalNumberOfFiveStarReviews}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {"5 Star Reviews Routed to Google"}
-                </CardTitle>
-                <FaGoogle className="h-4 w-4 text-muted-foreground" size={16} />
-              </CardHeader>
-              <CardContent>
-                <NumberTicker
-                  className="text-2xl font-bold"
-                  value={totalNumberOfFiveStarReviewsPostedToGoogle}
-                />
-              </CardContent>
-            </Card>
-            {/* Hiding review times. For kiosk, it won't make sense. since the timer starts on the review page. */}
-            <Card hidden={true}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {"Average Review Time (Personal Devices)"}
-                </CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {averageReviewTime} {"s"}
-                </div>
-              </CardContent>
-            </Card>
-            <Card hidden={true}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {"Average In Store Review Time"}
-                </CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {averageInStoreReviewTime} {"s"}
-                </div>
-              </CardContent>
-            </Card>
-            <Card hidden={true}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {"Average Personal Device Feedback Time"}
-                </CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {averagePersonalDeviceReviewTime} {"s"}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-
-        {/* Table will be here eventually. should probs create own component.*/}
-        <Separator className="my-4" />
+        <NumberTicker className="text-2xl font-bold" value={value} decimalPlaces={decimalPlaces} />
       </CardContent>
     </Card>
-  );
+  )
 }
