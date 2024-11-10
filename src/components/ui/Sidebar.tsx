@@ -50,8 +50,8 @@ const navItems = [
     show: true,
   },
   //Hiding Messenger for now, won't release to public just yet.
-  { icon: MessageCircle, label: "Messenger", href: "/messenger", show:false },
-  { icon: Star, label: "Customer Reviews", href: "/reviews", show: true },
+  { icon: MessageCircle, label: "Messenger", href: "/messenger", show: false },
+  { icon: Star, label: "Customer Feedback", href: "/reviews", show: true },
   {
     icon: GiSpiderWeb,
     label: "Website Creator",

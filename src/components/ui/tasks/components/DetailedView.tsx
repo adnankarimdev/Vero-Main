@@ -32,6 +32,7 @@ type Bug = {
   status: string;
   priority: string;
   email?: string;
+  email_sent?: string;
   name?: string;
   assignee?: {
     name: string;
@@ -104,11 +105,18 @@ export default function DetailedView({
                   {bug.priority}
                 </Badge>
               </div>
-              <div className="space-x-4" hidden={(bug.email == "") && (bug.name == "")}>
-                <Badge
-                  variant="outline"
-                >
-                  {"Concern from: "} <span className="text-green-500 ml-1">{bug.name}</span>
+              <div
+                className="space-x-4"
+                hidden={bug.email == "" && bug.name == ""}
+              >
+                <Badge variant="outline">
+                  {"Concern from: "}{" "}
+                  <span className="text-green-500 ml-1">{bug.name}</span>
+                </Badge>
+              </div>
+              <div className="space-x-4" hidden={bug.email_sent == "False"}>
+                <Badge variant="outline" className="bg-green-500 text-white">
+                  {"Email Sent"}
                 </Badge>
               </div>
             </div>

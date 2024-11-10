@@ -43,8 +43,8 @@ export function DataTableFacetedFilter<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
-        {title === "Status" ? <BadgeAlert/> : <CircleChevronUp/>}
-        {title}
+          {title === "Status" ? <BadgeAlert /> : <CircleChevronUp />}
+          {title}
           {selectedValues?.size > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />

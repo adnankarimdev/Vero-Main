@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
-import { ToastAction } from "@/components/ui/toast"
+import { ToastAction } from "@/components/ui/toast";
 import path from "path";
 import { Metadata } from "next";
 import { useEffect, useState } from "react";
@@ -37,31 +37,36 @@ export default function TaskPage() {
   const [dataToRender, setDataToRender] = useState<any>();
   const [placeId, setPlaceId] = useState("");
 
-
-  const sendEmailToCustomer = (bug: any) =>
-  {
-    console.log(bug)
+  const sendEmailToCustomer = (bug: any) => {
+    console.log(bug);
     axios
-    .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/send-email-to-customer-resolved/`, {
-      task: bug
-    })
-    .then((response) => {})
-    .catch((error) => {});
-  }
+      .post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/send-email-to-customer-resolved/`,
+        {
+          task: bug,
+        }
+      )
+      .then((response) => {})
+      .catch((error) => {});
+  };
 
   const handleStatusUpdate = (bug: any, newStatus: string) => {
-    console.log(newStatus)
+    console.log(newStatus);
     // Directly modifying the status of the rowData
-    if (newStatus == "resolved" && bug.name != "")
-      {
-        toast({
-          title: `Let ${bug.name} know issue is resolved?`,
-          duration: 10000,
-          action: (
-            <ToastAction altText="Goto schedule to undo" onClick={() => sendEmailToCustomer(bug)}>Email</ToastAction>
-          ),
-        });
-      }
+    if (newStatus == "resolved" && bug.name != "") {
+      toast({
+        title: `Let ${bug.name} know issue is resolved?`,
+        duration: 10000,
+        action: (
+          <ToastAction
+            altText="Goto schedule to undo"
+            onClick={() => sendEmailToCustomer(bug)}
+          >
+            Email
+          </ToastAction>
+        ),
+      });
+    }
     const updatedTask = { ...bug, status: newStatus }; // This will modify the status field of the passed bug
 
     // Assuming data is an array of bugs, update the correct bug
@@ -82,8 +87,6 @@ export default function TaskPage() {
     // Now update the state with the new data
 
     setTasks(updatedData);
-
-
   };
 
   const handleDescriptionUpdate = (bug: any, newDescription: string) => {
@@ -164,7 +167,7 @@ export default function TaskPage() {
           {"New Task"}
         </Button> */}
             </div>
-            
+
             <DataTable
               data={tasks}
               columns={columns}
@@ -172,7 +175,6 @@ export default function TaskPage() {
               onDescriptionUpdate={handleDescriptionUpdate}
               isNewTaskOpen={newTaskOpen}
             />
-
           </div>
         </>
       )}
