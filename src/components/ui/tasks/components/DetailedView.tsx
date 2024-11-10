@@ -38,7 +38,7 @@ type Bug = {
     name: string;
     avatar: string;
   };
-  createdAt?: string;
+  createdAt: string;
   updatedAt?: string;
   comments?: {
     id: string;
@@ -72,6 +72,8 @@ export default function DetailedView({
 }) {
   const [status, setStatus] = useState(bug.status);
   const [content, setContent] = useState("");
+  const createdAt = new Date(`${bug.createdAt} UTC`);
+  const localTimeString = createdAt.toLocaleString();
 
   const handleStatusUpdate = (newStatus: string) => {
     setStatus(newStatus);
@@ -143,7 +145,7 @@ export default function DetailedView({
 
           <span className="inline-flex items-center text-sm ">
             <AlertCircle className="mr-1 h-4 w-4" />
-            Opened on {bug.createdAt}
+            Opened on {localTimeString}
           </span>
         </div>
         <Separator />
