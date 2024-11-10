@@ -72,6 +72,7 @@ export default function DetailedView({
 }) {
   const [status, setStatus] = useState(bug.status);
   const [content, setContent] = useState("");
+  console.log(bug)
 
   const handleStatusUpdate = (newStatus: string) => {
     setStatus(newStatus);
@@ -114,7 +115,7 @@ export default function DetailedView({
                   <span className="text-green-500 ml-1">{bug.name}</span>
                 </Badge>
               </div>
-              <div className="space-x-4" hidden={bug.email_sent == "False"}>
+              <div className="space-x-4" hidden={!bug.email_sent || bug.email_sent == "False"}>
                 <Badge variant="outline" className="bg-green-500 text-white">
                   {"Email Sent"}
                 </Badge>
