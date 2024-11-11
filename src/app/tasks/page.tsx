@@ -9,6 +9,7 @@ import { Metadata } from "next";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { z } from "zod";
+import { Badge } from "@/components/ui/badge";
 
 import { columns } from "@/components/ui/tasks/components/columns";
 import { DataTable } from "@/components/ui/tasks/components/data-table";
@@ -17,8 +18,11 @@ import { taskSchema } from "@/components/ui/tasks/data/schema";
 import { AnimatedBeamTransition } from "@/components/ui/AnimatedBeamTransition";
 import GradualSpacing from "@/components/ui/gradual-spacing";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { Kanban, PlusCircle, Table } from "lucide-react";
 import KanbanBoard from "@/components/ui/tasks/components/KanbanBoard";
+import TimelineView from "@/components/ui/tasks/components/TimelineView";
+
+type ViewType = "table" | "kanban";
 
 export default function TaskPage() {
   const { toast } = useToast();
@@ -38,6 +42,7 @@ export default function TaskPage() {
   ]);
 
   const [newTaskOpen, setIsNewTaskOpen] = useState(false);
+  const [activeView, setActiveView] = useState<ViewType>("table");
 
   const [isLoading, setIsLoading] = useState(false);
   const [dataToRender, setDataToRender] = useState<any>();
@@ -57,7 +62,6 @@ export default function TaskPage() {
   };
 
   const handleStatusUpdate = (bug: any, newStatus: string) => {
-    console.log(newStatus);
     // Directly modifying the status of the rowData
     if (newStatus == "resolved" && bug.name != "") {
       toast({
@@ -141,7 +145,6 @@ export default function TaskPage() {
         );
 
         const reversedTasks = [...tasks.data.tasks].reverse();
-        console.log(tasks.data.tasks);
         setDataToRender(reversedTasks);
         setTasks(reversedTasks);
         setPlaceId(tasks.data.place_id);
@@ -158,22 +161,31 @@ export default function TaskPage() {
   return (
     <>
       {!isLoading && (
-        <>
-          <div className="md:hidden"></div>
-          <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-            <div className="flex items-center justify-between space-y-2">
-              <div className="container mx-auto p-4">
-                <GradualSpacing
-                  className="text-2xl font-bold mb-4 text-center"
-                  text="Vero Tasks"
-                />
-              </div>
-              {/* <Button variant="outline" size="sm" className="h-8 border-dashed" onClick={() => setIsNewTaskOpen(true)}>
-          <PlusCircle />
-          {"New Task"}
-        </Button> */}
+        <div className="container mx-auto p-4">
+          <div className="flex items-center justify-between space-y-2 mb-4">
+            <GradualSpacing
+              className="text-2xl font-bold text-center"
+              text="Vero Tasks"
+            />
+            <div className="flex space-x-2">
+              <Badge
+                variant={activeView === "table" ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => setActiveView("table")}
+              >
+                <Table />
+              </Badge>
+              <Badge
+                variant={activeView === "kanban" ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => setActiveView("kanban")}
+              >
+                <Kanban />
+              </Badge>
             </div>
+          </div>
 
+          {activeView === "table" && (
             <DataTable
               data={tasks}
               columns={columns}
@@ -181,11 +193,15 @@ export default function TaskPage() {
               onDescriptionUpdate={handleDescriptionUpdate}
               isNewTaskOpen={newTaskOpen}
             />
-          </div>
-          <div>
-          {/* <KanbanBoard initialBugs={tasks}/> */}
-          </div>
-        </>
+          )}
+
+          {activeView === "kanban" && (
+            <KanbanBoard
+              initialBugs={tasks}
+              onStatusUpdate={handleStatusUpdate}
+            />
+          )}
+        </div>
       )}
     </>
   );

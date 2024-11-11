@@ -22,21 +22,21 @@ export default function AnimatedSaveIcon() {
 
   useEffect(() => {
     let mounted = true;
-  
+
     const animateIcon = async () => {
       if (!mounted) return;
-  
+
       await controls.start("visible");
       await new Promise((resolve) => setTimeout(resolve, 1000));
-  
+
       if (mounted) {
         await controls.start("hidden");
         setKey((prevKey) => prevKey + 1);
       }
     };
-  
+
     animateIcon();
-  
+
     return () => {
       mounted = false;
     };

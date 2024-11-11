@@ -74,11 +74,11 @@ export default function DetailedView({
   const [content, setContent] = useState("");
   const createdAt = new Date(`${bug.createdAt} UTC`);
   const localTimeString = createdAt.toLocaleString([], {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
     hour12: true, // Set to false if you prefer a 24-hour format
   });
 
@@ -123,7 +123,10 @@ export default function DetailedView({
                   <span className="text-green-500 ml-1">{bug.name}</span>
                 </Badge>
               </div>
-              <div className="space-x-4" hidden={!bug.email_sent || bug.email_sent == "False"}>
+              <div
+                className="space-x-4"
+                hidden={!bug.email_sent || bug.email_sent == "False"}
+              >
                 <Badge variant="outline" className="bg-green-500 text-white">
                   {"Email Sent"}
                 </Badge>

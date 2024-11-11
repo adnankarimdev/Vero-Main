@@ -46,8 +46,7 @@ export default function PricingCard() {
             <div
               className="p-px overflow-hidden rounded-2xl hover:-translate-y-2 transition duration-500 transform-gpu"
               style={{
-                backgroundImage:
-                  "url('/advanced-gradient.jpg')",
+                backgroundImage: "url('/advanced-gradient.jpg')",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
               }}
@@ -56,8 +55,7 @@ export default function PricingCard() {
                 <div
                   className="p-12"
                   style={{
-                    backgroundImage:
-                      "url('/advanced-gradient.jpg')",
+                    backgroundImage: "url('/advanced-gradient.jpg')",
                     backgroundRepeat: "no-repeat",
                     backgroundSize: "cover",
                   }}

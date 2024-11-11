@@ -419,7 +419,9 @@ export default function SummaryTab({
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>{isSocialMediaAccount ? "All Engagement" : "All Locations"}</CardTitle>
+          <CardTitle>
+            {isSocialMediaAccount ? "All Engagement" : "All Locations"}
+          </CardTitle>
           <div className="flex justify-between">
             <CardDescription>Overview</CardDescription>
             {showWebsiteMessage && <ShowWebsiteBadge />}
@@ -477,14 +479,20 @@ export default function SummaryTab({
               {Object.entries(organizedBadges)
                 .reverse()
                 .map(([recordNumber, badgeCounts]) => (
-                  <div key={recordNumber} className="border rounded-lg p-4 mb-4">
-                    <h3 className="text-lg font-semibold mb-2">{recordNumber}</h3>
+                  <div
+                    key={recordNumber}
+                    className="border rounded-lg p-4 mb-4"
+                  >
+                    <h3 className="text-lg font-semibold mb-2">
+                      {recordNumber}
+                    </h3>
                     <div className="flex flex-wrap gap-2">
                       {Object.entries(badgeCounts).map(([badge, count]) => (
                         <Badge key={badge} variant="outline">
                           {!loadingBadges[`${recordNumber}-${badge}`] ? (
                             <>
-                              {badgeTexts[recordNumber]?.[badge] || badge}: {count}
+                              {badgeTexts[recordNumber]?.[badge] || badge}:{" "}
+                              {count}
                             </>
                           ) : (
                             <BadgeLoader />
@@ -496,7 +504,12 @@ export default function SummaryTab({
                                   variant="ghost"
                                   size="sm"
                                   className="hover:bg-transparent"
-                                  onClick={() => handleBadgeTranslationChange(recordNumber, badge)}
+                                  onClick={() =>
+                                    handleBadgeTranslationChange(
+                                      recordNumber,
+                                      badge
+                                    )
+                                  }
                                 >
                                   <PiTranslate />
                                 </Button>
@@ -517,7 +530,11 @@ export default function SummaryTab({
 
         <Card>
           <CardHeader>
-            <CardTitle>{isSocialMediaAccount ? "Engagements per month" : "Reviews per month"}</CardTitle>
+            <CardTitle>
+              {isSocialMediaAccount
+                ? "Engagements per month"
+                : "Reviews per month"}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <AreaChartComponent
@@ -534,21 +551,25 @@ export default function SummaryTab({
       <Card>
         <CardHeader>
           <CardTitle>Top 5 Vero Customers</CardTitle>
-          <CardDescription>Based on the number of times visited</CardDescription>
+          <CardDescription>
+            Based on the number of times visited
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {isTableLoading ? (
-            <div className="h-[200px] flex items-center justify-center">Loading...</div>
+            <div className="h-[200px] flex items-center justify-center">
+              Loading...
+            </div>
           ) : (
             <TopCustomersTable customers={topCustomers} />
           )}
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
 
-function StatCard({ title, value, icon, decimalPlaces = 0 }:any) {
+function StatCard({ title, value, icon, decimalPlaces = 0 }: any) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -556,8 +577,12 @@ function StatCard({ title, value, icon, decimalPlaces = 0 }:any) {
         {icon}
       </CardHeader>
       <CardContent>
-        <NumberTicker className="text-2xl font-bold" value={value} decimalPlaces={decimalPlaces} />
+        <NumberTicker
+          className="text-2xl font-bold"
+          value={value}
+          decimalPlaces={decimalPlaces}
+        />
       </CardContent>
     </Card>
-  )
+  );
 }
