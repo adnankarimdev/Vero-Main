@@ -40,6 +40,13 @@ type Column = {
   bugs: Bug[];
 };
 
+const priorityColors = {
+    low: "bg-green-100 text-green-800 hover:bg-green-200",
+    medium: "bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
+    high: "bg-orange-100 text-orange-800 hover:bg-orange-200",
+    critical: "bg-red-100 text-red-800 hover:bg-red-200",
+  };
+  
 export default function KanbanBoard({
   initialBugs,
   onStatusUpdate,
@@ -161,7 +168,7 @@ export default function KanbanBoard({
         </Popover>
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex gap-4 p-4 overflow-x-auto">
+      <div className="flex gap-4 p-4 overflow-x-auto justify-center">
           {filteredColumns.map((column) => (
             <div key={column.id} className="flex-shrink-0 w-72">
               <Card>
@@ -206,7 +213,7 @@ export default function KanbanBoard({
                                     </h3>
                                   </div>
                                   <div className="flex justify-between items-center">
-                                    <Badge variant="secondary">
+                                    <Badge className={`${priorityColors[bug.priority as keyof typeof priorityColors]} w-24 justify-center`}>
                                       {bug.priority}
                                     </Badge>
                                     <span className="text-xs text-muted-foreground">

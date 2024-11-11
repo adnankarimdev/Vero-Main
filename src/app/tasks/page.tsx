@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Kanban, PlusCircle, Table } from "lucide-react";
 import KanbanBoard from "@/components/ui/tasks/components/KanbanBoard";
 import TimelineView from "@/components/ui/tasks/components/TimelineView";
+import AnimatedLayout from "@/animations/AnimatedLayout";
 
 type ViewType = "table" | "kanban";
 
@@ -159,7 +160,7 @@ export default function TaskPage() {
   }, []);
 
   return (
-    <>
+    <AnimatedLayout>
       {!isLoading && (
         <div className="container mx-auto p-4">
           <div className="flex items-center justify-between space-y-2 mb-4">
@@ -186,6 +187,7 @@ export default function TaskPage() {
           </div>
 
           {activeView === "table" && (
+            <AnimatedLayout>
             <DataTable
               data={tasks}
               columns={columns}
@@ -193,16 +195,19 @@ export default function TaskPage() {
               onDescriptionUpdate={handleDescriptionUpdate}
               isNewTaskOpen={newTaskOpen}
             />
+            </AnimatedLayout>
           )}
 
           {activeView === "kanban" && (
+            <AnimatedLayout>
             <KanbanBoard
               initialBugs={tasks}
               onStatusUpdate={handleStatusUpdate}
             />
+            </AnimatedLayout>
           )}
         </div>
       )}
-    </>
+    </AnimatedLayout>
   );
 }
