@@ -82,11 +82,11 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <div className="mb-2">
-            <Logo />
+            <Logo size={24}/>
           </div>
           <SidebarGroupContent>
             <SidebarMenu>
