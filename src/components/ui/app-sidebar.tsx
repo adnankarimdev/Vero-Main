@@ -52,7 +52,7 @@ const navItems = [
     href: "/settings",
     show: true,
   },
-  { icon: Logs, label: "Tasks List", href: "/tasks", show: true },
+  { icon: Logs, label: "Tasks List", href: "/tasks", show: false },
   {
     icon: Route,
     label: "Customer Journey",
