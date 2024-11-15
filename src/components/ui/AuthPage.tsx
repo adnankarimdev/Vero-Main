@@ -58,6 +58,7 @@ export default function AuthPage() {
         localStorage.setItem("authToken", response.data.token);
         localStorage.setItem("userEmail", email);
         localStorage.setItem("accountType", response.data.account_type);
+        sessionStorage.setItem("authToken", response.data.token);
         toast({
           title: "Successfully Logged In",
           description: "Welcome to Vero.",
@@ -94,6 +95,7 @@ export default function AuthPage() {
         });
         localStorage.setItem("userEmail", email);
         localStorage.setItem("accountType", accountType);
+        sessionStorage.setItem("authToken", response.data.token);
         setTimeout(() => {
           if (accountType == "google-business") {
             router.push("/placefinder");
