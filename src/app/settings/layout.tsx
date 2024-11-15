@@ -1,4 +1,4 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/Sidebar"
 import { AppSidebar } from "@/components/ui/app-sidebar";
 
 type LayoutProps = {
