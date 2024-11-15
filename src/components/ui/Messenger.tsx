@@ -130,7 +130,7 @@ export default function Messenger() {
     setIsLoading(true);
     const fetchData = async () => {
       try {
-        const email = localStorage.getItem("userEmail");
+        const email = sessionStorage.getItem("authToken");
         if (!email) {
           toast({
             title: "Please sign in.",
@@ -143,7 +143,12 @@ export default function Messenger() {
 
         // First, fetch the placeId
         const placeIdResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/`,
+          {
+            headers: {
+              Authorization: `Bearer ${email}`,
+            },
+          }
         );
         setPlaceIds(placeIdResponse.data.placeIds);
 

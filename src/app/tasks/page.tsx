@@ -126,14 +126,19 @@ export default function TaskPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const email = localStorage.getItem("userEmail");
+        const email = sessionStorage.getItem("authToken");
         if (!email) {
           console.error("Email not found in localStorage");
           return;
         }
 
         const placeIdResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/`,
+          {
+            headers: {
+              Authorization: `Bearer ${email}`,
+            },
+          }
         );
 
         const placeIdsAsArray = placeIdResponse.data.places.map(

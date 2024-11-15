@@ -98,7 +98,7 @@ export default function Onboarding() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const email = localStorage.getItem("userEmail");
+        const email = sessionStorage.getItem("authToken");
         if (!email) {
           toast({
             title: "Please sign in.",
@@ -111,7 +111,12 @@ export default function Onboarding() {
 
         // First, fetch the placeId
         const placeIdResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/`,
+          {
+            headers: {
+              Authorization: `Bearer ${email}`,
+            },
+          }
         );
         handleSettingChange("placeIds", placeIdResponse.data.placeIds);
         handleSettingChange("userEmail", email as string);

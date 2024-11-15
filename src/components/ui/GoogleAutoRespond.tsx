@@ -33,7 +33,7 @@ export default function GoogleAutoRespond() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const email = localStorage.getItem("userEmail");
+        const email = sessionStorage.getItem("authToken");
         if (!email) {
           toast({
             title: "Please sign in.",
@@ -44,7 +44,12 @@ export default function GoogleAutoRespond() {
           return;
         }
         const userData = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-user-data/${email}/`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-user-data/`,
+          {
+            headers: {
+              Authorization: `Bearer ${email}`,
+            },
+          }
         );
         setBuisnessName(userData.data.business_name);
       } catch (err) {

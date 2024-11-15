@@ -327,7 +327,7 @@ export default function SummaryTab({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const email = localStorage.getItem("userEmail");
+        const email = sessionStorage.getItem("authToken");
         if (!email) {
           toast({
             title: "Please sign in.",
@@ -339,8 +339,15 @@ export default function SummaryTab({
         }
 
         const shouldTriggerWebistePrompt = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-website-message/${email}/`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-website-message/`,
+          {
+            headers: {
+              Authorization: `Bearer ${email}`,
+            },
+          }
         );
+
+        console.log(shouldTriggerWebistePrompt)
 
         setShowWebsiteMessage(
           shouldTriggerWebistePrompt.data.data["internal_website"] === null &&
@@ -351,7 +358,12 @@ export default function SummaryTab({
         console.log(shouldTriggerWebistePrompt.data.data);
 
         const placeIdResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/${email}/`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/`,
+          {
+            headers: {
+              Authorization: `Bearer ${email}`,
+            },
+          }
         );
         setIsSocialMediaAccount(
           placeIdResponse.data.places[0].name ===

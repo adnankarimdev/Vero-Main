@@ -52,7 +52,7 @@ const navItems = [
     href: "/settings",
     show: true,
   },
-  { icon: Logs, label: "Tasks List", href: "/tasks", show: false },
+  { icon: Logs, label: "Tasks List", href: "/tasks", show: true },
   {
     icon: Route,
     label: "Customer Journey",
@@ -78,6 +78,7 @@ export function AppSidebar() {
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userEmail");
+    sessionStorage.removeItem("authToken")
     router.push("/");
   };
 
