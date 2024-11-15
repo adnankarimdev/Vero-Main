@@ -1,22 +1,27 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Card } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { PlusCircle, Image as ImageIcon, Link as LinkIcon, SmilePlus } from 'lucide-react'
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  PlusCircle,
+  Image as ImageIcon,
+  Link as LinkIcon,
+  SmilePlus,
+} from "lucide-react";
 
 export default function BlogWriter() {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const [tags, setTags] = useState('')
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tags, setTags] = useState("");
 
   const handlePublish = () => {
-    console.log('Publishing:', { title, content, tags })
+    console.log("Publishing:", { title, content, tags });
     // Here you would typically send the data to your backend
-  }
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -42,7 +47,7 @@ export default function BlogWriter() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        
+
         <div className="mb-4">
           <Input
             type="text"
@@ -55,10 +60,18 @@ export default function BlogWriter() {
 
         <Card className="mb-4 p-2">
           <div className="flex space-x-2">
-            <Button variant="ghost" size="icon"><PlusCircle className="h-4 w-4" /></Button>
-            <Button variant="ghost" size="icon"><ImageIcon className="h-4 w-4" /></Button>
-            <Button variant="ghost" size="icon"><LinkIcon className="h-4 w-4" /></Button>
-            <Button variant="ghost" size="icon"><SmilePlus className="h-4 w-4" /></Button>
+            <Button variant="ghost" size="icon">
+              <PlusCircle className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <ImageIcon className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <LinkIcon className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <SmilePlus className="h-4 w-4" />
+            </Button>
           </div>
         </Card>
 
@@ -70,5 +83,5 @@ export default function BlogWriter() {
         />
       </main>
     </div>
-  )
+  );
 }

@@ -188,22 +188,22 @@ export default function TaskPage() {
 
           {activeView === "table" && (
             <AnimatedLayout>
-            <DataTable
-              data={tasks}
-              columns={columns}
-              onStatusUpdate={handleStatusUpdate}
-              onDescriptionUpdate={handleDescriptionUpdate}
-              isNewTaskOpen={newTaskOpen}
-            />
+              <DataTable
+                data={tasks}
+                columns={columns}
+                onStatusUpdate={handleStatusUpdate}
+                onDescriptionUpdate={handleDescriptionUpdate}
+                isNewTaskOpen={newTaskOpen}
+              />
             </AnimatedLayout>
           )}
 
           {activeView === "kanban" && (
             <AnimatedLayout>
-            <KanbanBoard
-              initialBugs={tasks}
-              onStatusUpdate={handleStatusUpdate}
-            />
+              <KanbanBoard
+                initialBugs={tasks}
+                onStatusUpdate={handleStatusUpdate}
+              />
             </AnimatedLayout>
           )}
         </div>

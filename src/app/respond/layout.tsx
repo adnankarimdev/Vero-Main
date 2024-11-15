@@ -1,4 +1,4 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/Sidebar"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/Sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
 
 type LayoutProps = {
@@ -8,12 +8,13 @@ type LayoutProps = {
 export default function ReviewsLayout({ children }: LayoutProps) {
   return (
     <div className="flex">
-    <SidebarProvider>
-    <AppSidebar />
-      <main className="flex-1 p-4">
-      <SidebarTrigger />
-        {children}</main>
-        </SidebarProvider>
+      <SidebarProvider>
+        <AppSidebar />
+        <main className="flex-1 p-4">
+          <SidebarTrigger />
+          {children}
+        </main>
+      </SidebarProvider>
     </div>
   );
 }
