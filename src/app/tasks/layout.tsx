@@ -1,4 +1,5 @@
-import Sidebar from "@/components/ui/Sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/ui/app-sidebar";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -7,8 +8,12 @@ type LayoutProps = {
 export default function SettingsLayout({ children }: LayoutProps) {
   return (
     <div className="flex">
-      <Sidebar />
-      <main className="flex-1 p-4">{children}</main>
+    <SidebarProvider>
+    <AppSidebar />
+      <main className="flex-1 p-4">
+      <SidebarTrigger />
+        {children}</main>
+        </SidebarProvider>
     </div>
   );
 }
