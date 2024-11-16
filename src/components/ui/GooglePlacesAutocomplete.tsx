@@ -71,33 +71,48 @@ export default function GooglePlacesAutocomplete(): JSX.Element {
             formatted_address: selectedPlace.formatted_address,
             place_id: selectedPlace.place_id,
           };
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-details/${selectedPlace.place_id}/`
-          );
-          const data = response.data;
-          const website = data.result["website"] || "";
-          const types = data.result["types"];
-          const typesToRemove = new Set([
-            "store",
-            "point_of_interest",
-            "establishment",
-          ]);
-          const finalTypes = types.filter(
-            (type: any) => !typesToRemove.has(type)
-          );
-          newPlace.currentRating = data.result["rating"];
-          newPlace.currentTotalReviews = data.result["user_ratings_total"];
-          newPlace.websiteUrl = website;
-          newPlace.googleTypes = finalTypes;
-          setPlaces((prevPlaces) => {
-            if (!prevPlaces.includes(newPlace)) {
-              return [...prevPlaces, newPlace];
+
+          try {
+            const response = await axios.get(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-details/${selectedPlace.place_id}/`
+            );
+            const data = response.data;
+            const website = data.result["website"] || "";
+            const types = data.result["types"];
+            const typesToRemove = new Set([
+              "store",
+              "point_of_interest",
+              "establishment",
+            ]);
+            const finalTypes = types.filter(
+              (type: any) => !typesToRemove.has(type)
+            );
+            newPlace.currentRating = data.result["rating"];
+            newPlace.currentTotalReviews = data.result["user_ratings_total"];
+            newPlace.websiteUrl = website;
+            newPlace.googleTypes = finalTypes;
+            setPlaces((prevPlaces) => {
+              if (!prevPlaces.includes(newPlace)) {
+                return [...prevPlaces, newPlace];
+              }
+              return prevPlaces;
+            });
+            if (inputRef.current) {
+              inputRef.current.value = "";
             }
-            return prevPlaces;
-          });
-          if (inputRef.current) {
-            inputRef.current.value = "";
           }
+          catch (error: any) {
+            // Handle and throw the error explicitly
+            console.log(error.response.data.error)
+            toast({
+              title: error.response.data.error,
+              duration: 3000,
+              variant: "destructive",
+            });
+            return
+          }
+
+
         });
       }
     };
