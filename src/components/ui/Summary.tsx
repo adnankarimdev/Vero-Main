@@ -560,23 +560,26 @@ export default function SummaryTab({
         </Card>
       </div>
 
+    {topCustomers.length != 0 && (
       <Card>
-        <CardHeader>
-          <CardTitle>Top 5 Vero Customers</CardTitle>
-          <CardDescription>
-            Based on the number of times visited
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {isTableLoading ? (
-            <div className="h-[200px] flex items-center justify-center">
-              Loading...
-            </div>
-          ) : (
-            <TopCustomersTable customers={topCustomers} />
-          )}
-        </CardContent>
-      </Card>
+      <CardHeader>
+        <CardTitle>Top 5 Vero Customers</CardTitle>
+        <CardDescription>
+          Based on the number of times visited
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {isTableLoading ? (
+          <div className="h-[200px] flex items-center justify-center">
+            Loading...
+          </div>
+        ) : (
+          <TopCustomersTable customers={topCustomers} />
+        )}
+      </CardContent>
+    </Card>
+    )}
+
     </div>
   );
 }
