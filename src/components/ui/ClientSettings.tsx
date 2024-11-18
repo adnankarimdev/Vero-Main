@@ -481,11 +481,7 @@ export default function ClientSettings() {
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader>
-        <CardTitle className="text-center">
-          Configure Vero Review Settings
-        </CardTitle>
-      </CardHeader>
+
       <CardContent>
         {isTabsLoading && <TabsSkeletonLoader />}
         {!isTabsLoading && (
@@ -497,7 +493,7 @@ export default function ClientSettings() {
       >
         <TabsTrigger 
           value="badges"
-          className="flex-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground focus:outline-none group relative"
+          className="flex-1 px-10 py-2 text-sm font-medium text-muted-foreground hover:text-foreground focus:outline-none group relative"
         >
           Badges
           <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary scale-x-0 transition-transform group-data-[state=active]:scale-x-100" />
@@ -505,7 +501,7 @@ export default function ClientSettings() {
         {!isOnlineBusiness && (
           <TabsTrigger 
             value="email"
-            className="flex-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground focus:outline-none group relative"
+            className="flex-1 px-10 py-2 text-sm font-medium text-muted-foreground hover:text-foreground focus:outline-none group relative"
           >
             Email
             <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary scale-x-0 transition-transform group-data-[state=active]:scale-x-100" />
@@ -513,7 +509,7 @@ export default function ClientSettings() {
         )}
         <TabsTrigger 
           value="locations"
-          className="flex-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground focus:outline-none group relative"
+          className="flex-1 px-10 py-2 text-sm font-medium text-muted-foreground hover:text-foreground focus:outline-none group relative"
         >
           {isOnlineBusiness ? "Social Media" : "Locations"}
           <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary scale-x-0 transition-transform group-data-[state=active]:scale-x-100" />
@@ -773,7 +769,6 @@ export default function ClientSettings() {
                     <div className="mb-4">
                       {customerInternalWebsite && (
                         <>
-                          <Separator className="mt-5 mb-5" />
                           <Label htmlFor="showComplimentaryItem">
                             Personalized Website
                           </Label>
