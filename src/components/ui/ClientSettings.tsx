@@ -489,18 +489,36 @@ export default function ClientSettings() {
       <CardContent>
         {isTabsLoading && <TabsSkeletonLoader />}
         {!isTabsLoading && (
-          <Tabs defaultValue="badges">
-            <TabsList
-              className={`grid w-full ${!isOnlineBusiness ? "grid-cols-3" : "grid-cols-2"}`}
-            >
-              <TabsTrigger value="badges">Badges</TabsTrigger>
-              {!isOnlineBusiness && (
-                <TabsTrigger value="email">Email</TabsTrigger>
-              )}
-              <TabsTrigger value="locations">
-                {isOnlineBusiness ? "Social Media" : "Locations"}
-              </TabsTrigger>
-            </TabsList>
+          <Tabs defaultValue="badges" className="w-full border-transparent">
+      <TabsList 
+        className={`flex w-full border-b border-gray-200 bg-transparent ${
+          !isOnlineBusiness ? "grid-cols-3" : "grid-cols-2"
+        }`}
+      >
+        <TabsTrigger 
+          value="badges"
+          className="flex-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground focus:outline-none group relative"
+        >
+          Badges
+          <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary scale-x-0 transition-transform group-data-[state=active]:scale-x-100" />
+        </TabsTrigger>
+        {!isOnlineBusiness && (
+          <TabsTrigger 
+            value="email"
+            className="flex-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground focus:outline-none group relative"
+          >
+            Email
+            <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary scale-x-0 transition-transform group-data-[state=active]:scale-x-100" />
+          </TabsTrigger>
+        )}
+        <TabsTrigger 
+          value="locations"
+          className="flex-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground focus:outline-none group relative"
+        >
+          {isOnlineBusiness ? "Social Media" : "Locations"}
+          <span className="absolute inset-x-0 bottom-0 h-0.5 bg-primary scale-x-0 transition-transform group-data-[state=active]:scale-x-100" />
+        </TabsTrigger>
+      </TabsList>
             <TabsContent value="badges">
               <AnimatedLayout>
                 <Sheet>
