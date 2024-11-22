@@ -2,6 +2,12 @@ import { flattenedIconMap } from "@/utils/IconList";
 export type KeywordCounts = {
   [key: string]: number;
 };
+export type Question = {
+  id: string
+  type: string
+  content: string
+  options?: string[]
+}
 
 export type Block = {
   id: string;

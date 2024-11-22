@@ -57,9 +57,9 @@ const navItems = [
     icon: Speaker,
     label: "Real Time",
     href: "/realtime",
-    show: false,
+    show: true,
   },
-  { icon: Logs, label: "Tasks List", href: "/tasks", show: false },
+  { icon: Logs, label: "Tasks List", href: "/tasks", show: true },
   {
     icon: Route,
     label: "Customer Journey",

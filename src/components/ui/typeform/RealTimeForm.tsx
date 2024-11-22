@@ -20,6 +20,7 @@ import { WavRecorder, WavStreamPlayer } from '@/lib/wavtools/index.js';
 import { useToast } from "@/components/ui/use-toast";
 import { instructions } from '@/utils/conversation_config.js';
 import { useRouter } from "next/navigation";
+import { Question } from '@/components/Types/types';
 import { WavRenderer } from '@/utils/wav_renderer';
 
 import { X, Edit, Zap, ArrowUp, ArrowDown } from 'lucide-react';
@@ -30,7 +31,7 @@ import { Toggle } from '@/components/ui/toggle';
 import { isJsxOpeningLikeElement } from 'typescript';
 import { strict } from 'assert';
 import { Label } from '../label';
-import VoiceGridVisualization from './VoiceGridVisualization';
+import VoiceGridVisualization from '../real-time/VoiceGridVisualization';
 import { Switch } from '../switch';
 import { CustomerReviewInfoFromSerializer } from '@/components/Types/types';
 
@@ -61,7 +62,12 @@ interface RealtimeEvent {
   event: { [key: string]: any };
 }
 
-export function ConsolePage() {
+interface QuestionsProps {
+  questions: Question[];
+  setQuestions: React.Dispatch<React.SetStateAction<Question[]>>;
+}
+
+export function RealTimeTypeForm({questions, setQuestions}: QuestionsProps) {
   /**
    * Ask user for API Key
    * If we're using the local relay server, we don't need this
@@ -495,14 +501,230 @@ type RatingToBadges = {
     // Get refs
     const wavStreamPlayer = wavStreamPlayerRef.current;
     const client = clientRef.current;
+    const localInstructions = `
+    System settings:
+Tool use: enabled.
+
+You are to help the user create forms. Make use of the tools provided to you whenever you can. 
+    `
 
     // Set instructions
-    client.updateSession({ instructions: instructions });
+    client.updateSession({ instructions: localInstructions });
     // Set transcription, otherwise we don't get user transcriptions back
     client.updateSession({ voice: 'ash' });
     // client.updateSession({ input_audio_transcription: { model: 'whisper-1' } });
 
     // Add tools
+    client.addTool(
+      {
+        name: 'add_question',
+        description: 'Adds a new question to the list of questions.',
+        parameters: {
+          type: 'object',
+          properties: {
+            type: {
+              type: 'string',
+              description:
+                'The type of the question. It can be "text", "multiple_choice", "checkbox", or "date".',
+            },
+          },
+          required: ['type'],
+        },
+      },
+      async ({ type }: { type: string }) => {
+        const newQuestion: Question = {
+          id: `question-${Date.now()}`,
+          type,
+          content: `New ${type} question`,
+          options: type === 'multiple_choice' || type === 'checkbox' ? ['Option 1', 'Option 2'] : undefined,
+        };
+        setQuestions((questions) => [...questions, newQuestion]);
+        return { success: true, question: newQuestion };
+      }
+    );
+
+    client.addTool(
+      {
+        name: 'update_question',
+        description: 'Updates a question by its ID.',
+        parameters: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description: 'The unique identifier of the question to update.',
+            },
+            updates: {
+              type: 'object',
+              description: 'The properties to update on the question.',
+              additionalProperties: true,
+            },
+          },
+          required: ['id', 'updates'],
+        },
+      },
+      async ({ id, updates }: { id: string; updates: Partial<Question> }) => {
+        setQuestions((questions) =>
+          questions.map((q) => (q.id === id ? { ...q, ...updates } : q))
+        );
+        return { success: true, updatedQuestion: { id, updates } };
+      }
+    );
+
+
+    client.addTool(
+      {
+        name: 'update_question_options',
+        description: 'Updates the options for a multiple-choice or checkbox question based on user input.',
+        parameters: {
+          type: 'object',
+          properties: {
+            questionId: {
+              type: 'string',
+              description: 'The unique ID of the question to update.',
+            },
+            options: {
+              type: 'string',
+              description: 'The updated options as a single string where each option is separated by a newline.',
+            },
+          },
+          required: ['questionId', 'options'],
+        },
+      },
+      async ({ questionId, options }: { questionId: string; options: string }) => {
+        const updatedOptions = options.split('\n');
+        setQuestions((prevQuestions) =>
+          prevQuestions.map((q) =>
+            q.id === questionId ? { ...q, options: updatedOptions } : q
+          )
+        );
+        return { success: true, updatedOptions };
+      }
+    );
+
+    client.addTool(
+      {
+        name: 'update_question_content',
+        description: 'Updates the content of a question based on user input.',
+        parameters: {
+          type: 'object',
+          properties: {
+            questionId: {
+              type: 'string',
+              description: 'The unique ID of the question to update.',
+            },
+            content: {
+              type: 'string',
+              description: 'The updated content for the question.',
+            },
+          },
+          required: ['questionId', 'content'],
+        },
+      },
+      async ({ questionId, content }: { questionId: string; content: string }) => {
+        setQuestions((prevQuestions) =>
+          prevQuestions.map((q) =>
+            q.id === questionId ? { ...q, content } : q
+          )
+        );
+        return { success: true, updatedContent: content };
+      }
+    );
+    
+    client.addTool(
+      {
+        name: 'remove_question',
+        description: 'Removes a question by its ID.',
+        parameters: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description: 'The unique identifier of the question to remove.',
+            },
+          },
+          required: ['id'],
+        },
+      },
+      async ({ id }: { id: string }) => {
+        setQuestions((questions) => questions.filter((q) => q.id !== id));
+        return { success: true, removedQuestionId: id };
+      }
+    );
+
+    client.addTool(
+      {
+        name: 'render_question_content',
+        description: 'Renders the content of a question based on its type.',
+        parameters: {
+          type: 'object',
+          properties: {
+            question: {
+              type: 'object',
+              description: 'The question object to render.',
+              properties: {
+                id: { type: 'string', description: 'The unique identifier of the question.' },
+                type: {
+                  type: 'string',
+                  description: 'The type of the question. It can be "text", "multiple_choice", "checkbox", or "date".',
+                },
+                content: { type: 'string', description: 'The question content.' },
+                options: {
+                  type: 'array',
+                  items: { type: 'string' },
+                  description: 'Options for multiple-choice or checkbox questions.',
+                },
+              },
+              required: ['id', 'type', 'content'],
+            },
+          },
+          required: ['question'],
+        },
+      },
+      async ({ question }: { question: Question }) => {
+        switch (question.type) {
+          case 'text':
+            return `<div>
+                      <label for="${question.id}">${question.content}</label>
+                      <input id="${question.id}" placeholder="Type your answer here..." />
+                    </div>`;
+          case 'multiple_choice':
+            return `<div>
+                      <label>${question.content}</label>
+                      ${question.options
+                        ?.map(
+                          (option, index) =>
+                            `<div>
+                               <input type="radio" id="${question.id}-option${index + 1}" name="${question.id}" />
+                               <label for="${question.id}-option${index + 1}">${option}</label>
+                             </div>`
+                        )
+                        .join('')}
+                    </div>`;
+          case 'checkbox':
+            return `<div>
+                      <label>${question.content}</label>
+                      ${question.options
+                        ?.map(
+                          (option, index) =>
+                            `<div>
+                               <input type="checkbox" id="${question.id}-checkbox${index + 1}" />
+                               <label for="${question.id}-checkbox${index + 1}">${option}</label>
+                             </div>`
+                        )
+                        .join('')}
+                    </div>`;
+          case 'date':
+            return `<div>
+                      <label for="${question.id}">${question.content}</label>
+                      <input id="${question.id}" type="date" />
+                    </div>`;
+          default:
+            return null;
+        }
+      }
+    );
+
     client.addTool(
       {
         name: 'speak_with_badges',
@@ -741,7 +963,7 @@ type RatingToBadges = {
    * Render the application
    */
   return (
-    <div className="grid grid-cols-[1fr_300px] gap-4 h-screen">
+    <div className="grid gap-4 h-screen">
       <div className="p-4 overflow-auto">
         <div className="content-top mb-4">
           <div className="content-title flex items-center">
