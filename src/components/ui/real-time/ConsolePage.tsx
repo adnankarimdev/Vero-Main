@@ -445,7 +445,7 @@ export function ConsolePage() {
     // Set instructions
     client.updateSession({ instructions: instructions });
     // Set transcription, otherwise we don't get user transcriptions back
-    client.updateSession({ voice: 'shimmer' });
+    client.updateSession({ voice: 'ash' });
     client.updateSession({ input_audio_transcription: { model: 'whisper-1' } });
 
     // Add tools
@@ -654,8 +654,8 @@ export function ConsolePage() {
           </div>
         </div>
       </div>
-      <div className="border p-4 overflow-auto">
-        <div className="content-block conversation">
+      {/* <div className="border p-4 overflow-auto"> */}
+        {/* <div className="content-block conversation">
           <div className="content-block-title font-bold mb-2">Conversation</div>
           <div className="content-block-body" data-conversation-content>
             {!items.length && `Awaiting connection...`}
@@ -709,8 +709,8 @@ export function ConsolePage() {
               </div>
             ))}
           </div>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
     </div>
   );
 }

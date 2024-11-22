@@ -24,6 +24,7 @@ import {
   MonitorCog,
   BadgePlus,
   Logs,
+  Speaker
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -52,7 +53,13 @@ const navItems = [
     href: "/settings",
     show: true,
   },
-  { icon: Logs, label: "Tasks List", href: "/tasks", show: true },
+  {
+    icon: Speaker,
+    label: "Real Time",
+    href: "/realtime",
+    show: false,
+  },
+  { icon: Logs, label: "Tasks List", href: "/tasks", show: false },
   {
     icon: Route,
     label: "Customer Journey",
