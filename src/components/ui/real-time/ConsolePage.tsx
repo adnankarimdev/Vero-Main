@@ -14,6 +14,7 @@ const LOCAL_RELAY_SERVER_URL: string =
 import { useEffect, useRef, useCallback, useState } from 'react';
 
 import { RealtimeClient } from '@openai/realtime-api-beta';
+import axios from 'axios';
 import { ItemType } from '@openai/realtime-api-beta/dist/lib/client.js';
 import { WavRecorder, WavStreamPlayer } from '@/lib/wavtools/index.js';
 import { useToast } from "@/components/ui/use-toast";
@@ -31,6 +32,7 @@ import { strict } from 'assert';
 import { Label } from '../label';
 import VoiceGridVisualization from './VoiceGridVisualization';
 import { Switch } from '../switch';
+import { CustomerReviewInfoFromSerializer } from '@/components/Types/types';
 
 /**
  * Type for result from get_weather() function call
@@ -433,6 +435,58 @@ export function ConsolePage() {
     };
   }, []);
 
+
+
+type RatingToBadges = {
+  [key: number]: string[]; // Adjust the value type as needed
+};
+  const [placeIds, setPlaceIds] = useState([]);
+  const [ratingToBadgesData, setRatingsToBadgesData] = useState<RatingToBadges>()
+  const [reviews, setReviews] = useState<CustomerReviewInfoFromSerializer[]>(
+    []
+  );
+  const findKeywordsInReview = (textBody: string, keywordsArray: string[]) => {
+    const foundKeywords: string[] = [];
+
+    keywordsArray.forEach((keyword) => {
+      if (textBody.toLowerCase().includes(keyword.toLowerCase())) {
+        foundKeywords.push(keyword);
+      }
+    });
+
+    return foundKeywords;
+  };
+  function ratingToBadges(reviews: any): Record<number, string[]> {
+    return reviews.reduce(
+      (acc: any, review: any) => {
+        const { rating, badges } = review;
+
+        // If the rating key does not exist, initialize an empty array
+        if (!acc[rating]) {
+          acc[rating] = [];
+        }
+
+        // Concatenate the badges for the current rating
+        acc[rating] = acc[rating].concat(badges);
+
+        return acc;
+      },
+      {} as Record<number, string[]>
+    );
+  }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+
+      } catch (err) {
+        console.error(err);
+        false;
+      }
+    };
+
+    fetchData();
+  }, []);
+
   /**
    * Core RealtimeClient and audio capture setup
    * Set all of our instructions, tools, events and more
@@ -449,6 +503,95 @@ export function ConsolePage() {
     client.updateSession({ input_audio_transcription: { model: 'whisper-1' } });
 
     // Add tools
+    client.addTool(
+      {
+        name: 'speak_with_badges',
+        description: 'Sends user input to the backend and retrieves badges based on the rating.',
+        parameters: {
+          type: 'object',
+          properties: {
+            selectedRating: {
+              type: 'number',
+              description: 'The selected rating, used to fetch the corresponding badges.',
+            },
+            userInput: {
+              type: 'string',
+              description: 'The message input from the user for which badges are fetched.',
+            },
+          },
+          required: ['selectedRating', 'userInput'],
+        },
+      },
+      async ({ selectedRating, userInput }:{selectedRating:number, userInput:string}) => {
+        try {
+          const email = sessionStorage.getItem("authToken");
+          if (!email) {
+            toast({
+              title: "Please sign in.",
+              duration: 3000,
+            });
+            router.push("/login");
+            console.error("Email not found in localStorage");
+            return;
+          }
+  
+          // First, fetch the placeId
+          const placeIdResponse = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-place-id-by-email/`,
+            {
+              headers: {
+                Authorization: `Bearer ${email}`,
+              },
+            }
+          );
+          setPlaceIds(placeIdResponse.data.placeIds);
+  
+          const placeIdsAsArray = placeIdResponse.data.places.map(
+            (place: any) => place.place_id
+          );
+          const placeIdsQuery = placeIdsAsArray.join(",");
+  
+          const reviewSettingsResponse = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-review-settings/${placeIdsQuery}/`
+          );
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/get-reviews-by-client-ids/`,
+            {
+              params: {
+                clientIds: placeIdsAsArray,
+              },
+            }
+          );
+          const data = response.data as CustomerReviewInfoFromSerializer[];
+          const updatedReviews = data.map((review) => {
+            // Convert badges JSON string to array or empty array if invalid
+            const badgesArray = review.badges ? JSON.parse(review.badges) : [];
+            return {
+              ...review,
+              badges: Array.isArray(badgesArray) ? badgesArray : [],
+              internal_google_key_words: findKeywordsInReview(
+                review.final_review_body,
+                reviewSettingsResponse.data.keywords
+              ),
+            };
+          });
+          setReviews(updatedReviews.reverse() as any);
+          setRatingsToBadgesData(ratingToBadges(updatedReviews));
+          const newData = ratingToBadges(updatedReviews)
+          const newResponse = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/backend/chat-with-badges/`,
+            {
+              context: newData[selectedRating],
+              inputMessage: userInput,
+            }
+          );
+          return newResponse.data; // Return the response from the backend.
+        } catch (error) {
+          console.error('Error in chat_with_badges tool:', error);
+          return { error: 'Failed to fetch badges.' }; // Handle any error that occurs during the request.
+        }
+      }
+    );
     client.addTool(
       {
         name: 'set_memory',
