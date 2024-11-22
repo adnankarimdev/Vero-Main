@@ -202,13 +202,13 @@ export function ConsolePage() {
 
     // Connect to realtime API
     await client.connect();
-    client.sendUserMessageContent([
-      {
-        type: `input_text`,
-        text: `Introduce the person whose portfolio this, and then ask what do you want to know about them`,
-        // text: `For testing purposes, I want you to list ten car brands. Number each item, e.g. "one (or whatever number you are one): the item name".`
-      },
-    ]);
+    // client.sendUserMessageContent([
+    //   {
+    //     type: `input_text`,
+    //     text: ``,
+    //     // text: `For testing purposes, I want you to list ten car brands. Number each item, e.g. "one (or whatever number you are one): the item name".`
+    //   },
+    // ]);
 
     if (client.getTurnDetectionType() === 'server_vad') {
       await wavRecorder.record((data) => client.appendInputAudio(data.mono));
