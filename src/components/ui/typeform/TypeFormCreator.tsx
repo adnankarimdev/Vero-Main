@@ -33,6 +33,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { RealTimeTypeForm } from './RealTimeForm'
 import { AlignLeft, ListOrdered, CheckSquare, Calendar, Trash2, GripVertical } from 'lucide-react'
+import ShinyButton from '../shiny-button'
+import AnimatedSaveIcon from '../AnimatedIcons/AnimatedSaveIcon'
 
 type Question = {
   id: string
@@ -78,6 +80,11 @@ export default function TypeformCreator() {
 
   const removeQuestion = (id: string) => {
     setQuestions(questions.filter(q => q.id !== id))
+  }
+
+  const handleSave =  async () =>
+  {
+
   }
 
   const renderQuestionContent = (question: Question) => {
@@ -219,13 +226,17 @@ export default function TypeformCreator() {
       <div>
       <Sheet open={openRealTime} onOpenChange={setOpenRealTime}>
   <SheetTrigger>
-  <Button className="absolute bottom-4 right-4 px-4 py-2 rounded" variant="ghost">Talk</Button>
+  <ShinyButton className="absolute top-4 right-4 px-4 py-2 rounded" >Build with Voice</ShinyButton>
   </SheetTrigger>
   <SheetContent>
   <RealTimeTypeForm questions={questions} setQuestions={setQuestions}/>
   </SheetContent>
 </Sheet>
 
+<Button onClick={handleSave} variant="outline" className="absolute bottom-4 right-4">
+          <AnimatedSaveIcon />
+        </Button>
+        
 </div>
     </div>
   )

@@ -210,13 +210,13 @@ export function RealTimeTypeForm({questions, setQuestions}: QuestionsProps) {
 
     // Connect to realtime API
     await client.connect();
-    // client.sendUserMessageContent([
-    //   {
-    //     type: `input_text`,
-    //     text: ``,
-    //     // text: `For testing purposes, I want you to list ten car brands. Number each item, e.g. "one (or whatever number you are one): the item name".`
-    //   },
-    // ]);
+    client.sendUserMessageContent([
+      {
+        type: `input_text`,
+        text: ``,
+        // text: `For testing purposes, I want you to list ten car brands. Number each item, e.g. "one (or whatever number you are one): the item name".`
+      },
+    ]);
 
     if (client.getTurnDetectionType() === 'server_vad') {
       await wavRecorder.record((data) => client.appendInputAudio(data.mono));
@@ -505,13 +505,14 @@ type RatingToBadges = {
     System settings:
 Tool use: enabled.
 
-You are to help the user create forms. Make use of the tools provided to you whenever you can. 
+You are to help the user create forms. Make use of the tools provided to you whenever you can. You are to only help the user assist in building forms and nothing else.
+Reject all other sorts of inquiries that are not related to building the form.
     `
 
     // Set instructions
     client.updateSession({ instructions: localInstructions });
-    // Set transcription, otherwise we don't get user transcriptions back
     client.updateSession({ voice: 'ash' });
+    // Set transcription, otherwise we don't get user transcriptions back
     // client.updateSession({ input_audio_transcription: { model: 'whisper-1' } });
 
     // Add tools
@@ -983,22 +984,16 @@ You are to help the user create forms. Make use of the tools provided to you whe
           </div>
         </div>
         <div className="content-main">
-          <div className="content-logs">
-            <div className="content-block events mb-4">
-              <div className="visualization">
-                <div className="grid grid-cols-2 gap-8">
-                  <div className="visualization-entry">
+              <div className="visualization flex justify-center">
+                  {/* <div className="visualization-entry">
                     <h2 className="text-center text-white mb-2">Client</h2>
                     <VoiceGridVisualization type="client" frequencyData={clientFrequencies} canvasRef={clientCanvasRef}/>
-                  </div>
+                  </div> */}
                   <div className="visualization-entry">
-                    <h2 className="text-center text-white mb-2">Server</h2>
+                    <h2 className="text-center text-black mb-2">Server</h2>
                     <VoiceGridVisualization type="server" frequencyData={serverFrequencies} canvasRef={serverCanvasRef}/>
                   </div>
-                </div>
               </div>
-            </div>
-          </div>
           <div className="content-actions flex justify-center gap-4">
             {isConnected && canPushToTalk && (
               <Button
